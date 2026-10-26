@@ -1126,6 +1126,7 @@ var NewDatabase = builtin.NewDatabase
 var NewDateTime = builtin.NewDateTime
 var NewDebate = orchestration.NewDebate
 var NewDebugServer = debugger.NewDebugServer
+var NewDeepSeekProvider = llm.NewDeepSeekProvider
 var NewDefaultStrategy = agent.NewDefaultStrategy
 var NewDemoProvider = llm.NewDemoProvider
 var NewDistributedDiscovery = cluster.NewDistributedDiscovery

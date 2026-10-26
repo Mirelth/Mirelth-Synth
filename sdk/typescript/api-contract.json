@@ -4366,6 +4366,10 @@
           "doc": "NewGLMProvider 创建智谱 GLM 提供者实例（OpenAI 兼容模式）"
         },
         {
+          "name": "NewDeepSeekProvider",
+          "doc": "NewDeepSeekProvider 创建 DeepSeek 提供者实例（OpenAI 兼容模式）"
+        },
+        {
           "name": "ConfigFromEnv",
           "doc": "ConfigFromEnv 从环境变量读取 LLM 配置（AP_LLM_API_KEY, AP_LLM_BASE_URL, AP_LLM_MODEL 等）"
         },
