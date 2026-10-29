@@ -1,0 +1,130 @@
+# CNB 云原生构建流水线
+#
+# 等价于 .github/workflows/ci.yml 的核心检查项（Linux + Go 1.26.10 + Node 24）：
+#   1. gofmt / go vet（主模块 + 4 个子模块）
+#   2. 全量单元测试（主模块 + gateway/pgvector/wasm/operator）
+#   3. 核心包 race 检测
+#   4. 覆盖率门槛（agent ≥80% / llm、pkg ≥65%）
+#   5. Windows / darwin 交叉编译
+#   6. 版本、deprecation、文档死链、双线矩阵门
+#   7. TS SDK：npm ci / typecheck / vitest / eslint
+#
+# 说明：
+#   - 仅 main 分支的 push 与 PR 触发，避免每个 feature 分支都跑全量；
+#   - api_trigger 供 `cnb build start-build --event api_trigger` 手动验证；
+#   - Go 模块与 build cache 使用节点缓存，首次构建后显著加速。
+
+main:
+  push:
+    - &go-ci
+      name: go-ci
+      docker:
+        image: golang:1.26.10
+        volumes:
+          - /root/go/pkg/mod:copy-on-write
+          - /root/.cache/go-build:copy-on-write
+      env:
+        CGO_ENABLED: "1"
+        GOFLAGS: "-mod=readonly"
+      stages:
+        - name: 格式与静态检查
+          script: |
+            set -euo pipefail
+            go version
+            test "$(go env GOVERSION)" = "go1.26.10"
+            result="$(gofmt -l agentprimordia gateway wasm pgvector || true)"
+            if [ -n "$result" ]; then
+              echo "以下文件未格式化："
+              echo "$result"
+              exit 1
+            fi
+            go vet ./...
+            for d in gateway pgvector wasm; do
+              (cd "$d" && GOWORK=off go vet ./...)
+            done
+            (cd agentprimordia/operator && GOWORK=off go vet ./...)
+        - name: 主模块测试
+          script: |
+            set -euo pipefail
+            go test -count=1 -timeout=15m ./agentprimordia/...
+        - name: 子模块测试
+          script: |
+            set -euo pipefail
+            for d in gateway pgvector wasm agentprimordia/operator; do
+              echo "=== $d ==="
+              (cd "$d" && GOWORK=off go test -count=1 -timeout=10m ./...)
+            done
+        - name: 核心包 Race 检测
+          script: |
+            set -euo pipefail
+            CGO_ENABLED=1 go test -race -count=1 -timeout=15m \
+              ./agentprimordia/internal/agent/... \
+              ./agentprimordia/internal/llm/... \
+              ./agentprimordia/internal/memory/... \
+              ./agentprimordia/internal/persist/... \
+              ./agentprimordia/internal/tools/...
+        - name: 覆盖率门槛
+          script: |
+            set -euo pipefail
+            check() {
+              pkg="$1"; min="$2"
+              out="$(go test -cover "./$pkg")"
+              cov="$(printf '%s\n' "$out" | grep -oE '[0-9.]+%' | head -1 | tr -d '%')"
+              if [ -z "$cov" ]; then
+                echo "FAIL: $pkg 无法解析覆盖率"
+                return 1
+              fi
+              echo "$pkg: ${cov}% (门槛 ${min}%)"
+              awk -v c="$cov" -v t="$min" 'BEGIN { exit !(c >= t) }'
+            }
+            check agentprimordia/internal/agent 80
+            check agentprimordia/internal/llm 65
+            check agentprimordia/pkg 65
+        - name: 交叉编译
+          script: |
+            set -euo pipefail
+            CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build ./...
+            CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build ./...
+        - name: 版本与文档门
+          image: node:24
+          script: |
+            set -euo pipefail
+            if ! command -v git >/dev/null 2>&1; then
+              apt-get update -qq && apt-get install -y -qq git
+            fi
+            bash scripts/version-check.sh
+            bash scripts/deprecation-check.sh
+            node scripts/version-sync-check.mjs
+            node scripts/doc-version-consistency.mjs
+            node scripts/check-docs-links.mjs
+            node scripts/dual-line-matrix-check.mjs
+
+    - &ts-ci
+      name: ts-ci
+      docker:
+        image: node:24
+        volumes:
+          - /root/.npm:copy-on-write
+      stages:
+        - name: 安装依赖
+          script: |
+            set -euo pipefail
+            if ! command -v git >/dev/null 2>&1; then
+              apt-get update -qq && apt-get install -y -qq git
+            fi
+            cd sdk/typescript
+            npm ci --no-audit --no-fund
+        - name: 类型检查
+          script: cd sdk/typescript && npm run typecheck
+        - name: 单元测试
+          script: cd sdk/typescript && npm test
+        - name: Lint
+          script: cd sdk/typescript && npm run lint
+
+  pull_request:
+    - *go-ci
+    - *ts-ci
+
+  api_trigger:
+    - *go-ci
+    - *ts-ci
