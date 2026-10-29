@@ -109,6 +109,7 @@ func main() {
 
 | 版本 | 交付内容 |
 |------|----------|
+| **v7.8.0** | 累计发布 7.6–7.8：英文前门、clean-room CI、API 表面冻结、A2A 跨进程互操作、WASM 供应链签名 demo、v8.0 废弃标记 + `ap migrate`、默认安全加固 |
 | **v7.5.1** | 发布链路修正：6 平台二进制 + SHA256 校验和 + cosign 签名 + SBOM、Docker 构建上下文修复，`go install …@latest` 端到端可用 |
 | **v7.5** | 安全与质量战役：Shell 工具白名单加固（7 条实证攻击链全阻断）、`jsonutil` 并发覆写修复、Anthropic 结构化输出 panic 修复、167 个被禁用测试恢复；覆盖率 78.8% → 81.1%；模块路径迁至 `github.com/Gleamseekers/AgentPrimordia/v7`，框架自此可经 GOPROXY 分发 |
 | **v7.4** | 接线批次：OTel 端到端导出、Studio 接真实引擎、模板注册表持久化 + 签名远程协议、工具学习器自动装配、全链路关联存储、技能库持久化 + 入循环、自治 CLI 真实化 |
@@ -247,7 +248,7 @@ go run ./ecosystem/examples/resilient-provider/# 重试 / 降级 / 熔断
 - **指南与 cookbook** — [guides/](docs/guides/) · [cookbook/](docs/cookbook/)（RAG / 多 Agent / 代码审查机器人 / K8s 部署 / WASM 沙箱）
 - **API 参考** — [docs/api/](docs/api/) · [docs/api-reference/](docs/api-reference/)
 - **兼容性与稳定性分级** — [版本规范.md](docs/版本规范.md)
-- **路线图与变更** — [V7路线图.md](../docs/V7路线图.md) · [CHANGELOG.md](../docs/CHANGELOG.md) · [CHANGELOG-v7.5.md](docs/CHANGELOG-v7.5.md)
+- **路线图与变更** — [V7路线图.md](../docs/V7路线图.md) · [CHANGELOG.md](../docs/CHANGELOG.md) · [CHANGELOG-v7.8.md](docs/CHANGELOG-v7.8.md)
 - **性能与部署** — [benchmarks/](docs/benchmarks/) · [部署指南.md](../docs/部署指南.md) · [DEVELOPMENT.md](DEVELOPMENT.md)
 
 ---

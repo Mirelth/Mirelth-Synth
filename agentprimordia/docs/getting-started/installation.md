@@ -30,7 +30,7 @@ Verify:
 ap version
 ```
 
-> If you want a specific release, pin the tag: `…/cmd/ap@v7.5.1`. Release binaries with
+> If you want a specific release, pin the tag: `…/cmd/ap@v7.8.0`. Release binaries with
 > SHA256 checksums and cosign signatures are attached to every
 > [GitHub Release](https://github.com/Gleamseekers/AgentPrimordia/releases).
 
@@ -101,7 +101,7 @@ docker run -it --rm \
 ```
 
 Replace `<release-tag>` with a tag from the
-[Releases page](https://github.com/Gleamseekers/AgentPrimordia/releases) (for example `v7.5.1`).
+[Releases page](https://github.com/Gleamseekers/AgentPrimordia/releases) (for example `v7.8.0`).
 
 ## Method 4: TypeScript SDK (Node.js)
 

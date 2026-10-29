@@ -115,6 +115,7 @@ Version reality is maintained in [`docs/版本规范.md`](docs/版本规范.md) 
 
 | Release | What shipped |
 |---------|--------------|
+| **v7.8.0** | Cumulative release of 7.6–7.8: English front door, clean-room CI, API surface freeze, A2A cross-process interop, signed WASM supply-chain demo, v8.0 deprecation markers + `ap migrate`, default-deny hardening |
 | **v7.5.1** | Release pipeline fixed: 6-platform binaries + SHA256 checksums + cosign signatures + SBOM, Docker build context, `go install …@latest` works end to end |
 | **v7.5** | Security & quality campaign: shell-tool allowlist hardened against 7 verified attack chains, `jsonutil` concurrent-marshal corruption fixed, Anthropic structured-output panic fixed, 167 disabled tests restored; coverage 78.8% → 81.1%; module path moved to `github.com/Gleamseekers/AgentPrimordia/v7` so the framework is distributable via `GOPROXY` |
 | **v7.4** | Wiring batch: OTel end-to-end export, Studio bound to real engines, template registry persistence + signed remote protocol, tool-learner auto-assembly, correlation store, skill-library persistence + in-loop injection, autonomy CLI real execution |
@@ -262,7 +263,7 @@ go run ./ecosystem/examples/resilient-provider/# retry / fallback / circuit brea
 - **Guides & cookbook** — [guides/](docs/guides/) · [cookbook/](docs/cookbook/) (RAG / multi-agent / code-review bot / K8s / WASM sandbox)
 - **API reference** — [api/](docs/api/) · [api-reference/](docs/api-reference/)
 - **Compatibility & stability tiers** — [版本规范.md](docs/版本规范.md)
-- **Roadmaps & changelogs** — [V7路线图.md](../docs/V7路线图.md) · [CHANGELOG.md](../docs/CHANGELOG.md) · [CHANGELOG-v7.5.md](docs/CHANGELOG-v7.5.md)
+- **Roadmaps & changelogs** — [V7路线图.md](../docs/V7路线图.md) · [CHANGELOG.md](../docs/CHANGELOG.md) · [CHANGELOG-v7.8.md](docs/CHANGELOG-v7.8.md)
 - **Performance & deployment** — [benchmarks/](docs/benchmarks/) · [部署指南.md](../docs/部署指南.md) · [DEVELOPMENT.md](DEVELOPMENT.md)
 
 ---

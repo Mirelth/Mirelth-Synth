@@ -378,7 +378,7 @@ bootstrap comparisons, published reports).
 - **[Doc authority index](docs/文档权威索引.md)** — the single entry point for "which of 260+ documents do I trust" (version truth / current facts / plans / history)
 - **[Experimental capability registry](docs/实验性能力清单.md)** — which capabilities are really wired, which are demo-only or shells
 - **[English front door](agentprimordia/README.md)** · [English getting started](agentprimordia/docs/getting-started/five-minutes.md) · [English handbook](agentprimordia/docs/AP-开发手册-EN.md)
-- [v7.5 release notes](agentprimordia/docs/CHANGELOG-v7.5.md) · [Three-track user guide](agentprimordia/docs/三战线用户指南.md) · [Demo video script](agentprimordia/docs/demo-video-script.md)
+- [v7.5 release notes](agentprimordia/docs/CHANGELOG-v7.8.md) · [Three-track user guide](agentprimordia/docs/三战线用户指南.md) · [Demo video script](agentprimordia/docs/demo-video-script.md)
 - [Architecture](docs/架构图.md) · [API reference](docs/API参考.md) · [Version policy](agentprimordia/docs/版本规范.md)
 - [TypeScript SDK](sdk/typescript/README.md) · [Getting started](agentprimordia/ecosystem/docs/getting-started.md) · [CLI guide](agentprimordia/ecosystem/docs/ap-guide.md) · [Best practices](agentprimordia/ecosystem/docs/best-practices.md) · [Cookbook](agentprimordia/ecosystem/docs/cookbook/)
 - [Internal module map](agentprimordia/internal/AGENTS.md) · [Full changelog](docs/CHANGELOG.md)
@@ -387,6 +387,7 @@ bootstrap comparisons, published reports).
 
 | Version | Theme | Highlights |
 |---|---|---|
+| **v7.8.0** | Cumulative release: 7.6–7.8 | English front door, clean-room CI, API surface freeze, A2A interop demo, signed WASM supply-chain demo, v8.0 deprecation markers + `ap migrate`; 7.6/7.7 not separately released |
 | **v7.5.1** | Release pipeline fix | 6-platform binaries + checksums + cosign signatures + SBOM; `go install …@latest` works end to end |
 | v7.5 | Security & quality campaign | shell allowlist hardened against 7 verified attack chains, `jsonutil` concurrency corruption fixed, 167 disabled tests restored; module path moved to `/v7` so the framework is distributable via `GOPROXY` |
 | v7.4 | Wiring batch | OTel end-to-end export, Studio on real engines, signed template registry, tool-learner auto-assembly, skill library into the loop, autonomy CLI real execution |
@@ -413,7 +414,7 @@ Apache-2.0 © AgentPrimordia Contributors
   gate still forces an update whenever the measured numbers move.
   Update together with the code, then re-run: node scripts/doc-version-consistency.mjs
 
-  [![Version](https://img.shields.io/badge/version-7.5.1-2ea44f.svg)](agentprimordia/docs/CHANGELOG-v7.5.md)
+  [![Version](https://img.shields.io/badge/version-7.8.0-2ea44f.svg)](agentprimordia/docs/CHANGELOG-v7.8.md)
   [![Tests](https://img.shields.io/badge/tests-685%20files-green.svg)](agentprimordia/internal/)
   Red → Green → Refactor，685 个测试文件
   核心框架主模块（163 个包，1396 个 Go 文件）

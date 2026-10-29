@@ -43,7 +43,7 @@ default_input_modes / default_output_modes、agent_card.exposed、io_modes.text�
 - 版本发布或 A2A 协议面（`internal/agent/a2a/`、demo card 构造）变更后应重新
   生成并更新本目录，保持"随版证据"语义；
 - 报告中 `framework_version` 取自唯一版本真值 `agentprimordia/pkg/agent.go` 的
-  `const Version`（当前 7.5.1，由 `scripts/doc-version-consistency.mjs` 对账）。
+  `const Version`（当前 7.8.0，由 `scripts/doc-version-consistency.mjs` 对账）。
 
 ## 范围与缺口声明
 

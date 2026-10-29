@@ -367,7 +367,7 @@ Sandbox/ACL、A2A 协议互操作、可复现评测文化（预注册门、季�
 - **[文档权威索引](docs/文档权威索引.md)** — 260+ 篇文档"该信哪一篇"的唯一入口（版本真值 / 当前事实 / 规划 / 历史）
 - **[实验性能力清单](docs/实验性能力清单.md)** — 哪些能力真接线、哪些仅 demo/空壳
 - **[英文前门](agentprimordia/README.md)** · [英文入门](agentprimordia/docs/getting-started/five-minutes.md) · [英文开发手册](agentprimordia/docs/AP-开发手册-EN.md)
-- [v7.5 发布说明](agentprimordia/docs/CHANGELOG-v7.5.md) · [三战线用户指南](agentprimordia/docs/三战线用户指南.md) · [Demo 视频脚本](agentprimordia/docs/demo-video-script.md)
+- [v7.5 发布说明](agentprimordia/docs/CHANGELOG-v7.8.md) · [三战线用户指南](agentprimordia/docs/三战线用户指南.md) · [Demo 视频脚本](agentprimordia/docs/demo-video-script.md)
 - [架构设计](docs/架构图.md) · [API 参考](docs/API参考.md) · [版本规范](agentprimordia/docs/版本规范.md)
 - [TypeScript SDK](sdk/typescript/README.md) · [入门指南](agentprimordia/ecosystem/docs/getting-started.md) · [CLI 手册](agentprimordia/ecosystem/docs/ap-guide.md) · [最佳实践](agentprimordia/ecosystem/docs/best-practices.md) · [Cookbook](agentprimordia/ecosystem/docs/cookbook/)
 - [内部模块清单](agentprimordia/internal/AGENTS.md) · [完整变更记录](docs/CHANGELOG.md)
@@ -376,6 +376,7 @@ Sandbox/ACL、A2A 协议互操作、可复现评测文化（预注册门、季�
 
 | 版本 | 主题 | 亮点 |
 |------|------|------|
+| **v7.8.0** | 累计发布 7.6–7.8 | 英文前门、clean-room CI、API 表面冻结、A2A 跨进程互操作、WASM 供应链签名 demo、v8.0 废弃标记 + `ap migrate`；7.6/7.7 未单独发版 |
 | **v7.5.1** | 发布链路修正 | 6 平台二进制 + 校验和 + cosign 签名 + SBOM；`go install …@latest` 端到端可用 |
 | v7.5 | 安全与质量战役 | Shell 白名单加固（7 条实证攻击链全阻断）、`jsonutil` 并发覆写修复、167 个被禁用测试恢复；模块路径迁至 `/v7`，框架可经 GOPROXY 分发 |
 | v7.4 | 接线批次 | OTel 端到端导出、Studio 接真实引擎、签名模板注册表、工具学习器自动装配、技能库入循环、自治 CLI 真实化 |
