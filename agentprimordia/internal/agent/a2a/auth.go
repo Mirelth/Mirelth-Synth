@@ -3,6 +3,7 @@ package a2a
 import (
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"strings"
 )
@@ -42,6 +43,37 @@ func (p *Principal) HasRole(role string) bool {
 // Authenticator 认证器接口
 type Authenticator interface {
 	Authenticate(r *http.Request) (*Principal, error)
+}
+
+// ErrRemoteAuthRequired 表示非 loopback 请求未配置认证。
+var ErrRemoteAuthRequired = errors.New("a2a: remote access requires an explicit authenticator")
+
+// LoopbackOnlyAuthenticator 是 A2A Server 的默认认证器：
+// loopback/进程内请求放行，非 loopback 请求拒绝。
+// 生产环境对外服务必须显式 WithAuth(APIKey/Bearer)；本地开发无需额外配置。
+//
+// 注意：判定依据是 r.RemoteAddr。若服务挂在同机反向代理（nginx 等）后面，
+// 所有外部请求的来源都会显示为 127.0.0.1，本认证器会被绕过；该部署形态
+// 必须配置显式认证器，不能依赖 loopback 判定。
+type LoopbackOnlyAuthenticator struct{}
+
+func NewLoopbackOnlyAuthenticator() *LoopbackOnlyAuthenticator { return &LoopbackOnlyAuthenticator{} }
+
+func (l *LoopbackOnlyAuthenticator) Authenticate(r *http.Request) (*Principal, error) {
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		// 直接构造的 Request（无 RemoteAddr）按进程内调用处理；真实网络请求
+		// 一定有 RemoteAddr。
+		if r.RemoteAddr == "" {
+			return &Principal{ID: "loopback", Roles: []string{"admin"}, Scopes: []string{"*"}}, nil
+		}
+		return nil, ErrRemoteAuthRequired
+	}
+	ip := net.ParseIP(host)
+	if ip != nil && ip.IsLoopback() {
+		return &Principal{ID: "loopback", Roles: []string{"admin"}, Scopes: []string{"*"}}, nil
+	}
+	return nil, ErrRemoteAuthRequired
 }
 
 // NoopAuthenticator 跳过认证（开发/测试用）

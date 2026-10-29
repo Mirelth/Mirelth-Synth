@@ -58,6 +58,9 @@ type Chunk struct {
 	Content string `json:"content"`
 	Done    bool   `json:"done"`
 	Usage   *Usage `json:"usage,omitempty"`
+	// Error 携带流中途的错误帧（如 provider 返回 429/5xx JSON error）。
+	// 消费者必须检查该字段；空字符串表示正常 chunk。
+	Error string `json:"error,omitempty"`
 }
 
 type ToolCallRequest struct {

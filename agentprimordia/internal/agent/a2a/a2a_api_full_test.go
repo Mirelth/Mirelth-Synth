@@ -36,7 +36,7 @@ func TestServer_BearerAuth_ValidToken(t *testing.T) {
 	params, _ := json.Marshal(map[string]any{"message": map[string]string{"role": "user"}})
 	reqBody, _ := json.Marshal(JSONRPCRequest{JSONRPC: "2.0", ID: 1, Method: "task/create", Params: params})
 
-	req := httptest.NewRequest("POST", "/", bytes.NewReader(reqBody))
+	req := newLoopbackRequest("POST", "/", bytes.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer valid-bearer-token")
 	rec := httptest.NewRecorder()
@@ -68,7 +68,7 @@ func TestServer_BearerAuth_InvalidToken(t *testing.T) {
 	server := NewA2AServer(tm, WithAuth(auth))
 
 	reqBody, _ := json.Marshal(JSONRPCRequest{JSONRPC: "2.0", ID: 1, Method: "task/get"})
-	req := httptest.NewRequest("POST", "/", bytes.NewReader(reqBody))
+	req := newLoopbackRequest("POST", "/", bytes.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer wrong-token")
 	rec := httptest.NewRecorder()
@@ -150,7 +150,7 @@ func TestServer_TaskGet_EmptyID(t *testing.T) {
 	params, _ := json.Marshal(map[string]string{"id": ""})
 	reqBody, _ := json.Marshal(JSONRPCRequest{JSONRPC: "2.0", ID: 1, Method: "task/get", Params: params})
 
-	req := httptest.NewRequest("POST", "/", bytes.NewReader(reqBody))
+	req := newLoopbackRequest("POST", "/", bytes.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -178,7 +178,7 @@ func TestServer_TaskCancel_EmptyID(t *testing.T) {
 	params, _ := json.Marshal(map[string]string{"id": ""})
 	reqBody, _ := json.Marshal(JSONRPCRequest{JSONRPC: "2.0", ID: 1, Method: "task/cancel", Params: params})
 
-	req := httptest.NewRequest("POST", "/", bytes.NewReader(reqBody))
+	req := newLoopbackRequest("POST", "/", bytes.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -207,7 +207,7 @@ func TestServer_TaskCancel_CompletedTask(t *testing.T) {
 	params, _ := json.Marshal(map[string]string{"id": "completed-task"})
 	reqBody, _ := json.Marshal(JSONRPCRequest{JSONRPC: "2.0", ID: 1, Method: "task/cancel", Params: params})
 
-	req := httptest.NewRequest("POST", "/", bytes.NewReader(reqBody))
+	req := newLoopbackRequest("POST", "/", bytes.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -234,7 +234,7 @@ func TestServer_TaskCancel_FailedTask(t *testing.T) {
 	params, _ := json.Marshal(map[string]string{"id": "failed-task"})
 	reqBody, _ := json.Marshal(JSONRPCRequest{JSONRPC: "2.0", ID: 1, Method: "task/cancel", Params: params})
 
-	req := httptest.NewRequest("POST", "/", bytes.NewReader(reqBody))
+	req := newLoopbackRequest("POST", "/", bytes.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -256,7 +256,7 @@ func TestServer_SSE_EmptyTaskID(t *testing.T) {
 
 	server := NewA2AServer(tm)
 
-	req := httptest.NewRequest("GET", "/tasks//events", nil)
+	req := newLoopbackRequest("GET", "/tasks//events", nil)
 	rec := httptest.NewRecorder()
 
 	server.handleSSEEvents(rec, req)
@@ -316,7 +316,7 @@ func TestServer_AgentCard_AllFieldsSerialized(t *testing.T) {
 	}
 
 	server := NewA2AServer(tm, WithCard(card))
-	req := httptest.NewRequest("GET", "/", nil)
+	req := newLoopbackRequest("GET", "/", nil)
 	rec := httptest.NewRecorder()
 
 	server.Handler().ServeHTTP(rec, req)
@@ -422,7 +422,7 @@ func TestServer_EmptyRequestBody(t *testing.T) {
 
 	server := NewA2AServer(tm)
 
-	req := httptest.NewRequest("POST", "/", bytes.NewReader([]byte{}))
+	req := newLoopbackRequest("POST", "/", bytes.NewReader([]byte{}))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -446,7 +446,7 @@ func TestServer_InvalidJSONRPCVersion(t *testing.T) {
 	server := NewA2AServer(tm)
 
 	rawJSON := `{"jsonrpc":"1.0","id":1,"method":"task/get","params":{"id":"test"}}`
-	req := httptest.NewRequest("POST", "/", bytes.NewReader([]byte(rawJSON)))
+	req := newLoopbackRequest("POST", "/", bytes.NewReader([]byte(rawJSON)))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -491,7 +491,7 @@ func TestServer_ConcurrentTaskCreate(t *testing.T) {
 				Params:  params,
 			})
 
-			req := httptest.NewRequest("POST", "/", bytes.NewReader(reqBody))
+			req := newLoopbackRequest("POST", "/", bytes.NewReader(reqBody))
 			req.Header.Set("Content-Type", "application/json")
 			rec := httptest.NewRecorder()
 
@@ -537,7 +537,7 @@ func TestServer_NoAuthOnProtectedEndpoint(t *testing.T) {
 	server := NewA2AServer(tm, WithAuth(auth))
 
 	reqBody, _ := json.Marshal(JSONRPCRequest{JSONRPC: "2.0", ID: 1, Method: "task/get"})
-	req := httptest.NewRequest("POST", "/", bytes.NewReader(reqBody))
+	req := newLoopbackRequest("POST", "/", bytes.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -566,7 +566,7 @@ func TestServer_BatchRequest(t *testing.T) {
 	}
 	batchJSON, _ := json.Marshal(batch)
 
-	req := httptest.NewRequest("POST", "/", bytes.NewReader(batchJSON))
+	req := newLoopbackRequest("POST", "/", bytes.NewReader(batchJSON))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -596,7 +596,7 @@ func TestServer_TaskLifecycle_FullTransition(t *testing.T) {
 	})
 	createBody, _ := json.Marshal(JSONRPCRequest{JSONRPC: "2.0", ID: 1, Method: "task/create", Params: params})
 
-	createReq := httptest.NewRequest("POST", "/", bytes.NewReader(createBody))
+	createReq := newLoopbackRequest("POST", "/", bytes.NewReader(createBody))
 	createReq.Header.Set("Content-Type", "application/json")
 	createRec := httptest.NewRecorder()
 	server.Handler().ServeHTTP(createRec, createReq)
@@ -630,7 +630,7 @@ func TestServer_TaskLifecycle_FullTransition(t *testing.T) {
 	getParams, _ := json.Marshal(map[string]string{"id": "lifecycle-001"})
 	getBody, _ := json.Marshal(JSONRPCRequest{JSONRPC: "2.0", ID: 2, Method: "task/get", Params: getParams})
 
-	getReq := httptest.NewRequest("POST", "/", bytes.NewReader(getBody))
+	getReq := newLoopbackRequest("POST", "/", bytes.NewReader(getBody))
 	getReq.Header.Set("Content-Type", "application/json")
 	getRec := httptest.NewRecorder()
 	server.Handler().ServeHTTP(getRec, getReq)
@@ -697,7 +697,7 @@ func TestServer_SSE_NonExistentTask(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 	defer cancel()
 
-	req := httptest.NewRequest("GET", "/tasks/nonexistent-task/events", nil)
+	req := newLoopbackRequest("GET", "/tasks/nonexistent-task/events", nil)
 	req = req.WithContext(ctx)
 	rec := httptest.NewRecorder()
 

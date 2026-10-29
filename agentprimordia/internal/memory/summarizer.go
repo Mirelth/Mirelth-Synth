@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -154,7 +155,10 @@ func (s *SQLiteStore) StartAutoCleanup(cfg CleanupConfig) (stop func()) {
 		}
 	}()
 
-	return func() { close(done) }
+	var stopOnce sync.Once
+	return func() {
+		stopOnce.Do(func() { close(done) })
+	}
 }
 
 // autoCleanup 执行一次自动清理

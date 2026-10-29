@@ -196,12 +196,10 @@ func (p *AnthropicProvider) Stream(ctx context.Context, req *CompletionRequest) 
 			case "message_stop":
 				chunk = Chunk{Done: true}
 			case "error":
-				chunk = Chunk{Done: true}
+				chunk = Chunk{Error: "provider returned an error frame", Done: true}
 			}
 
-			select {
-			case ch <- chunk:
-			case <-ctx.Done():
+			if !sendChunk(ctx, ch, chunk) {
 				return
 			}
 

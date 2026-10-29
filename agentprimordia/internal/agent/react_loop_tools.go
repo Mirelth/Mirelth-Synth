@@ -4,6 +4,7 @@ package agent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"sync"
@@ -127,9 +128,12 @@ func (a *ReActAgent) executeSingleTool(ctx context.Context, tc *ToolCall, turn i
 	}
 
 	// HITL 处理
-	modifiedTC, skip := a.handleHITL(ctx, tc, turn, cfg)
+	modifiedTC, skip, skipReason := a.handleHITL(ctx, tc, turn, cfg)
 	if skip {
-		result := &ToolResult{ToolCallID: modifiedTC.ID, Content: "人类拒绝执行此操作", IsError: true}
+		if skipReason == "" {
+			skipReason = "人类拒绝执行此操作"
+		}
+		result := &ToolResult{ToolCallID: modifiedTC.ID, Content: skipReason, IsError: true}
 		return result, nil, 0
 	}
 
@@ -282,9 +286,9 @@ func (a *ReActAgent) getToolLearnerOrNil() tool_learning.ToolLearner {
 
 // handleHITL 处理 Human-in-the-Loop 确认流程。
 // 返回可能被修改的 ToolCall 和是否跳过执行的标志。
-func (a *ReActAgent) handleHITL(ctx context.Context, tc *ToolCall, turn int, cfg loopConfig) (_ ToolCall, skip bool) {
+func (a *ReActAgent) handleHITL(ctx context.Context, tc *ToolCall, turn int, cfg loopConfig) (_ ToolCall, skip bool, reason string) {
 	if a.hitlMgr == nil || !a.hitlMgr.ShouldInterrupt(tc.Name, InterruptToolConfirm) {
-		return *tc, false
+		return *tc, false, ""
 	}
 
 	a.emitStream(cfg, StreamEvent{Type: StreamEventThought, Content: fmt.Sprintf("[HITL] tool %s 需要人类确认", tc.Name)})
@@ -302,12 +306,20 @@ func (a *ReActAgent) handleHITL(ctx context.Context, tc *ToolCall, turn int, cfg
 	if hitlErr != nil {
 		a.emitStream(cfg, StreamEvent{Type: StreamEventError, Content: fmt.Sprintf("[HITL] 等待人类确认失败: %v", hitlErr)})
 		*tc = ToolCall{ID: tc.ID, Name: tc.Name, Args: tc.Args}
-		return *tc, true
+		if ctx.Err() != nil || errors.Is(hitlErr, context.Canceled) || errors.Is(hitlErr, context.DeadlineExceeded) {
+			return *tc, true, fmt.Sprintf("人类确认超时或已取消: %v", hitlErr)
+		}
+		return *tc, true, fmt.Sprintf("人类确认流程失败: %v", hitlErr)
+	}
+	if humanResp == nil {
+		// HumanInputChan 可能投递 nil；不能直接解引用。
+		*tc = ToolCall{ID: tc.ID, Name: tc.Name, Args: tc.Args}
+		return *tc, true, "人类确认返回空响应"
 	}
 
 	if !humanResp.Approved {
 		a.emitStream(cfg, StreamEvent{Type: StreamEventThought, Content: fmt.Sprintf("[HITL] 人类拒绝执行tool %s", tc.Name)})
-		return *tc, true
+		return *tc, true, "人类拒绝执行此操作"
 	}
 
 	if humanResp.Modified != nil {
@@ -317,5 +329,5 @@ func (a *ReActAgent) handleHITL(ctx context.Context, tc *ToolCall, turn int, cfg
 	}
 
 	a.emitStream(cfg, StreamEvent{Type: StreamEventThought, Content: fmt.Sprintf("[HITL] 人类已确认执行tool %s", tc.Name)})
-	return *tc, false
+	return *tc, false, ""
 }

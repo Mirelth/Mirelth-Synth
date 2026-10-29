@@ -179,43 +179,30 @@ func (p *AnthropicVisionProvider) StreamMultimodal(ctx context.Context, req *Com
 			}
 
 			if event.Type == "content_block_delta" && event.Delta.Text != "" {
-				select {
-				case ch <- Chunk{Content: event.Delta.Text}:
-				case <-ctx.Done():
+				if !sendChunk(ctx, ch, Chunk{Content: event.Delta.Text}) {
 					return
 				}
 			} else if event.Type == "message_stop" || event.Delta.StopReason == "end_turn" {
-				select {
-				case ch <- Chunk{Done: true}:
-				case <-ctx.Done():
-				}
+				_ = sendChunk(ctx, ch, Chunk{Done: true})
 				return
 			} else if event.Type == "message_start" && event.Message.Usage.OutputTokens > 0 {
-				select {
-				case ch <- Chunk{
+				if !sendChunk(ctx, ch, Chunk{
 					Done: true,
 					Usage: &Usage{
 						PromptTokens:     event.Message.Usage.InputTokens,
 						CompletionTokens: event.Message.Usage.OutputTokens,
 						TotalTokens:      event.Message.Usage.InputTokens + event.Message.Usage.OutputTokens,
 					},
-				}:
-				case <-ctx.Done():
+				}) {
 					return
 				}
 			}
 		}
 		if err := scanner.Err(); err != nil {
-			select {
-			case ch <- Chunk{Done: true}:
-			case <-ctx.Done():
-			}
+			_ = sendChunk(ctx, ch, Chunk{Done: true})
 			return
 		}
-		select {
-		case ch <- Chunk{Done: true}:
-		case <-ctx.Done():
-		}
+		_ = sendChunk(ctx, ch, Chunk{Done: true})
 	}()
 
 	return ch, nil

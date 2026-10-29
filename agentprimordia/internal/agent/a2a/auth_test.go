@@ -1,13 +1,12 @@
 package a2a
 
 import (
-	"net/http/httptest"
 	"testing"
 )
 
 func TestNoopAuthenticator_Passes(t *testing.T) {
 	auth := NewNoopAuthenticator()
-	req := httptest.NewRequest("POST", "/a2a", nil)
+	req := newLoopbackRequest("POST", "/a2a", nil)
 
 	principal, err := auth.Authenticate(req)
 	if err != nil {
@@ -33,7 +32,7 @@ func TestAPIKeyAuthenticator_ValidKey(t *testing.T) {
 		"key-002": "agent-beta",
 	}, "X-API-Key")
 
-	req := httptest.NewRequest("POST", "/a2a", nil)
+	req := newLoopbackRequest("POST", "/a2a", nil)
 	req.Header.Set("X-API-Key", "key-001")
 
 	principal, err := auth.Authenticate(req)
@@ -48,7 +47,7 @@ func TestAPIKeyAuthenticator_ValidKey(t *testing.T) {
 func TestAPIKeyAuthenticator_InvalidKey(t *testing.T) {
 	auth := NewAPIKeyAuthenticator(map[string]string{"key-001": "agent"}, "X-API-Key")
 
-	req := httptest.NewRequest("POST", "/a2a", nil)
+	req := newLoopbackRequest("POST", "/a2a", nil)
 	req.Header.Set("X-API-Key", "invalid-key")
 
 	_, err := auth.Authenticate(req)
@@ -60,7 +59,7 @@ func TestAPIKeyAuthenticator_InvalidKey(t *testing.T) {
 func TestAPIKeyAuthenticator_MissingHeader(t *testing.T) {
 	auth := NewAPIKeyAuthenticator(map[string]string{"key-001": "agent"}, "X-API-Key")
 
-	req := httptest.NewRequest("POST", "/a2a", nil)
+	req := newLoopbackRequest("POST", "/a2a", nil)
 
 	_, err := auth.Authenticate(req)
 	if err == nil {
@@ -71,7 +70,7 @@ func TestAPIKeyAuthenticator_MissingHeader(t *testing.T) {
 func TestAPIKeyAuthenticator_DefaultHeader(t *testing.T) {
 	auth := NewAPIKeyAuthenticator(map[string]string{"my-key": "user1"}, "")
 
-	req := httptest.NewRequest("POST", "/a2a", nil)
+	req := newLoopbackRequest("POST", "/a2a", nil)
 	req.Header.Set("X-API-Key", "my-key")
 
 	p, err := auth.Authenticate(req)
@@ -95,7 +94,7 @@ func TestBearerTokenAuthenticator_ValidToken(t *testing.T) {
 		return nil, nil
 	})
 
-	req := httptest.NewRequest("POST", "/a2a", nil)
+	req := newLoopbackRequest("POST", "/a2a", nil)
 	req.Header.Set("Authorization", "Bearer valid-jwt-token")
 
 	principal, err := auth.Authenticate(req)
@@ -112,7 +111,7 @@ func TestBearerTokenAuthenticator_InvalidToken(t *testing.T) {
 		return nil, nil
 	})
 
-	req := httptest.NewRequest("POST", "/a2a", nil)
+	req := newLoopbackRequest("POST", "/a2a", nil)
 	req.Header.Set("Authorization", "Bearer expired-token")
 
 	p, err := auth.Authenticate(req)
@@ -129,7 +128,7 @@ func TestBearerTokenAuthenticator_MissingAuth(t *testing.T) {
 		return &Principal{ID: "x"}, nil
 	})
 
-	req := httptest.NewRequest("POST", "/a2a", nil)
+	req := newLoopbackRequest("POST", "/a2a", nil)
 
 	_, err := auth.Authenticate(req)
 	if err == nil {
@@ -142,7 +141,7 @@ func TestBearerTokenAuthenticator_WrongScheme(t *testing.T) {
 		return &Principal{ID: "x"}, nil
 	})
 
-	req := httptest.NewRequest("POST", "/a2a", nil)
+	req := newLoopbackRequest("POST", "/a2a", nil)
 	req.Header.Set("Authorization", "Basic abc123")
 
 	_, err := auth.Authenticate(req)

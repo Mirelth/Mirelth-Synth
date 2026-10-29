@@ -230,6 +230,18 @@ func (le *LeaderElector) startHeartbeat(ctx context.Context) {
 
 	done := make(chan struct{})
 	le.hbMu.Lock()
+	// StartInBackground 在成为 Leader 后仍会按 RetryInterval 重新调用 Start，
+	// 同节点 Acquire 会续约成功并再次进入这里；若已有存活心跳则直接复用，
+	// 否则每 5s 新增一个 Renew goroutine，且旧 hbDone 被覆盖后无法被 Stop 等待。
+	if le.hbDone != nil {
+		select {
+		case <-le.hbDone:
+			// 上一个心跳已退出，允许重建
+		default:
+			le.hbMu.Unlock()
+			return
+		}
+	}
 	le.hbDone = done
 	le.hbMu.Unlock()
 

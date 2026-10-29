@@ -170,25 +170,21 @@ func (p *GeminiMultimodalProvider) StreamMultimodal(ctx context.Context, req *Co
 			if len(streamResp.Candidates) > 0 && len(streamResp.Candidates[0].Content.Parts) > 0 {
 				text := streamResp.Candidates[0].Content.Parts[0].Text
 				if text != "" {
-					select {
-					case ch <- Chunk{Content: text}:
-					case <-ctx.Done():
+					if !sendChunk(ctx, ch, Chunk{Content: text}) {
 						return
 					}
 				}
 			}
 
 			if streamResp.UsageMetadata.TotalTokenCount > 0 {
-				select {
-				case ch <- Chunk{
+				if !sendChunk(ctx, ch, Chunk{
 					Done: true,
 					Usage: &Usage{
 						PromptTokens:     streamResp.UsageMetadata.PromptTokenCount,
 						CompletionTokens: streamResp.UsageMetadata.CandidatesTokenCount,
 						TotalTokens:      streamResp.UsageMetadata.TotalTokenCount,
 					},
-				}:
-				case <-ctx.Done():
+				}) {
 					return
 				}
 			}
@@ -198,10 +194,7 @@ func (p *GeminiMultimodalProvider) StreamMultimodal(ctx context.Context, req *Co
 			slog.Warn("Gemini Multimodal 流式读取错误", "error", err)
 		}
 
-		select {
-		case ch <- Chunk{Done: true}:
-		case <-ctx.Done():
-		}
+		_ = sendChunk(ctx, ch, Chunk{Done: true})
 	}()
 
 	return ch, nil

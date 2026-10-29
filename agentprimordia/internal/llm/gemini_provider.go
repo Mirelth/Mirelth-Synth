@@ -197,9 +197,7 @@ func (p *GeminiProvider) Stream(ctx context.Context, req *CompletionRequest) (<-
 						TotalTokens:      sseResp.UsageMetadata.TotalTokenCount,
 					}
 				}
-				select {
-				case ch <- chunk:
-				case <-ctx.Done():
+				if !sendChunk(ctx, ch, chunk) {
 					return
 				}
 				if chunk.Done {

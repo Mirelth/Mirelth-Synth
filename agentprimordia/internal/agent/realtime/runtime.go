@@ -369,8 +369,9 @@ func (rt *Runtime) ProcessTurnStream(ctx context.Context, sessionID string, text
 
 	ch := make(chan TurnChunk, 8)
 	go func() {
+		var turnErr error
 		defer close(ch)
-		defer rt.recordTurn(sessionID, turnStart, nil)
+		defer func() { rt.recordTurn(sessionID, turnStart, turnErr) }()
 		defer rt.appendTranscript(sessionID, text)
 
 		var full strings.Builder
@@ -379,8 +380,8 @@ func (rt *Runtime) ProcessTurnStream(ctx context.Context, sessionID string, text
 		if bridge, ok := rt.cfg.React.(StreamingReactBridge); ok && rt.cfg.React != nil {
 			stream, serr := bridge.StreamReason(ctx, fused)
 			if serr != nil {
-				rt.recordTurn(sessionID, turnStart, serr)
-				ch <- TurnChunk{Err: serr}
+				turnErr = serr
+				_ = sendTurnChunk(ctx, ch, TurnChunk{Err: serr})
 				return
 			}
 			for chunk := range stream {
@@ -402,7 +403,10 @@ func (rt *Runtime) ProcessTurnStream(ctx context.Context, sessionID string, text
 					chunk = sanitized
 				}
 				full.WriteString(chunk)
-				ch <- TurnChunk{Text: chunk}
+				if !sendTurnChunk(ctx, ch, TurnChunk{Text: chunk}) {
+					turnErr = ctx.Err()
+					return
+				}
 			}
 		} else if rt.cfg.React != nil {
 			// 回退：非流式桥 → 单块
@@ -421,18 +425,24 @@ func (rt *Runtime) ProcessTurnStream(ctx context.Context, sessionID string, text
 			}
 			if streamErr == nil {
 				full.WriteString(response)
-				ch <- TurnChunk{Text: response}
+				if !sendTurnChunk(ctx, ch, TurnChunk{Text: response}) {
+					turnErr = ctx.Err()
+					return
+				}
 			}
 		} else {
 			// 回退：无 React → 回显
 			response := "echo:" + fused.Text
 			full.WriteString(response)
-			ch <- TurnChunk{Text: response}
+			if !sendTurnChunk(ctx, ch, TurnChunk{Text: response}) {
+				turnErr = ctx.Err()
+				return
+			}
 		}
 
 		if streamErr != nil {
-			rt.recordTurn(sessionID, turnStart, streamErr)
-			ch <- TurnChunk{Err: streamErr}
+			turnErr = streamErr
+			_ = sendTurnChunk(ctx, ch, TurnChunk{Err: streamErr})
 			return
 		}
 
@@ -442,8 +452,8 @@ func (rt *Runtime) ProcessTurnStream(ctx context.Context, sessionID string, text
 		// 流结束：TTS 合成全文音频
 		audio, terr := rt.cfg.TTS.Synthesize(ctx, full.String())
 		if terr != nil {
-			rt.recordTurn(sessionID, turnStart, terr)
-			ch <- TurnChunk{Err: terr}
+			turnErr = terr
+			_ = sendTurnChunk(ctx, ch, TurnChunk{Err: terr})
 			return
 		}
 		if s != nil && s.State == SessionSpeaking {
@@ -459,3 +469,17 @@ func (rt *Runtime) ProcessTurnStream(ctx context.Context, sessionID string, text
 type RuntimeError struct{ Msg string }
 
 func (e *RuntimeError) Error() string { return "realtime: " + e.Msg }
+
+// sendTurnChunk 非阻塞发送实时 chunk，避免消费者弃读时 goroutine 永久阻塞。
+func sendTurnChunk(ctx context.Context, ch chan<- TurnChunk, chunk TurnChunk) bool {
+	timer := time.NewTimer(5 * time.Second)
+	defer timer.Stop()
+	select {
+	case ch <- chunk:
+		return true
+	case <-ctx.Done():
+		return false
+	case <-timer.C:
+		return false
+	}
+}

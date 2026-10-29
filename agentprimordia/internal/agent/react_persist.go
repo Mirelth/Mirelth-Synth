@@ -36,6 +36,10 @@ func newMemoryWriter(mem MemoryStore, logger *slog.Logger) *memoryWriter {
 func (w *memoryWriter) ensureStarted() {
 	w.mu.Lock()
 	defer w.mu.Unlock()
+	w.ensureStartedLocked()
+}
+
+func (w *memoryWriter) ensureStartedLocked() {
 	if w.ch == nil {
 		ch := make(chan *memory.Episode, saveMemoryChBuffer)
 		w.ch = ch
@@ -56,9 +60,13 @@ func (w *memoryWriter) ensureStarted() {
 	}
 }
 
-// submit 非阻塞提交 Episode 到写入队列
+// submit 非阻塞提交 Episode 到写入队列。
+// 发送与 flush 的置空/关闭必须在同一把锁内，否则 submit 已读到旧 channel、
+// flush 随后 close(ch) 时会触发 "send on closed channel"。
 func (w *memoryWriter) submit(ep *memory.Episode) {
-	w.ensureStarted()
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	w.ensureStartedLocked()
 	select {
 	case w.ch <- ep:
 	default:

@@ -197,9 +197,7 @@ func (p *MistralProvider) Stream(ctx context.Context, req *CompletionRequest) (<
 					TotalTokens:      sseResp.Usage.TotalTokens,
 				}
 			}
-			select {
-			case ch <- chunk:
-			case <-ctx.Done():
+			if !sendChunk(ctx, ch, chunk) {
 				return
 			}
 			if chunk.Done {

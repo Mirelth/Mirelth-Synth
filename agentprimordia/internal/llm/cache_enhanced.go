@@ -161,6 +161,9 @@ func (c *FingerprintCache) Get(_ context.Context, query string, _ float32) (*Com
 }
 
 func (c *FingerprintCache) Set(_ context.Context, query string, resp *CompletionResponse) error {
+	if resp == nil {
+		return nil
+	}
 	key := PromptFingerprint(query)
 
 	c.mu.Lock()
@@ -215,6 +218,11 @@ func (c *FingerprintCache) getByKey(key string) (*CompletionResponse, bool) {
 		atomicAdd(&c.misses, 1)
 		return nil, false
 	}
+	if entry.response == nil {
+		delete(c.entries, key)
+		atomicAdd(&c.misses, 1)
+		return nil, false
+	}
 	entry.hitCount++
 	atomicAdd(&c.hits, 1)
 	atomicAdd(&c.tokensSave, int64(entry.response.Usage.TotalTokens))
@@ -223,6 +231,9 @@ func (c *FingerprintCache) getByKey(key string) (*CompletionResponse, bool) {
 
 // setByKey 内部按 fingerprint 写入。
 func (c *FingerprintCache) setByKey(key string, resp *CompletionResponse) error {
+	if resp == nil {
+		return nil
+	}
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
@@ -657,6 +668,9 @@ func (m *CacheManager) Get(ctx context.Context, query string, similarity float32
 	}
 
 	resp, hit := cache.Get(ctx, query, similarity)
+	if hit && resp == nil {
+		return nil, false
+	}
 
 	if tracer != nil {
 		ctx2, span := tracer.StartSpan(ctx, "cache.lookup")

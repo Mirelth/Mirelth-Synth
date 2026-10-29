@@ -41,6 +41,8 @@ type StreamToolCallChunk struct {
 	Done      bool
 	Usage     *llm.Usage
 	ToolCalls []ToolCallDelta
+	// Error 携带流中途错误；消费者必须检查。
+	Error string
 }
 
 // StreamingToolCallProvider 是 llm.Provider 的可选扩展接口：实现它的
@@ -133,7 +135,8 @@ func (a *ReActAgent) syncReasoning(ctx context.Context, llmMessages []llm.ChatMe
 				a.recordLLM(time.Since(llmStart), completeErr)
 				return Thought{}, completeErr
 			}
-			thought = Thought{Content: completeResp.Content, Usage: completeResp.Usage}
+			// 账单发生两次调用，Usage 必须合并，不能丢弃首次 resp.Usage。
+			thought = Thought{Content: completeResp.Content, Usage: addLLMUsage(resp.Usage, completeResp.Usage)}
 		} else {
 			thought = Thought{
 				Content:   resp.Content,
@@ -153,6 +156,21 @@ func (a *ReActAgent) syncReasoning(ctx context.Context, llmMessages []llm.ChatMe
 	}
 
 	return thought, nil
+}
+
+// addLLMUsage 合并两次 LLM 调用的 token 用量。
+// TotalTokens 若两侧都有值则相加；否则按 prompt+completion 重算，避免
+// 只带 completion 的流式 chunk 把总量算成 0。
+func addLLMUsage(a, b llm.Usage) llm.Usage {
+	out := llm.Usage{
+		PromptTokens:     a.PromptTokens + b.PromptTokens,
+		CompletionTokens: a.CompletionTokens + b.CompletionTokens,
+		TotalTokens:      a.TotalTokens + b.TotalTokens,
+	}
+	if out.TotalTokens == 0 {
+		out.TotalTokens = out.PromptTokens + out.CompletionTokens
+	}
+	return out
 }
 
 // streamReasoning 流式推理阶段
@@ -190,33 +208,49 @@ func (a *ReActAgent) streamReasoning(ctx context.Context, cfg loopConfig, llmMes
 		// 预分配容量以减少 realloc（典型 4K 流式响应）
 		contentBuilder.Grow(4096)
 
+		var streamUsage llm.Usage
 		for chunk := range streamCh {
 			if ctx.Err() != nil {
 				_ = a.lifecycle.SetStatus(StatusCancelled)
 				a.emitStream(cfg, StreamEvent{Type: StreamEventError, Content: ctx.Err().Error()})
 				return Thought{}, ctx.Err()
 			}
+			if chunk.Error != "" {
+				return Thought{}, fmt.Errorf("stream error: %s", chunk.Error)
+			}
 			if chunk.Content != "" {
 				contentBuilder.WriteString(chunk.Content)
 				a.emitStream(cfg, StreamEvent{Type: StreamEventToken, Content: chunk.Content})
+			}
+			if chunk.Usage != nil {
+				if chunk.Usage.TotalTokens > 0 {
+					streamUsage = *chunk.Usage
+				} else {
+					streamUsage = addLLMUsage(streamUsage, *chunk.Usage)
+				}
 			}
 			if chunk.Done {
 				break
 			}
 		}
-		// 注意：llm.Chunk 不携带 tool_calls 与逐 chunk Usage，此处无法从
-		// 流式增量中恢复 tool 调用——这正是原路径需要第二次非流式请求的原因。
-		// 该路径的 Usage 如实置零（provider 未在 Chunk 中给出）。
-		thought := Thought{Content: contentBuilder.String()}
+		// 注意：llm.Chunk 不携带 tool_calls，此处无法从流式增量中恢复
+		// tool 调用——这正是原路径需要第二次非流式请求的原因。
+		thought := Thought{Content: contentBuilder.String(), Usage: streamUsage}
 
 		// 优化（Task 2.5）：直接复用外层传入的 toolDefs，不再调用 tk.Definitions()
 		if len(toolDefs) > 0 {
 			resp, err := a.callToolsWithRetry(ctx, llmMessages, toolDefs)
-			if err == nil && len(resp.ToolCalls) > 0 {
+			if err != nil {
+				// 第二跳失败不能静默返回“无 tool_calls 的成功结果”，否则
+				// 模型想调工具却被吞掉，Agent 会把空回复当最终答案。
+				return Thought{}, err
+			}
+			if len(resp.ToolCalls) > 0 {
 				thought = Thought{
 					Content:   resp.Content,
 					ToolCalls: convertToToolCalls(resp.ToolCalls),
-					Usage:     resp.Usage,
+					// 两次调用都计费，Usage 合并上报。
+					Usage: addLLMUsage(streamUsage, resp.Usage),
 				}
 			}
 		}
@@ -277,6 +311,14 @@ func (a *ReActAgent) streamReasoningToolCalls(ctx context.Context, cfg loopConfi
 		Tools:    toolDefs,
 	})
 	if err != nil {
+		// ctx 取消/超时是真实失败，不能包装成“流式不可用”后回退到第二条路径，
+		// 否则会多发一次请求（可能产生额外计费），且掩盖取消语义。
+		if ctxErr := ctx.Err(); ctxErr != nil {
+			return Thought{}, ctxErr
+		}
+		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+			return Thought{}, err
+		}
 		// 通道不可用：回退原路径（普通流式 + 非流式 tool calls）
 		return Thought{}, fmt.Errorf("%w: %v", errStreamToolCallsUnavailable, err)
 	}
@@ -291,6 +333,9 @@ func (a *ReActAgent) streamReasoningToolCalls(ctx context.Context, cfg loopConfi
 			_ = a.lifecycle.SetStatus(StatusCancelled)
 			a.emitStream(cfg, StreamEvent{Type: StreamEventError, Content: ctx.Err().Error()})
 			return Thought{}, ctx.Err()
+		}
+		if chunk.Error != "" {
+			return Thought{}, fmt.Errorf("stream error: %s", chunk.Error)
 		}
 		if chunk.Content != "" {
 			contentBuilder.WriteString(chunk.Content)

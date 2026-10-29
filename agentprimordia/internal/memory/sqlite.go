@@ -21,6 +21,12 @@ import (
 	_ "modernc.org/sqlite"
 )
 
+var memorySQLiteSeq atomic.Uint64
+
+func uniqueMemorySQLiteDSN() string {
+	return fmt.Sprintf("file:ap_memory_%d?mode=memory&cache=shared", memorySQLiteSeq.Add(1))
+}
+
 const (
 	sqliteMaxOpenConns       = 10
 	sqliteMaxIdleConns       = 5
@@ -58,7 +64,7 @@ func NewSQLiteStore(path string) (*SQLiteStore, error) {
 	openPath := path
 	isInMemory := path == ":memory:"
 	if isInMemory {
-		openPath = "file::memory:?cache=shared"
+		openPath = uniqueMemorySQLiteDSN()
 	}
 
 	db, err := sql.Open("sqlite", openPath)

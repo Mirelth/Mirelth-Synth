@@ -77,7 +77,7 @@ func BenchmarkHTTP_CreateTask(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		req := httptest.NewRequest("POST", "/", bytes.NewReader(body))
+		req := newLoopbackRequest("POST", "/", bytes.NewReader(body))
 		req.Header.Set("Content-Type", "application/json")
 		rec := httptest.NewRecorder()
 		handler.ServeHTTP(rec, req)

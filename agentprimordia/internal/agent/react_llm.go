@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net"
 	"time"
 
 	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/llm"
@@ -73,9 +74,11 @@ func (a *ReActAgent) executeTool(ctx context.Context, tc ToolCall) (*ToolResult,
 		Args: tc.Args,
 	}
 
-	// v3.4-4：tool 执行层失败自动重试（网络抖动/瞬时错误），最多 defaultToolRetries 次额外尝试。
-	// 注意：业务级拒绝（result.IsError）不触发重试，仅执行层 error 重试。
+	// v3.4-4：tool 执行层失败自动重试，但只重试瞬时/网络错误。
+	// 2026-10-26 P1 修复：旧实现盲重试所有执行层 error，参数非法、权限拒绝、
+	// shell 非 0 退出等不可恢复错误也会再执行一次，导致非幂等工具重复副作用。
 	var lastErr error
+	var lastResult *tools.Result
 	for attempt := 0; attempt <= defaultToolRetries; attempt++ {
 		if ctx.Err() != nil {
 			return &ToolResult{
@@ -93,18 +96,47 @@ func (a *ReActAgent) executeTool(ctx context.Context, tc ToolCall) (*ToolResult,
 			}, nil
 		}
 		lastErr = err
-		a.logger.Debug("tool 执行失败，准备重试",
-			"tool", tc.Name,
-			"attempt", attempt+1,
-			"error", err,
-		)
+		lastResult = result
+		if !isRetryableToolError(err) {
+			break
+		}
+		if attempt < defaultToolRetries {
+			a.logger.Debug("tool 执行失败，准备重试",
+				"tool", tc.Name,
+				"attempt", attempt+1,
+				"error", err,
+			)
+		}
 	}
 
+	content := lastErr.Error()
+	if lastResult != nil && lastResult.Content != "" {
+		content = lastResult.Content
+	}
 	return &ToolResult{
 		ToolCallID: tc.ID,
-		Content:    lastErr.Error(),
+		Content:    content,
 		IsError:    true,
 	}, lastErr
+}
+
+// isRetryableToolError 只把超时/网络类错误视为可重试。
+// 参数校验、权限拒绝、确认拒绝、tool 不存在、shell 非 0 退出等均不可重试。
+func isRetryableToolError(err error) bool {
+	if err == nil {
+		return false
+	}
+	if errors.Is(err, context.DeadlineExceeded) {
+		return true
+	}
+	if errors.Is(err, context.Canceled) {
+		return false
+	}
+	var netErr net.Error
+	if errors.As(err, &netErr) {
+		return netErr.Timeout() || netErr.Temporary()
+	}
+	return false
 }
 
 // defaultToolRetries tool 执行层失败时的额外重试次数（v3.4-4）

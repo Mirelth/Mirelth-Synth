@@ -194,9 +194,7 @@ func (p *OpenAIMultimodalProvider) StreamMultimodal(ctx context.Context, req *Co
 					TotalTokens:      sseResp.Usage.TotalTokens,
 				}
 			}
-			select {
-			case ch <- chunk:
-			case <-ctx.Done():
+			if !sendChunk(ctx, ch, chunk) {
 				return
 			}
 			if chunk.Done {

@@ -180,9 +180,8 @@ func (p *CohereProvider) Stream(ctx context.Context, req *CompletionRequest) (<-
 						TotalTokens:      evt.Usage.Tokens.InputTokens + evt.Usage.Tokens.OutputTokens,
 					}
 				}
-				select {
-				case ch <- chunk:
-				case <-ctx.Done():
+				if !sendChunk(ctx, ch, chunk) {
+					return
 				}
 				return
 			}

@@ -101,6 +101,22 @@ func indexTokens(fields ...string) []string {
 	return out
 }
 
+// cloneEpisode 返回 Episode 的深拷贝，避免 Get/List/Search 泄漏内部指针。
+// 调用方（如 SharedStore.Publish）直接改写 Metadata 会绕过 s.mu，与并发读竞争。
+func cloneEpisode(e *Episode) *Episode {
+	if e == nil {
+		return nil
+	}
+	cp := *e
+	if e.Metadata != nil {
+		cp.Metadata = make(map[string]string, len(e.Metadata))
+		for k, v := range e.Metadata {
+			cp.Metadata[k] = v
+		}
+	}
+	return &cp
+}
+
 func (s *InMemoryStore) Add(ctx context.Context, episode *Episode) error {
 	if err := episode.Validate(); err != nil {
 		return err
@@ -160,7 +176,7 @@ func (s *InMemoryStore) GetBatch(ctx context.Context, ids []string) (map[string]
 	result := make(map[string]*Episode, len(ids))
 	for _, id := range ids {
 		if ep, ok := s.episodes[id]; ok {
-			result[id] = ep
+			result[id] = cloneEpisode(ep)
 		}
 	}
 	return result, nil
@@ -238,7 +254,7 @@ func (s *InMemoryStore) Search(ctx context.Context, query string, opts *SearchOp
 		// 不再做 substring 兜底。FTS 标准行为是：所有 token 出现即命中，
 		// 词之间可以间隔其他内容。比原 substring 匹配更宽松（更符合
 		// 用户对"搜索"的直觉）。
-		results = append(results, ep)
+		results = append(results, cloneEpisode(ep))
 		if len(results) >= opts.Limit {
 			break
 		}
@@ -327,7 +343,7 @@ func (s *InMemoryStore) Get(ctx context.Context, id string) (*Episode, error) {
 	if !ok {
 		return nil, ErrEpisodeNotFound
 	}
-	return ep, nil
+	return cloneEpisode(ep), nil
 }
 
 func (s *InMemoryStore) Delete(ctx context.Context, id string) error {
@@ -366,7 +382,7 @@ func (s *InMemoryStore) List(ctx context.Context, opts *ListOptions) ([]*Episode
 		if opts.SessionID != "" && e.SessionID != opts.SessionID {
 			continue
 		}
-		results = append(results, e)
+		results = append(results, cloneEpisode(e))
 	}
 	// 与 SQLiteStore.List 语义对齐：按 created_at 排序（RFC3339 字典序=时间序，
 	// 同秒内以 ID 字典序稳定兜底），Ascending=false 为倒序（最新在前）。
@@ -432,7 +448,7 @@ func (s *InMemoryStore) GetImportant(ctx context.Context, threshold float64, lim
 	var results []*Episode
 	for _, e := range s.episodes {
 		if e.Importance >= threshold {
-			results = append(results, e)
+			results = append(results, cloneEpisode(e))
 		}
 	}
 	if limit > 0 && len(results) > limit {
@@ -450,7 +466,7 @@ func (s *InMemoryStore) GetTimeline(ctx context.Context, days int) (map[string][
 		if len(date) >= 10 {
 			date = date[:10]
 		}
-		timeline[date] = append(timeline[date], e)
+		timeline[date] = append(timeline[date], cloneEpisode(e))
 	}
 	return timeline, nil
 }
@@ -465,7 +481,7 @@ func (s *InMemoryStore) GetMemoriesBySession(ctx context.Context, sessionID stri
 	var results []*Episode
 	for _, e := range s.episodes {
 		if e.SessionID == sessionID {
-			results = append(results, e)
+			results = append(results, cloneEpisode(e))
 		}
 	}
 	return results, nil

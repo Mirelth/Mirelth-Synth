@@ -238,7 +238,8 @@ func (p *OpenAIProvider) Stream(ctx context.Context, req *CompletionRequest) (<-
 				continue
 			}
 			if sseResp.Error != nil {
-				continue
+				_ = sendChunk(ctx, ch, Chunk{Error: sseResp.Error.Message, Done: true})
+				return
 			}
 			if len(sseResp.Choices) == 0 {
 				continue

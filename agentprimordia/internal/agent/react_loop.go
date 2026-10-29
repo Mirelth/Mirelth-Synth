@@ -381,16 +381,30 @@ func (a *ReActAgent) getMemSessionID() string {
 	return a.memSessionID
 }
 
-// emitStream 在流式模式下向通道发送事件
+// emitStream 在流式模式下向通道发送事件。
+//
+// 2026-10-26 P0 修复：旧实现只有 ch<-event 与 ctx.Done() 两个分支。
+// 调用方拿到 StreamRun 的 channel 后不排空（客户端断连、消费者 panic 或
+// 传 context.Background 后提前返回）时，缓冲满后 emitStream 永久阻塞；
+// 此时 reactLoopEngine 正持有 runMu，该 Agent 后续所有 Run/StreamRun 都会挂死。
+// 现在改为非阻塞发送：消费者跟不上时丢弃该事件并告警，保证主循环有出口。
 func (a *ReActAgent) emitStream(cfg loopConfig, event StreamEvent) {
-	if cfg.stream && cfg.streamCh != nil {
-		// 自动填充请求 ID
-		if event.RequestID == "" {
-			event.RequestID = cfg.requestID
-		}
-		select {
-		case cfg.streamCh <- event:
-		case <-cfg.streamCtx.Done():
+	if !cfg.stream || cfg.streamCh == nil || cfg.streamCtx == nil {
+		return
+	}
+	// 自动填充请求 ID
+	if event.RequestID == "" {
+		event.RequestID = cfg.requestID
+	}
+	select {
+	case cfg.streamCh <- event:
+	case <-cfg.streamCtx.Done():
+	default:
+		if a.logger != nil {
+			a.logger.Warn("流式消费者过慢，丢弃事件",
+				"event_type", event.Type,
+				"request_id", cfg.requestID,
+			)
 		}
 	}
 }

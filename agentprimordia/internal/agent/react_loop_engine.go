@@ -89,6 +89,13 @@ func (a *ReActAgent) reactLoopEngine(ctx context.Context, input Message, cfg loo
 	// P1-2：hookCtx 是运行期共享字段（fireHook / saveMemory 的异步摘要
 	// goroutine 都会读），必须在 mu 保护下写入，避免与并发读取竞争。
 	a.setHookCtx(ctx)
+	// 2026-10-26 P1 修复：Lifecycle.Reset 只在终态可用，且此前没有调用方；
+	// 一旦首次 Run 结束，runningDone 永久关闭，第二次 Run 的
+	// GracefulShutdown 会立即返回 nil（假停机）。新 Run 开始前自动 Reset。
+	switch a.lifecycle.Status() {
+	case StatusCompleted, StatusFailed, StatusCancelled:
+		_ = a.lifecycle.Reset()
+	}
 	_ = a.lifecycle.SetStatus(StatusRunning)
 	// P1-2：a.stats.Status 是死字段——Stats() 一律以 lifecycle.Status()
 	// 覆盖返回值，此处写入无任何消费者，已删除。

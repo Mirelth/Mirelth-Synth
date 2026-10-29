@@ -37,7 +37,7 @@ func BenchmarkInteropTaskSend(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		req := httptest.NewRequest(http.MethodPost, "/a2a/v1", bytes.NewReader(payload))
+		req := newLoopbackRequest(http.MethodPost, "/a2a/v1", bytes.NewReader(payload))
 		req.Header.Set("Content-Type", "application/json")
 		rec := httptest.NewRecorder()
 		handler.ServeHTTP(rec, req)
@@ -54,7 +54,7 @@ func BenchmarkInteropAgentCard(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		req := httptest.NewRequest(http.MethodGet, "/.well-known/agent.json", nil)
+		req := newLoopbackRequest(http.MethodGet, "/.well-known/agent.json", nil)
 		rec := httptest.NewRecorder()
 		handler.ServeHTTP(rec, req)
 		if rec.Code != http.StatusOK {

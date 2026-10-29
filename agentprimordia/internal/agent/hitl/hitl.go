@@ -109,6 +109,9 @@ func (m *HITLManager) isAutoApproved(toolName string) bool {
 	return false
 }
 
+// ErrNilHumanResponse 表示 HumanInputChan 投递了 nil 响应。
+var ErrNilHumanResponse = errors.New("hitl: human response is nil")
+
 // RequestInterrupt 发起中断请求，阻塞等待人类响应。
 //
 // P1-4：确认流程串行化。整个「登记 pending → 触发 OnInterrupt → 等待响应」
@@ -157,6 +160,9 @@ func (m *HITLManager) RequestInterrupt(ctx context.Context, req *InterruptReques
 		return nil, fmt.Errorf("timed out waiting for human response: %w", ctx.Err())
 	}
 
+	if resp == nil {
+		return nil, ErrNilHumanResponse
+	}
 	return resp, nil
 }
 

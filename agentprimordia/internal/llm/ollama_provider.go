@@ -163,9 +163,7 @@ func (p *OllamaProvider) Stream(ctx context.Context, req *CompletionRequest) (<-
 				Content: chunkResp.Message.Content,
 				Done:    chunkResp.Done,
 			}
-			select {
-			case ch <- chunk:
-			case <-ctx.Done():
+			if !sendChunk(ctx, ch, chunk) {
 				return
 			}
 			if chunkResp.Done {

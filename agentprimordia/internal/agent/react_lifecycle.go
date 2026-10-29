@@ -205,10 +205,10 @@ func (a *ReActAgent) resumeFromState(ctx context.Context, state *persist.AgentSt
 
 	// 恢复路径绕过了 reactLoopEngine 入口，必须在此处填充 capCache，
 	// 否则 runLoop 内对 a.capCache.model 等字段的无保护访问会 panic。
-	// 注意：runLoop 不会像 reactLoopEngine 那样在 defer 中清理 capCache，
-	// 因此这里显式清理，避免后续 Run() 误用本次恢复的旧引用。
+	// 与主路径保持一致：不要把 capCache 置 nil。异步路径
+	// （distillKnowledge/saveSolutionMemory/fireHook）会无锁读取该字段，
+	// 置 nil 会静默降级，且与下一次 Run 的写入构成数据竞争。
 	a.capCache = a.resolveCapabilities(reqID)
-	defer func() { a.capCache = nil }()
 	// P1-5：恢复路径绕过了 reactLoopEngine，必须在此处 flush 有界摘要
 	// worker 池，否则 runLoop 内 saveMemory 派生的 worker goroutine
 	// 不会被等待，随恢复调用次数线性泄漏。

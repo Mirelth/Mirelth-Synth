@@ -48,6 +48,7 @@ type A2AGRPCServer struct {
 func NewA2AGRPCServer(service *A2AService, opts ...GRPCServerOption) *A2AGRPCServer {
 	s := &A2AGRPCServer{
 		service: service,
+		auth:    LoopbackGRPCAuth,
 		logger:  slog.Default(),
 		metrics: &A2AInterceptorMetrics{},
 	}

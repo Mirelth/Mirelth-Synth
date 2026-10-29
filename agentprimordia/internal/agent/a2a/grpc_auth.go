@@ -3,11 +3,13 @@ package a2a
 import (
 	"context"
 	"errors"
+	"net"
 	"strings"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
 )
 
@@ -104,4 +106,27 @@ func BearerAuthFunc(validate BearerTokenValidator) GRPCAuthFunc {
 		}
 		return validate(strings.TrimPrefix(header, "Bearer "))
 	}
+}
+
+// LoopbackGRPCAuth 是 A2A gRPC Server 的默认认证函数：
+// TCP 来源只放行 loopback；bufconn/Unix 等非 TCP 传输按进程内调用放行。
+// 生产跨机部署必须 WithGRPCAuth 显式配置 API key/JWT/mTLS。
+//
+// 注意：Unix socket 若暴露给其他本地用户/进程，同样会被“进程内可信”放行，
+// 不能视为隔离边界；多租户或共享主机场景应显式配置认证。
+func LoopbackGRPCAuth(ctx context.Context) (*Principal, error) {
+	p, ok := peer.FromContext(ctx)
+	if !ok || p.Addr == nil {
+		return &Principal{ID: "in-process", Roles: []string{"admin"}, Scopes: []string{"*"}}, nil
+	}
+	host, _, err := net.SplitHostPort(p.Addr.String())
+	if err != nil {
+		// bufconn/Unix socket 等非 TCP 地址：进程内可信传输。
+		return &Principal{ID: "in-process", Roles: []string{"admin"}, Scopes: []string{"*"}}, nil
+	}
+	ip := net.ParseIP(host)
+	if ip != nil && ip.IsLoopback() {
+		return &Principal{ID: "loopback", Roles: []string{"admin"}, Scopes: []string{"*"}}, nil
+	}
+	return nil, ErrRemoteAuthRequired
 }

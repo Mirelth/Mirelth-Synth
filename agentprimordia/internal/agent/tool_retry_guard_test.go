@@ -4,7 +4,6 @@ package agent
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -25,10 +24,17 @@ func (t *retryTool) Parameters() json.RawMessage {
 }
 func (t *retryTool) Execute(_ context.Context, _ json.RawMessage) (*tools.Result, error) {
 	if t.attempts.Add(1) == 1 {
-		return nil, errors.New("transient failure")
+		return nil, transientTestError{}
 	}
 	return &tools.Result{Content: "ok"}, nil
 }
+
+// transientTestError 实现 net.Error，使 executeTool 按瞬时网络错误重试。
+type transientTestError struct{}
+
+func (transientTestError) Error() string   { return "transient failure" }
+func (transientTestError) Timeout() bool   { return true }
+func (transientTestError) Temporary() bool { return true }
 
 // panicTool 执行时直接 panic（验证并行 recover 不击穿循环）
 type panicTool struct{}

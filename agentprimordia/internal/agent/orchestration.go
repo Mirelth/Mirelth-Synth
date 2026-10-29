@@ -163,6 +163,9 @@ func NewHandoff(config HandoffConfig) *Handoff {
 
 // Run 执行 Handoff 编排
 func (h *Handoff) Run(ctx context.Context, input string) (*HandoffResult, error) {
+	if h.config.Router == nil {
+		return nil, fmt.Errorf("handoff router is nil")
+	}
 	start := time.Now()
 	currentInput := input
 
@@ -222,6 +225,8 @@ type AgentResult struct {
 	Output    string        `json:"output"`
 	Duration  time.Duration `json:"duration"`
 	Error     error         `json:"error,omitempty"`
+	// Skipped 表示因 ctx 取消未启动该 Agent；零值结果不能当成功。
+	Skipped bool `json:"skipped,omitempty"`
 }
 
 // ParallelResult 是并行执行的结果
@@ -239,8 +244,12 @@ func ParallelRun(ctx context.Context, agents []Agent, input string) (*ParallelRe
 	var wg sync.WaitGroup
 
 	for i, a := range agents {
-		// 如果 context 已取消，不再启动新的并行任务
-		if ctx.Err() != nil {
+		// 如果 context 已取消，不再启动新的并行任务；把剩余槽位显式标记
+		// 为 Skipped，避免调用方把 AgentName==""、Error=nil 的零值当成功。
+		if err := ctx.Err(); err != nil {
+			for j := i; j < len(agents); j++ {
+				results[j] = AgentResult{Skipped: true, Error: err}
+			}
 			break
 		}
 		wg.Add(1)

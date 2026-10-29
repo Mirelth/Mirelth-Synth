@@ -24,6 +24,12 @@ const (
 	sqliteMaxIdleConns        = 2
 )
 
+var cacheMemorySeq atomic.Uint64
+
+func uniqueCacheMemoryDSN() string {
+	return fmt.Sprintf("file:ap_cache_%d?mode=memory&cache=shared", cacheMemorySeq.Add(1))
+}
+
 type SQLiteCacheConfig struct {
 	DSN       string
 	MaxSize   int
@@ -52,7 +58,7 @@ func NewSQLiteCache(dsn string) (*SQLiteCache, error) {
 
 func NewSQLiteCacheWithConfig(cfg SQLiteCacheConfig) (*SQLiteCache, error) {
 	if cfg.DSN == "" {
-		cfg.DSN = "file::memory:?cache=shared"
+		cfg.DSN = uniqueCacheMemoryDSN()
 	}
 	if cfg.MaxSize <= 0 {
 		cfg.MaxSize = defaultSQLiteCacheMaxSize
@@ -112,6 +118,8 @@ func (c *SQLiteCache) initSchema() error {
 		response_id TEXT NOT NULL,
 		content TEXT NOT NULL,
 		usage TEXT,
+		model TEXT DEFAULT '',
+		role TEXT DEFAULT '',
 		vector TEXT,
 		created_at TEXT NOT NULL,
 		hit_count INTEGER DEFAULT 0
@@ -119,7 +127,13 @@ func (c *SQLiteCache) initSchema() error {
 	CREATE INDEX IF NOT EXISTS idx_cache_created ON cache_entries(created_at);
 	`
 	_, err := c.db.Exec(schema)
-	return err
+	if err != nil {
+		return err
+	}
+	// 旧库迁移：补 model/role 列（已存在时忽略）。
+	_, _ = c.db.Exec("ALTER TABLE cache_entries ADD COLUMN model TEXT DEFAULT ''")
+	_, _ = c.db.Exec("ALTER TABLE cache_entries ADD COLUMN role TEXT DEFAULT ''")
+	return nil
 }
 
 func (c *SQLiteCache) Get(ctx context.Context, query string, similarity float32) (*CompletionResponse, bool) {
@@ -132,12 +146,12 @@ func (c *SQLiteCache) Get(ctx context.Context, query string, similarity float32)
 
 	atomic.AddInt64(&c.totalQuery, 1)
 
-	var respID, content, usageJSON string
+	var respID, content, usageJSON, model, role string
 	var createdAt string
 	err := c.db.QueryRowContext(ctx,
-		"SELECT response_id, content, usage, created_at FROM cache_entries WHERE fingerprint = ?",
+		"SELECT response_id, content, usage, model, role, created_at FROM cache_entries WHERE fingerprint = ?",
 		fp,
-	).Scan(&respID, &content, &usageJSON, &createdAt)
+	).Scan(&respID, &content, &usageJSON, &model, &role, &createdAt)
 	if err == nil {
 		if ttl > 0 {
 			ct, err := time.Parse(time.RFC3339, createdAt)
@@ -154,7 +168,7 @@ func (c *SQLiteCache) Get(ctx context.Context, query string, similarity float32)
 		if _, err := c.db.ExecContext(ctx, "UPDATE cache_entries SET hit_count = hit_count + 1 WHERE fingerprint = ?", fp); err != nil {
 			slog.Warn("缓存命中计数更新失败", "fingerprint", fp, "error", err)
 		}
-		resp := &CompletionResponse{ID: respID, Content: content}
+		resp := &CompletionResponse{ID: respID, Content: content, Model: model, Role: role}
 		if usageJSON != "" {
 			var u Usage
 			// perf-v6 round 8 Task 1：使用 pooled reader
@@ -190,7 +204,7 @@ func (c *SQLiteCache) semanticSearch(ctx context.Context, query string, similari
 	queryVec := fingerprintToVector(query)
 
 	rows, err := c.db.QueryContext(ctx,
-		"SELECT fingerprint, response_id, content, usage, vector, created_at FROM cache_entries",
+		"SELECT fingerprint, response_id, content, usage, model, role, vector, created_at FROM cache_entries",
 	)
 	if err != nil {
 		atomic.AddInt64(&c.misses, 1)
@@ -202,8 +216,8 @@ func (c *SQLiteCache) semanticSearch(ctx context.Context, query string, similari
 	var bestScore float32
 
 	for rows.Next() {
-		var fp, respID, content, usageJSON, vecJSON, createdAt string
-		if err := rows.Scan(&fp, &respID, &content, &usageJSON, &vecJSON, &createdAt); err != nil {
+		var fp, respID, content, usageJSON, model, role, vecJSON, createdAt string
+		if err := rows.Scan(&fp, &respID, &content, &usageJSON, &model, &role, &vecJSON, &createdAt); err != nil {
 			continue
 		}
 
@@ -230,7 +244,7 @@ func (c *SQLiteCache) semanticSearch(ctx context.Context, query string, similari
 		score := cosineSimilarity(queryVec, entryVec)
 		if score > bestScore {
 			bestScore = score
-			resp := &CompletionResponse{ID: respID, Content: content}
+			resp := &CompletionResponse{ID: respID, Content: content, Model: model, Role: role}
 			if usageJSON != "" {
 				var u Usage
 				// perf-v6 round 8 Task 1：使用 pooled reader
@@ -271,12 +285,12 @@ func (c *SQLiteCache) GetRequest(ctx context.Context, req *CompletionRequest) (*
 
 	atomic.AddInt64(&c.totalQuery, 1)
 
-	var respID, content, usageJSON string
+	var respID, content, usageJSON, model, role string
 	var createdAt string
 	err := c.db.QueryRowContext(ctx,
-		"SELECT response_id, content, usage, created_at FROM cache_entries WHERE fingerprint = ?",
+		"SELECT response_id, content, usage, model, role, created_at FROM cache_entries WHERE fingerprint = ?",
 		fp,
-	).Scan(&respID, &content, &usageJSON, &createdAt)
+	).Scan(&respID, &content, &usageJSON, &model, &role, &createdAt)
 	if err != nil {
 		atomic.AddInt64(&c.misses, 1)
 		return nil, false
@@ -298,7 +312,7 @@ func (c *SQLiteCache) GetRequest(ctx context.Context, req *CompletionRequest) (*
 	if _, uerr := c.db.ExecContext(ctx, "UPDATE cache_entries SET hit_count = hit_count + 1 WHERE fingerprint = ?", fp); uerr != nil {
 		slog.Warn("缓存命中计数更新失败", "fingerprint", fp, "error", uerr)
 	}
-	resp := &CompletionResponse{ID: respID, Content: content}
+	resp := &CompletionResponse{ID: respID, Content: content, Model: model, Role: role}
 	if usageJSON != "" {
 		var u Usage
 		// perf-v6 round 8 Task 1：使用 pooled reader
@@ -361,9 +375,9 @@ func (c *SQLiteCache) setByFingerprint(ctx context.Context, fp, query, vecText s
 	}
 
 	_, execErr := c.db.ExecContext(ctx, `
-		INSERT OR REPLACE INTO cache_entries (fingerprint, query, response_id, content, usage, vector, created_at)
-		VALUES (?, ?, ?, ?, ?, ?, ?)`,
-		fp, query, resp.ID, resp.Content, string(usageJSON), vecJSON, time.Now().Format(time.RFC3339),
+		INSERT OR REPLACE INTO cache_entries (fingerprint, query, response_id, content, usage, model, role, vector, created_at)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		fp, query, resp.ID, resp.Content, string(usageJSON), resp.Model, resp.Role, vecJSON, time.Now().Format(time.RFC3339),
 	)
 	return execErr
 }

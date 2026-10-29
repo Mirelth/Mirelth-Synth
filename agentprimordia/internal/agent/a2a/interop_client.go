@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 // v3.5 开放协议客户端互操作
@@ -22,8 +23,10 @@ type OpenInteropClient struct {
 // NewOpenInteropClient 创建开放协议客户端
 func NewOpenInteropClient(baseURL string) *OpenInteropClient {
 	return &OpenInteropClient{
-		baseURL:    baseURL,
-		httpClient: http.DefaultClient,
+		baseURL: baseURL,
+		// 不使用 http.DefaultClient：它没有整体超时，调用方传 Background
+		// 时第三方 Agent 可无限挂起。
+		httpClient: &http.Client{Timeout: 30 * time.Second},
 	}
 }
 

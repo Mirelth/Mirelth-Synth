@@ -10,6 +10,7 @@ package pipeline
 
 import (
 	"fmt"
+	"math"
 	"sort"
 )
 
@@ -144,7 +145,10 @@ func courseWeight(t Trajectory, minTurns, maxTurns int) float64 {
 	if w < 0 {
 		w = 0
 	}
-	return w
+	// 黄金夹具与 TS 消费端按字节对账；浮点末位会随架构/编译器
+	// （arm64 vs amd64、FMA 收缩）变化 1 ULP。量化到 12 位小数，
+	// 保证跨平台确定性，同时远高于课程权重的业务精度需求。
+	return math.Round(w*1e12) / 1e12
 }
 
 func absFloat(x float64) float64 {

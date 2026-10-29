@@ -46,15 +46,21 @@ func (a *ReActAgent) recordFailure(ctx context.Context, input Message, err error
 		rec.Phase = persist.PhaseRun
 	}
 
+	// 失败记录必须独立于已取消的请求 ctx：否则 ctx 超时后 Load 被静默跳过，
+	// rec.State=nil，ReplayFailure 会报 "has no embedded checkpoint"，
+	// 一键重放能力在真正需要时恰好失效。
+	recordCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	// 嵌入失败前最新检查点（若有），使记录可一键重放
 	if cs := a.getCheckpointStore(); cs != nil {
-		if state, lerr := cs.Load(ctx, a.config.Name); lerr == nil && state != nil {
+		if state, lerr := cs.Load(recordCtx, a.config.Name); lerr == nil && state != nil {
 			state.Status = "failed"
 			rec.State = state
 		}
 	}
 
-	if rerr := store.Record(ctx, rec); rerr != nil {
+	if rerr := store.Record(recordCtx, rec); rerr != nil {
 		a.logger.Warn("写入失败记录失败", "error", rerr)
 		return
 	}

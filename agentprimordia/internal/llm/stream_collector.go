@@ -18,7 +18,8 @@ type ToolCallInfo struct {
 
 // CollectedResult 收集结果
 type CollectedResult struct {
-	Content   string         `json:"content"`
+	Content string `json:"content"`
+	// ToolCalls 由 Chunk.ToolCalls 聚合；provider 未填充时为空。
 	ToolCalls []ToolCallInfo `json:"tool_calls,omitempty"`
 	Tokens    int            `json:"tokens"`
 	Duration  time.Duration  `json:"duration"`
@@ -55,10 +56,12 @@ func (c *StreamCollector) Collect(ch <-chan Chunk) (*CollectedResult, error) {
 
 	start := time.Now()
 	var tokens []string
-	var toolCalls []ToolCallInfo
 	var usage *Usage
 
 	for chunk := range ch {
+		if chunk.Error != "" {
+			return nil, &StreamError{Message: chunk.Error}
+		}
 		if chunk.Content != "" {
 			tokens = append(tokens, chunk.Content)
 		}
@@ -81,11 +84,10 @@ func (c *StreamCollector) Collect(ch <-chan Chunk) (*CollectedResult, error) {
 	content := contentBuilder.String()
 
 	result := &CollectedResult{
-		Content:   content,
-		ToolCalls: toolCalls,
-		Tokens:    len(tokens),
-		Duration:  duration,
-		Usage:     usage,
+		Content:  content,
+		Tokens:   len(tokens),
+		Duration: duration,
+		Usage:    usage,
 	}
 
 	return result, nil

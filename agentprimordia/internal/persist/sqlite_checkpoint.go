@@ -8,18 +8,27 @@ import (
 	"fmt"
 	"log/slog"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	_ "modernc.org/sqlite"
 )
 
+var checkpointMemorySeq atomic.Uint64
+
+func uniqueCheckpointMemoryDSN() string {
+	return fmt.Sprintf("file:ap_checkpoint_%d?mode=memory&cache=shared", checkpointMemorySeq.Add(1))
+}
+
 var (
-	ErrCheckpointNotFound = errors.New("checkpoint not found")
+	ErrCheckpointNotFound    = errors.New("checkpoint not found")
+	ErrCheckpointStoreClosed = errors.New("persist: checkpoint store is closed")
 )
 
 type SQLiteCheckpointStore struct {
-	mu sync.RWMutex
-	db *sql.DB
+	mu     sync.RWMutex
+	db     *sql.DB
+	closed atomic.Bool
 }
 
 func NewSQLiteCheckpointStore(dsn string) (*SQLiteCheckpointStore, error) {
@@ -38,7 +47,7 @@ func NewSQLiteCheckpointStore(dsn string) (*SQLiteCheckpointStore, error) {
 }
 
 func InMemoryCheckpointStore() (*SQLiteCheckpointStore, error) {
-	return NewSQLiteCheckpointStore("file::memory:?cache=shared")
+	return NewSQLiteCheckpointStore(uniqueCheckpointMemoryDSN())
 }
 
 func (s *SQLiteCheckpointStore) initSchema() error {
@@ -68,6 +77,9 @@ func (s *SQLiteCheckpointStore) initSchema() error {
 }
 
 func (s *SQLiteCheckpointStore) Save(ctx context.Context, state *AgentState) error {
+	if s.closed.Load() {
+		return ErrCheckpointStoreClosed
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -118,6 +130,9 @@ func (s *SQLiteCheckpointStore) Save(ctx context.Context, state *AgentState) err
 }
 
 func (s *SQLiteCheckpointStore) Load(ctx context.Context, agentID string) (*AgentState, error) {
+	if s.closed.Load() {
+		return nil, ErrCheckpointStoreClosed
+	}
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -161,6 +176,9 @@ func (s *SQLiteCheckpointStore) Load(ctx context.Context, agentID string) (*Agen
 }
 
 func (s *SQLiteCheckpointStore) List(ctx context.Context, sessionID string) ([]*AgentState, error) {
+	if s.closed.Load() {
+		return nil, ErrCheckpointStoreClosed
+	}
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -203,10 +221,16 @@ func (s *SQLiteCheckpointStore) List(ctx context.Context, sessionID string) ([]*
 		results = append(results, &state)
 	}
 
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate checkpoints: %w", err)
+	}
 	return results, nil
 }
 
 func (s *SQLiteCheckpointStore) Delete(ctx context.Context, agentID string) error {
+	if s.closed.Load() {
+		return ErrCheckpointStoreClosed
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -227,6 +251,9 @@ func (s *SQLiteCheckpointStore) Delete(ctx context.Context, agentID string) erro
 }
 
 func (s *SQLiteCheckpointStore) Close() error {
+	if s.closed.Swap(true) {
+		return nil
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if s.db != nil {
