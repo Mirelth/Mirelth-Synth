@@ -5,10 +5,12 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 let sqliteAvailable = false;
 try {
-  require('better-sqlite3');
+  const Database = require('better-sqlite3');
+  const probe = new Database(':memory:');
+  probe.close();
   sqliteAvailable = true;
 } catch {
-  // better-sqlite3 not installed — skip tests
+  // better-sqlite3 native binding not available — skip tests
 }
 
 import { SQLiteCheckpointStore } from '../../src/persist/sqlite-checkpoint.js';

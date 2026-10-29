@@ -13,7 +13,7 @@ export const ResponseFormatTypeSchema = z.enum(['text', 'json_object', 'json_sch
 export const SchemaDefSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
-  schema: z.record(z.unknown()),
+  schema: z.record(z.string(), z.unknown()),
   strict: z.boolean().optional(),
 });
 
@@ -79,10 +79,23 @@ export const CheckpointSchema = z.object({
 // ===== 工具定义 JSON Schema 生成助手 =====
 
 /**
- * 使用 zodToJsonSchema 将任意 Zod 参数 schema 转为 JSON Schema，
- * 用于在 ToolDefinition.function.parameters 中嵌入符合 OpenAI 规范的参数定义。
+ * 将任意 Zod 参数 schema 转为 JSON Schema，用于 ToolDefinition.function.parameters。
+ *
+ * zod 4 已内置 z.toJSONSchema；这里保留 zod-to-json-schema 时代的
+ * `{ definitions: { <name>: ... } }` 返回形态，避免破坏公共 API 与
+ * 现有调用方。zod 3 用户应升级到 zod 4（旧版存在内存耗尽公告）。
  */
-export { zodToJsonSchema } from 'zod-to-json-schema';
+export function zodToJsonSchema(
+  schema: z.ZodType,
+  opts?: { name?: string },
+): { $schema: string; definitions: Record<string, unknown> } {
+  const name = opts?.name ?? 'Schema';
+  const jsonSchema = z.toJSONSchema(schema, { target: 'draft-7', io: 'input', unrepresentable: 'any' });
+  return {
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    definitions: { [name]: jsonSchema },
+  };
+}
 
 // ===== 类型推导 =====
 

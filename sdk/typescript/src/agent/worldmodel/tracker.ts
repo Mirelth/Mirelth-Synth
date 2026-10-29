@@ -13,7 +13,6 @@
  */
 import {
   StateGraph,
-  StateNode,
   nodeId,
   KindTask,
   KindPlan,
@@ -25,7 +24,8 @@ import {
   EdgeContext,
   EdgeHypothesis,
 } from './graph.js';
-import { Plan, PlanStep } from './backdiff.js';
+import type { StateNode } from './graph.js';
+import type { Plan, PlanStep } from './backdiff.js';
 
 export {
   StateGraph,

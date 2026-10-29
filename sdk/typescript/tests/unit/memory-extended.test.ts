@@ -825,11 +825,11 @@ describe('ConversationalMemory', () => {
     expect(stats.totalSessions).toBe(2);
   });
 
-  it('should close', () => {
+  it('should close', async () => {
     const mem = new ConversationalMemory();
     mem.close();
     // After close, should be empty
-    expect(mem.stats()).resolves.toHaveProperty('totalEpisodes', 0);
+    await expect(mem.stats()).resolves.toHaveProperty('totalEpisodes', 0);
   });
 
   it('should get history', async () => {

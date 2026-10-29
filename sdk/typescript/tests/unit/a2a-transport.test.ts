@@ -276,13 +276,13 @@ describe('HTTPTransport', () => {
     expect(resp.status).toBe(400);
   });
 
-  it('should register and unregister agents', () => {
+  it('should register and unregister agents', async () => {
     transport = new HTTPTransport({ port: 0 });
     transport.registerAgent('agent-1', 'http://localhost:8001');
     transport.registerAgent('agent-2', 'http://localhost:8002');
     transport.unregisterAgent('agent-1');
     // No direct accessor, test via send which should throw
-    expect(transport.send('agent-1', {} as A2AMessage)).rejects.toThrow('Unknown agent: agent-1');
+    await expect(transport.send('agent-1', {} as A2AMessage)).rejects.toThrow('Unknown agent: agent-1');
   });
 
   it('should send to registered agents via fetch', async () => {

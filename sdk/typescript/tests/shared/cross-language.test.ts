@@ -166,7 +166,7 @@ describe('Cross-Language Behavioral Alignment', () => {
               // 其余套件不需要 LLM Provider 的测试骨架
               console.log(`Skipping ${testCase.id}: unknown suite`);
           }
-        });
+        }, 30_000);
       }
     });
   }

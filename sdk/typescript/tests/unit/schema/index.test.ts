@@ -10,7 +10,7 @@
  */
 import { describe, it, expect, expectTypeOf } from 'vitest';
 import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import { zodToJsonSchema } from '../../../src/schema/config.js';
 // 被测 schema（待实现）
 import {
   MessageSchema,

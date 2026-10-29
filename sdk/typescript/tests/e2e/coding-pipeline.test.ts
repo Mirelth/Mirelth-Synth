@@ -70,7 +70,7 @@ const lowCritique = JSON.stringify({ issues: [], severity: 'low', corrections: [
 // ===== 辅助 =====
 
 function git(workdir: string, ...args: string[]): string {
-  return execFileSync('git', args, { cwd: workdir, encoding: 'utf-8' });
+  return execFileSync('git', args, { cwd: workdir, encoding: 'utf-8', env: { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null' } });
 }
 
 function hasGit(): boolean {
@@ -85,12 +85,15 @@ function hasGit(): boolean {
 describe('TS coding pipeline 端到端', () => {
   it('计划→编写→实施→测试→审查→发布全流程打通', async () => {
     if (!hasGit()) return; // 无 git 环境跳过
+    process.env.GIT_CONFIG_GLOBAL = '/dev/null';
+    process.env.GIT_CONFIG_SYSTEM = '/dev/null';
 
     const workdir = fs.mkdtempSync(path.join(os.tmpdir(), 'ts-coding-pipeline-'));
     try {
       git(workdir, 'init', '-b', 'main');
       git(workdir, 'config', 'user.email', 'e2e@example.com');
       git(workdir, 'config', 'user.name', 'e2e-bot');
+      git(workdir, 'commit', '--allow-empty', '-m', 'init');
 
       const provider = new ScriptedProvider();
       provider.withResponse(pipelinePlan); // 根任务 Planning：分解为 5 个子任务

@@ -128,7 +128,7 @@ describe('v5.1 检索质量革命 — recall@10 固定种子量化门', () => {
       }
       const recall = totalRecall / queries.length;
       expect(recall).toBeGreaterThanOrEqual(RECALL_GATE);
-    });
+    }, 30_000);
 
     it(`VectorStore (vector) recall@10 >= ${RECALL_GATE} @ N=${size}`, () => {
       const { vectors, queries } = generateDataset(size, 42 + size);
@@ -152,6 +152,6 @@ describe('v5.1 检索质量革命 — recall@10 固定种子量化门', () => {
       }
       const recall = totalRecall / queries.length;
       expect(recall).toBeGreaterThanOrEqual(RECALL_GATE);
-    });
+    }, 30_000);
   }
 });

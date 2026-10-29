@@ -5,8 +5,8 @@
  * 纯图算法、无 LLM、确定性输出；缺陷文案（中文）与 Go 逐字一致——跨语言
  * 对账夹具覆盖。本模块只提供检查结果，不拦截任何默认路径。
  */
-import { StateGraph } from './graph.js';
-import { Plan, PlanStep } from './backdiff.js';
+import type { StateGraph } from './graph.js';
+import type { Plan, PlanStep } from './backdiff.js';
 
 /** 预演结果。 */
 export interface RehearsalReport {
