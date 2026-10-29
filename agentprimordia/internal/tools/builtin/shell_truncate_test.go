@@ -8,10 +8,9 @@ import (
 )
 
 func TestShell_OutputTruncation(t *testing.T) {
-	shell := NewShell().WithBlacklist()
-	shell.maxOutputSize = 10
-
 	dir := t.TempDir()
+	shell := NewShell().WithBlacklist().WithAllowedWorkdirs([]string{dir})
+	shell.maxOutputSize = 10
 
 	args, _ := json.Marshal(map[string]string{
 		"action":  "execute",
@@ -32,12 +31,13 @@ func TestShell_OutputTruncation(t *testing.T) {
 }
 
 func TestShell_OutputUnderLimit(t *testing.T) {
-	shell := NewShell().WithBlacklist()
+	dir := t.TempDir()
+	shell := NewShell().WithBlacklist().WithAllowedWorkdirs([]string{dir})
 
 	args, _ := json.Marshal(map[string]string{
 		"action":  "execute",
 		"command": "go env GOROOT",
-		"workdir": t.TempDir(),
+		"workdir": dir,
 	})
 
 	result, err := shell.Execute(context.Background(), args)

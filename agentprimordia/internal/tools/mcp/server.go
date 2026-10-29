@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"net"
 	"net/http"
 	"strings"
 	"sync"
@@ -48,7 +49,7 @@ type MCPServer struct {
 	mu               sync.Mutex
 	logger           *slog.Logger
 	builtinResources *BuiltinResources
-	apiKey           string // P1 安全修复：Bearer 认证密钥，空 = 不认证（兼容既有部署）
+	apiKey           string // 空 = 仅 loopback 可用；非空 = 强制 Bearer 认证
 }
 
 // MCPServerOption configures an MCPServer.
@@ -62,7 +63,8 @@ func WithLogger(l *slog.Logger) MCPServerOption {
 // WithAPIKey 启用 Bearer 认证（P1 安全修复）。
 // 设置后所有 /mcp 请求必须携带 `Authorization: Bearer <key>`，
 // 常量时间比较（crypto/subtle）防 timing attack。
-// 不设置时保持默认行为（无认证）——兼容既有内网/本地部署。
+// 不设置时仅允许 loopback 监听/请求；跨机部署必须设置，否则 Start 会拒绝
+// 非 loopback 地址。
 func WithAPIKey(key string) MCPServerOption {
 	return func(s *MCPServer) { s.apiKey = key }
 }
@@ -183,8 +185,30 @@ func (s *MCPServer) NotifyToolListChanged() error {
 	return nil
 }
 
+// isLoopbackListenAddr 判断监听地址是否仅本机可达。
+// 空 host（":8080"）表示所有网卡，按非 loopback 处理。
+func isLoopbackListenAddr(addr string) bool {
+	host, _, err := net.SplitHostPort(addr)
+	if err != nil {
+		return false
+	}
+	if host == "" {
+		return false
+	}
+	if strings.EqualFold(host, "localhost") {
+		return true
+	}
+	ip := net.ParseIP(host)
+	return ip != nil && ip.IsLoopback()
+}
+
 // Start launches the HTTP server on the given address.
 func (s *MCPServer) Start(ctx context.Context, addr string) error {
+	// 安全默认：未配置 Bearer key 时只允许 loopback 监听。此前默认无认证，
+	// 调用方传 ":8080" 就会把任意 tools/call 暴露到网络。
+	if s.apiKey == "" && !isLoopbackListenAddr(addr) {
+		return fmt.Errorf("refusing to start MCP server on non-loopback address %q without API key", addr)
+	}
 	s.mu.Lock()
 	if s.server != nil {
 		s.mu.Unlock()

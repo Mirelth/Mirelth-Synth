@@ -26,7 +26,7 @@ func mcpServerRequest(id int, method string, params any) string {
 
 // mcpDoRequest 辅助函数：向 MCPServer 发送请求并解析响应
 func mcpDoRequest(server *MCPServer, method string, body string, headers map[string]string) *httptest.ResponseRecorder {
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	for k, v := range headers {
 		req.Header.Set(k, v)
@@ -170,7 +170,7 @@ func TestMCPServer_NotificationsInitialized(t *testing.T) {
 	}, reg)
 
 	body := `{"jsonrpc":"2.0","method":"notifications/initialized"}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -195,7 +195,7 @@ func TestMCPServer_ToolsCall_无效参数(t *testing.T) {
 
 	// params 为字符串而非对象
 	body := `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":"invalid"}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -219,7 +219,7 @@ func TestMCPServer_ToolsCall_无Registry(t *testing.T) {
 	}, nil)
 
 	body := `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"echo","arguments":{}}}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -247,7 +247,7 @@ func TestMCPServer_ResourcesRead_处理器错误(t *testing.T) {
 	})
 
 	body := `{"jsonrpc":"2.0","id":1,"method":"resources/read","params":{"uri":"file:///data/secret.txt"}}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -275,7 +275,7 @@ func TestMCPServer_PromptsGet_无处理器(t *testing.T) {
 	}, reg)
 
 	body := `{"jsonrpc":"2.0","id":1,"method":"prompts/get","params":{"name":"greet","arguments":{}}}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -303,7 +303,7 @@ func TestMCPServer_PromptsGet_处理器错误(t *testing.T) {
 	})
 
 	body := `{"jsonrpc":"2.0","id":1,"method":"prompts/get","params":{"name":"broken","arguments":{}}}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -346,7 +346,7 @@ func TestMCPServer_PromptsGet_非字符串参数过滤(t *testing.T) {
 
 	// arguments 包含字符串和非字符串值
 	body := `{"jsonrpc":"2.0","id":1,"method":"prompts/get","params":{"name":"test","arguments":{"name":"Alice","count":42,"active":true,"note":null}}}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -435,7 +435,7 @@ func TestMCPServer_并发安全(t *testing.T) {
 			go func(idx int, method string, params any) {
 				defer wg.Done()
 				body := mcpServerRequest(idx, method, params)
-				req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+				req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 				req.Header.Set("Content-Type", "application/json")
 				rec := httptest.NewRecorder()
 				server.ServeHTTP(rec, req)
@@ -477,7 +477,7 @@ func TestMCPServer_请求体大小限制(t *testing.T) {
 	}
 	largeBodyStr := string(largeBody)
 
-	req := httptest.NewRequest("POST", "/", strings.NewReader(largeBodyStr))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(largeBodyStr))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -668,7 +668,7 @@ func TestMCPServer_错误码_ParseError(t *testing.T) {
 		Version: "1.0.0",
 	}, reg)
 
-	req := httptest.NewRequest("POST", "/", strings.NewReader("{{{invalid"))
+	req := newLoopbackRequest("POST", "/", strings.NewReader("{{{invalid"))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -711,7 +711,7 @@ func TestMCPServer_错误码_InvalidParams(t *testing.T) {
 
 	// tools/call params 为数字
 	body := `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":12345}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -738,7 +738,7 @@ func TestMCPServer_错误码_InvalidParams_resources_read(t *testing.T) {
 
 	// resources/read params 为数组
 	body := `{"jsonrpc":"2.0","id":1,"method":"resources/read","params":[1,2,3]}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -765,7 +765,7 @@ func TestMCPServer_错误码_InvalidParams_prompts_get(t *testing.T) {
 
 	// prompts/get params 为布尔值
 	body := `{"jsonrpc":"2.0","id":1,"method":"prompts/get","params":true}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 

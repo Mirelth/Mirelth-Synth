@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"net"
 	"net/http"
 	"os/exec"
 	"runtime"
@@ -443,6 +444,14 @@ func (s *MCPServer) SetPromptHandler(handler func(ctx context.Context, name stri
 
 // ServeHTTP 实现 http.Handler，处理 MCP JSON-RPC 请求
 func (s *MCPServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// 安全默认：未配置 APIKey 时只接受 loopback 请求。此前默认无认证，
+	// 直接挂到 0.0.0.0 即把 tools/call 暴露给任意网络客户端。
+	// 注意：RemoteAddr 在同机反向代理后一律显示为 127.0.0.1，代理部署
+	// 必须配置 APIKey，不能依赖 loopback 判定。
+	if s.config.APIKey == "" && !isLoopbackRemoteAddr(r.RemoteAddr) {
+		writeMCPError(w, 0, -32001, "unauthorized: remote access requires APIKey")
+		return
+	}
 	if r.Method != "POST" {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -747,4 +756,17 @@ func bearerAuthorized(authHeader, apiKey string) bool {
 	}
 	token := authHeader[len(prefix):]
 	return subtle.ConstantTimeCompare([]byte(token), []byte(apiKey)) == 1
+}
+
+// isLoopbackRemoteAddr 判断 HTTP 请求来源是否为本机。
+func isLoopbackRemoteAddr(remoteAddr string) bool {
+	host, _, err := net.SplitHostPort(remoteAddr)
+	if err != nil {
+		return remoteAddr == ""
+	}
+	if strings.EqualFold(host, "localhost") {
+		return true
+	}
+	ip := net.ParseIP(host)
+	return ip != nil && ip.IsLoopback()
 }

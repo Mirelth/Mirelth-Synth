@@ -118,6 +118,32 @@ func TestCSVTool_Write(t *testing.T) {
 	t.Logf("✅ CSV Write: %s", result.Content)
 }
 
+func TestCSVTool_Write_DeterministicHeadersAndFormulaSanitized(t *testing.T) {
+	csvTool := NewCSVTool()
+	outputPath := filepath.Join(t.TempDir(), "output.csv")
+	data := []map[string]any{{"z": "=SUM(1,1)", "a": "plain"}}
+	input := map[string]any{"action": "write", "file_path": outputPath, "data": data}
+	inputBytes, _ := json.Marshal(input)
+
+	if _, err := csvTool.Execute(context.Background(), inputBytes); err != nil {
+		t.Fatalf("Execute error: %v", err)
+	}
+	content, err := os.ReadFile(outputPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	lines := strings.Split(strings.TrimSpace(string(content)), "\n")
+	if len(lines) < 2 {
+		t.Fatalf("unexpected CSV output: %q", content)
+	}
+	if lines[0] != "a,z" {
+		t.Fatalf("header order not deterministic: %q", lines[0])
+	}
+	if !strings.Contains(lines[1], "'=SUM(1,1)") {
+		t.Fatalf("formula cell was not sanitized: %q", lines[1])
+	}
+}
+
 func TestJSONTool_Parse(t *testing.T) {
 	jsonTool := NewJSONTool()
 

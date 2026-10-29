@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log/slog"
 	"regexp"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -128,11 +129,7 @@ func (e *Executor) Execute(ctx context.Context, tc *FunctionCall) (*Result, erro
 	// （2026-09-28 P0 修复：提取改为完整递归遍历 + fail-closed——
 	//  此前只认 6 个顶层 key，嵌套/MCP 风格参数会静默跳过检查）。
 	if e.scopePolicy != nil {
-		first, second := extractPathsFromArgs(tc.Args)
-		for _, resource := range []string{first, second} {
-			if resource == "" {
-				continue
-			}
+		for _, resource := range extractAllPathsFromArgs(tc.Args) {
 			if !e.scopePolicy.Allow(e.scopeAgent, resource) {
 				deniedErr := NewScopeDeniedError(e.scopeAgent, resource)
 				return NewErrorResult(deniedErr.Error()), deniedErr
@@ -326,33 +323,55 @@ func (e *Executor) ExecuteBatch(ctx context.Context, calls []*FunctionCall) ([]*
 //  2. 路径 key 集合扩充（含 camelCase 与常见简写）；
 //  3. 顺带返回第二个发现路径（copy src→dst 类多路径参数的第二个目标）。
 func extractPathFromArgs(args string) string {
-	first, _ := extractPathsFromArgs(args)
-	return first
+	paths := extractAllPathsFromArgs(args)
+	if len(paths) == 0 {
+		return ""
+	}
+	return paths[0]
 }
 
-// extractPathsFromArgs 递归提取参数中的全部路径字段（按发现顺序，最多返回前两个：
-// 第一个用于 ScopePolicy 校验，第二个覆盖 copy/move 的 dst 场景）。
+// extractPathsFromArgs 兼容旧调用方：返回前两个路径。
+// 新代码应使用 extractAllPathsFromArgs，确保第三个及后续路径也过 ScopePolicy。
 func extractPathsFromArgs(args string) (first, second string) {
+	paths := extractAllPathsFromArgs(args)
+	if len(paths) > 0 {
+		first = paths[0]
+	}
+	if len(paths) > 1 {
+		second = paths[1]
+	}
+	return first, second
+}
+
+// extractAllPathsFromArgs 递归提取参数中的全部路径字段。
+// 修复（2026-10-26 P1）：旧实现最多只返回两个路径，参数含 ≥3 个路径 key 时
+// 第三个起完全逃过 ScopePolicy；同时 map 遍历顺序不确定，哪两个被检查也不稳定。
+// 现在按 key 排序后深度优先遍历，去重并返回全部路径，executor 逐一校验。
+func extractAllPathsFromArgs(args string) []string {
 	if args == "" {
-		return "", ""
+		return nil
 	}
 	var root any
 	if err := json.Unmarshal([]byte(args), &root); err != nil {
-		return "", ""
+		return nil
 	}
+	seen := make(map[string]struct{})
+	var paths []string
 	var walk func(v any)
 	walk = func(v any) {
-		if first != "" && second != "" {
-			return
-		}
 		switch t := v.(type) {
 		case map[string]any:
-			for k, val := range t {
+			keys := make([]string, 0, len(t))
+			for k := range t {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			for _, k := range keys {
+				val := t[k]
 				if s, ok := val.(string); ok && s != "" && isPathKey(k) {
-					if first == "" {
-						first = s
-					} else if second == "" {
-						second = s
+					if _, dup := seen[s]; !dup {
+						seen[s] = struct{}{}
+						paths = append(paths, s)
 					}
 					continue
 				}
@@ -365,7 +384,7 @@ func extractPathsFromArgs(args string) (first, second string) {
 		}
 	}
 	walk(root)
-	return first, second
+	return paths
 }
 
 // isPathKey 判断 key 是否为常见的路径参数名（含 camelCase 与常见简写，

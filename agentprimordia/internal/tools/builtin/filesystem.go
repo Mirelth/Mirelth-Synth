@@ -129,9 +129,16 @@ func (f *FileSystem) acquireLock(path string) (release func()) {
 	return func() { f.fileLock.Release(path) }
 }
 
-// openAndValidate 安全地打开文件并在打开后验证符号链接不会逃逸到根目录外
+// openAndValidate 安全地打开文件并在打开后验证符号链接不会逃逸到根目录外。
+//
+// P2 安全修复（2026-10-26）：原实现把 O_TRUNC 直接传给 os.OpenFile，
+// 在验证符号链接之前就已经截断了目标文件——若路径是并发替换的、指向
+// jail 外的符号链接，会造成“先破坏、后拒绝”。现在先以不带 O_TRUNC 的
+// 方式打开，验证通过后再显式 Truncate。
 func (f *FileSystem) openAndValidate(path string, flag int, perm os.FileMode) (*os.File, error) {
-	file, err := os.OpenFile(path, flag, perm)
+	truncate := flag&os.O_TRUNC != 0
+	openFlag := flag &^ os.O_TRUNC
+	file, err := os.OpenFile(path, openFlag, perm)
 	if err != nil {
 		return nil, err
 	}
@@ -160,6 +167,17 @@ func (f *FileSystem) openAndValidate(path string, flag int, perm os.FileMode) (*
 			os.Remove(path)
 		}
 		return nil, fmt.Errorf("access denied: cannot resolve path symlinks: %v", evalErr)
+	}
+
+	if truncate {
+		if err := file.Truncate(0); err != nil {
+			file.Close()
+			return nil, err
+		}
+		if _, err := file.Seek(0, io.SeekStart); err != nil {
+			file.Close()
+			return nil, err
+		}
 	}
 
 	return file, nil
@@ -321,7 +339,12 @@ func (f *FileSystem) readFile(_ context.Context, path string, params map[string]
 	}
 	defer file.Close()
 
-	data, err := io.ReadAll(io.LimitReader(file, f.maxReadSize+1))
+	var data []byte
+	if f.maxReadSize > 0 {
+		data, err = io.ReadAll(io.LimitReader(file, f.maxReadSize+1))
+	} else {
+		data, err = io.ReadAll(file)
+	}
 	if err != nil {
 		return tools.NewErrorResult(fmt.Sprintf("read error: %v", err)), nil
 	}
@@ -383,11 +406,17 @@ func (f *FileSystem) writeFile(_ context.Context, path string, params map[string
 		return tools.NewErrorResult(fmt.Sprintf("cannot create directory: %v", err)), nil
 	}
 
-	file, err := f.openAndValidate(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	// 2026-10-26 P2 修复：不要用 O_TRUNC 打开后再校验 symlink。
+	// 旧顺序会在发现链接指向窗外之前就截断目标文件（TOCTOU 数据破坏）。
+	// 先以 O_CREATE 打开（不截断），校验通过后再显式 Truncate。
+	file, err := f.openAndValidate(path, os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return tools.NewErrorResult(fmt.Sprintf("open error: %v", err)), nil
 	}
 	defer file.Close()
+	if err := file.Truncate(0); err != nil {
+		return tools.NewErrorResult(fmt.Sprintf("truncate error: %v", err)), nil
+	}
 
 	if _, err := file.WriteString(content.Value); err != nil {
 		return tools.NewErrorResult(fmt.Sprintf("write error: %v", err)), nil
@@ -405,7 +434,19 @@ func (f *FileSystem) editFile(_ context.Context, path string, params map[string]
 	}
 	defer file.Close()
 
-	data, err := io.ReadAll(file)
+	info, statErr := file.Stat()
+	if statErr != nil {
+		return tools.NewErrorResult(fmt.Sprintf("stat error: %v", statErr)), nil
+	}
+	if f.maxReadSize > 0 && info.Size() > f.maxReadSize {
+		return tools.NewErrorResult(fmt.Sprintf("file too large for edit: %d bytes (max %d bytes)", info.Size(), f.maxReadSize)), nil
+	}
+	var data []byte
+	if f.maxReadSize > 0 {
+		data, err = io.ReadAll(io.LimitReader(file, f.maxReadSize))
+	} else {
+		data, err = io.ReadAll(file)
+	}
 	if err != nil {
 		return tools.NewErrorResult(fmt.Sprintf("read error: %v", err)), nil
 	}
@@ -467,7 +508,13 @@ func (f *FileSystem) listDir(path string) (*tools.Result, error) {
 
 	var result []entryInfo
 	for _, e := range entries {
-		info, _ := e.Info()
+		info, infoErr := e.Info()
+		if infoErr != nil {
+			// 并发删除/权限错误时 Info 可能失败；不能忽略错误后解引用 nil。
+			// 目录列表本身仍可返回，缺失大小的条目按 0 处理并保留名称。
+			result = append(result, entryInfo{Name: e.Name(), IsDir: e.IsDir()})
+			continue
+		}
 		result = append(result, entryInfo{
 			Name:  e.Name(),
 			IsDir: e.IsDir(),
@@ -665,6 +712,11 @@ func (f *FileSystem) searchDirectory(_ context.Context, dirPath string, params m
 			return nil
 		}
 		if d.IsDir() {
+			return nil
+		}
+		if d.Type()&os.ModeSymlink != 0 {
+			// 不跟随文件符号链接：rootDir 内的链接可指向 /etc/passwd 等
+			// 窗外目标，逐文件直读会绕过 openAndValidate 的符号链接复核。
 			return nil
 		}
 

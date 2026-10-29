@@ -543,7 +543,7 @@ func TestMCPServer_Initialize(t *testing.T) {
 	server := NewMCPServer(MCPServerConfig{Name: "test-server", Version: "1.0.0"}, reg)
 
 	body := `{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test-client","version":"1.0.0"}}}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -580,7 +580,7 @@ func TestMCPServer_ToolsList(t *testing.T) {
 	server := NewMCPServer(MCPServerConfig{Name: "test-server", Version: "1.0.0"}, reg)
 
 	body := `{"jsonrpc":"2.0","id":2,"method":"tools/list"}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -609,7 +609,7 @@ func TestMCPServer_ToolsCall(t *testing.T) {
 	server := NewMCPServer(MCPServerConfig{Name: "test-server", Version: "1.0.0"}, reg)
 
 	body := `{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"echo","arguments":{"msg":"hello"}}}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -627,7 +627,7 @@ func TestMCPServer_ToolsCall_NotFound(t *testing.T) {
 	server := NewMCPServer(MCPServerConfig{Name: "test-server", Version: "1.0.0"}, reg)
 
 	body := `{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"nonexistent","arguments":{}}}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -651,7 +651,7 @@ func TestMCPServer_ResourcesList(t *testing.T) {
 	})
 
 	body := `{"jsonrpc":"2.0","id":5,"method":"resources/list"}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -685,7 +685,7 @@ func TestMCPServer_ResourcesRead(t *testing.T) {
 	})
 
 	body := `{"jsonrpc":"2.0","id":6,"method":"resources/read","params":{"uri":"file:///data/test.txt"}}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -715,7 +715,7 @@ func TestMCPServer_ResourcesRead_NoHandler(t *testing.T) {
 	server := NewMCPServer(MCPServerConfig{Name: "test-server", Version: "1.0.0"}, reg)
 
 	body := `{"jsonrpc":"2.0","id":7,"method":"resources/read","params":{"uri":"file:///test"}}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -740,7 +740,7 @@ func TestMCPServer_PromptsList(t *testing.T) {
 	})
 
 	body := `{"jsonrpc":"2.0","id":8,"method":"prompts/list"}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -779,7 +779,7 @@ func TestMCPServer_PromptsGet(t *testing.T) {
 	})
 
 	body := `{"jsonrpc":"2.0","id":9,"method":"prompts/get","params":{"name":"greet","arguments":{"name":"World"}}}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -809,7 +809,7 @@ func TestMCPServer_Ping(t *testing.T) {
 	server := NewMCPServer(MCPServerConfig{Name: "test-server", Version: "1.0.0"}, reg)
 
 	body := `{"jsonrpc":"2.0","id":10,"method":"ping"}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -827,7 +827,7 @@ func TestMCPServer_MethodNotFound(t *testing.T) {
 	server := NewMCPServer(MCPServerConfig{Name: "test-server", Version: "1.0.0"}, reg)
 
 	body := `{"jsonrpc":"2.0","id":11,"method":"unknown/method"}`
-	req := httptest.NewRequest("POST", "/", strings.NewReader(body))
+	req := newLoopbackRequest("POST", "/", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -847,7 +847,7 @@ func TestMCPServer_InvalidJSON(t *testing.T) {
 	reg := NewRegistry()
 	server := NewMCPServer(MCPServerConfig{Name: "test-server", Version: "1.0.0"}, reg)
 
-	req := httptest.NewRequest("POST", "/", strings.NewReader("not json"))
+	req := newLoopbackRequest("POST", "/", strings.NewReader("not json"))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 
@@ -864,7 +864,7 @@ func TestMCPServer_GetMethod(t *testing.T) {
 	reg := NewRegistry()
 	server := NewMCPServer(MCPServerConfig{Name: "test-server", Version: "1.0.0"}, reg)
 
-	req := httptest.NewRequest("GET", "/", nil)
+	req := newLoopbackRequest("GET", "/", nil)
 	rec := httptest.NewRecorder()
 
 	server.ServeHTTP(rec, req)

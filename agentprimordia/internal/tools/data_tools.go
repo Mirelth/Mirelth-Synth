@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -417,7 +418,26 @@ func (t *CSVTool) aggregateCSV(params map[string]any) (*Result, error) {
 	return &Result{Content: string(outputJSON)}, nil
 }
 
-func (t *CSVTool) writeCSV(params map[string]any) (*Result, error) {
+// sanitizeCSVRecord 缓解 CSV 公式注入：以 = + - @ 或制表/回车开头的单元格
+// 在电子表格中可能被解释为公式。写入时加单引号前缀，读取时保持原值。
+func sanitizeCSVRecord(record []string) []string {
+	out := make([]string, len(record))
+	for i, cell := range record {
+		if cell == "" {
+			out[i] = cell
+			continue
+		}
+		switch cell[0] {
+		case '=', '+', '-', '@', '\t', '\r':
+			out[i] = "'" + cell
+		default:
+			out[i] = cell
+		}
+	}
+	return out
+}
+
+func (t *CSVTool) writeCSV(params map[string]any) (result *Result, err error) {
 	filePath, ok := params["file_path"].(string)
 	if !ok {
 		return nil, fmt.Errorf("parameter 'file_path' must be a string")
@@ -441,30 +461,51 @@ func (t *CSVTool) writeCSV(params map[string]any) (*Result, error) {
 	if err != nil {
 		return nil, fmt.Errorf("create file error: %w", err)
 	}
-	defer func() { _ = file.Close() }()
+	// 关闭错误也属于写入失败：用命名返回值捕获，避免“写入成功但落盘失败”。
+	// 只在没有其他错误时覆盖返回值，防止掩盖更早的根因。
+	defer func() {
+		if cerr := file.Close(); cerr != nil && err == nil {
+			result, err = nil, fmt.Errorf("close CSV file: %w", cerr)
+		}
+	}()
 
 	writer := csv.NewWriter(file)
-	defer writer.Flush()
 
 	if len(data) == 0 {
+		writer.Flush()
+		if err := writer.Error(); err != nil {
+			return nil, fmt.Errorf("flush CSV: %w", err)
+		}
 		return &Result{
 			Content:  fmt.Sprintf("CSV written to %s with 0 rows", filePath),
 			Metadata: map[string]any{"file": filePath, "rows": 0},
 		}, nil
 	}
 
+	// 固定表头顺序：map 遍历顺序随机，旧实现会让同一数据每次写出不同的列序。
 	headers := make([]string, 0, len(data[0]))
 	for key := range data[0] {
 		headers = append(headers, key)
 	}
-	_ = writer.Write(headers)
+	sort.Strings(headers)
+
+	if err := writer.Write(sanitizeCSVRecord(headers)); err != nil {
+		return nil, fmt.Errorf("write CSV header: %w", err)
+	}
 
 	for _, row := range data {
 		record := make([]string, len(headers))
 		for i, header := range headers {
 			record[i] = fmt.Sprintf("%v", row[header])
 		}
-		_ = writer.Write(record)
+		if err := writer.Write(sanitizeCSVRecord(record)); err != nil {
+			return nil, fmt.Errorf("write CSV row: %w", err)
+		}
+	}
+
+	writer.Flush()
+	if err := writer.Error(); err != nil {
+		return nil, fmt.Errorf("flush CSV: %w", err)
 	}
 
 	return &Result{

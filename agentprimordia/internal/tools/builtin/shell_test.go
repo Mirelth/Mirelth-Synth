@@ -103,6 +103,9 @@ func TestExecuteSimpleCommand_Pwd(t *testing.T) {
 }
 
 func TestExecuteWithTimeout(t *testing.T) {
+	if _, err := exec.LookPath("ping"); err != nil {
+		t.Skip("ping not installed; timeout test requires a long-running external command")
+	}
 	sh := NewShell().WithWhitelist([]string{"echo", "ping"}).WithTimeout(1 * time.Second)
 	// ping 语法分平台：Windows 用 -n（发送次数），Unix/macOS 用 -c
 	// （旧实现固定 -n，在 macOS/Linux 上把 "10" 当主机名解析失败——可移植性 bug）
@@ -181,7 +184,7 @@ func TestStderrCapture(t *testing.T) {
 
 func TestWorkingDirectory(t *testing.T) {
 	tmpDir := t.TempDir()
-	sh := NewShell().WithWhitelist([]string{"go", "pwd"})
+	sh := NewShell().WithWhitelist([]string{"go", "pwd"}).WithAllowedWorkdirs([]string{tmpDir})
 	cmd := "go env GOROOT"
 	if runtime.GOOS != "windows" {
 		cmd = "pwd"
@@ -490,7 +493,7 @@ func TestExecute_GoRun(t *testing.T) {
 		[]byte("package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"hello-shell-go-run\")\n}\n"), 0o644); err != nil {
 		t.Fatalf("写测试文件失败: %v", err)
 	}
-	sh := NewShell().WithWhitelist([]string{"go"})
+	sh := NewShell().WithWhitelist([]string{"go"}).WithAllowedWorkdirs([]string{tmpDir})
 	args, _ := json.Marshal(map[string]any{
 		"action":  "execute",
 		"command": "go run hello.go",

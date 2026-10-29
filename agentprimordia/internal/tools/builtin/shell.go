@@ -9,6 +9,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/logger"
@@ -19,17 +20,109 @@ import (
 // 防 int(v) 大值溢出 time.Duration（P2 修复）。
 const maxTimeoutSec = 3600
 
+// canonicalJailPath 把路径转换为用于 jail 比较的规范形式：
+//   - 相对路径先转绝对路径；
+//   - 对存在的路径解析符号链接；
+//   - 对不存在的路径，解析最长的已存在父目录，再拼回尚未创建的后缀。
+//
+// 只做 filepath.Clean 无法防住“workdir 本身是符号链接”的逃逸；这里必须
+// 解析链接后再比较，否则 cmd.Dir 指向窗外时所有相对 token 都会被误判为合法。
+func canonicalJailPath(p string) string {
+	if p == "" {
+		return ""
+	}
+	abs, err := filepath.Abs(p)
+	if err != nil {
+		abs = p
+	}
+	abs = filepath.Clean(abs)
+
+	if real, err := filepath.EvalSymlinks(abs); err == nil {
+		return filepath.Clean(real)
+	}
+
+	// 路径可能尚不存在（例如写入新文件）：逐级向上找到第一个存在的父目录，
+	// 解析其符号链接后，把剩余后缀拼回去。
+	rest := ""
+	cur := abs
+	for {
+		parent := filepath.Dir(cur)
+		if parent == cur {
+			return abs
+		}
+		rest = filepath.Join(filepath.Base(cur), rest)
+		cur = parent
+		if real, err := filepath.EvalSymlinks(cur); err == nil {
+			return filepath.Clean(filepath.Join(real, rest))
+		}
+	}
+}
+
 // isWithinAllowedWorkdirs 判断 path 是否落在任一允许的工作目录内
-// （Clean + 分隔符边界检查，防 "/home/app-secret" 绕过 "/home/app"）。
+// （Clean + 符号链接解析 + 分隔符边界检查，防 "/home/app-secret" 绕过 "/home/app"）。
 func isWithinAllowedWorkdirs(p string, allowed []string) bool {
-	abs := filepath.Clean(p)
+	abs := canonicalJailPath(p)
 	for _, dir := range allowed {
-		absDir := filepath.Clean(dir)
+		absDir := canonicalJailPath(dir)
 		if abs == absDir || strings.HasPrefix(abs, absDir+string(filepath.Separator)) {
 			return true
 		}
 	}
 	return false
+}
+
+// pathValueNeedsJail 判断一个选项值是否可能被目标命令解释为路径。
+// 相对且不含 ".." 的值会以 workdir 为基准，仍在 jail 内，无需额外拦截；
+// 绝对路径、显式 ./ ../、以及含 .. 段的值必须走 jail 校验。
+func pathValueNeedsJail(v string) bool {
+	if v == "" {
+		return false
+	}
+	if filepath.IsAbs(v) {
+		return true
+	}
+	if v == "." || v == ".." || strings.HasPrefix(v, "."+string(filepath.Separator)) ||
+		strings.HasPrefix(v, ".."+string(filepath.Separator)) {
+		return true
+	}
+	for _, part := range strings.Split(v, string(filepath.Separator)) {
+		if part == ".." {
+			return true
+		}
+	}
+	return false
+}
+
+// validateOptionPathValue 拦截“绝对路径藏在选项值里”的逃逸：
+//
+//	cp a --target-directory=/etc/cron.d
+//	mv a --target-directory=/root/.ssh
+//	sort -o/tmp/out
+//
+// 目标命令会把 = 右侧或短选项紧跟的值当成路径，而旧实现只检查 token 是否
+// 以 '/' 开头，导致 jail 被绕过。返回空字符串表示通过，否则返回被拒的值。
+func validateOptionPathValue(tok, workdir string, allowed []string) string {
+	if len(allowed) == 0 || !strings.HasPrefix(tok, "-") {
+		return ""
+	}
+	// 长选项 --name=value
+	if strings.HasPrefix(tok, "--") {
+		if i := strings.IndexByte(tok, '='); i >= 0 {
+			val := tok[i+1:]
+			if pathValueNeedsJail(val) && !resolveWithinWorkdir(val, workdir, allowed) {
+				return val
+			}
+		}
+		return ""
+	}
+	// 短选项 -oVALUE / -tVALUE；仅当 value 看起来像路径时校验。
+	if len(tok) > 2 {
+		val := tok[2:]
+		if pathValueNeedsJail(val) && !resolveWithinWorkdir(val, workdir, allowed) {
+			return val
+		}
+	}
+	return ""
 }
 
 // resolveWithinWorkdir 判定 argv 中的路径 token 是否落在允许的工作目录内。
@@ -131,12 +224,28 @@ type SandboxChecker interface {
 
 const defaultMaxOutputSize = 50000
 
+// NewShell 创建默认白名单 Shell。
+//
+// 安全默认：路径禁锢到进程当前工作目录（allowedWorkdirs=[cwd]），避免
+// `ap.NewShell()`（文档/cookbook 常见用法）默认可以读写宿主全盘。需要访问
+// 更多目录时显式调用 WithAllowedWorkdirs；完全关闭 jail 需显式调用
+// WithAllowedWorkdirs(nil)（不推荐，仅用于受控环境）。DefaultToolkit 会
+// 按 RootDir 自动设置允许目录。
 func NewShell() *Shell {
+	// 安全默认：直接构造 Shell 时也把工作目录限制在当前目录，避免
+	// `ap.NewShell()`（文档/cookbook 常见用法）默认可以读写宿主全盘。
+	// 需要更大范围时显式 WithAllowedWorkdirs；需要完全关闭 jail 时
+	// 使用 WithAllowedWorkdirs(nil) 的旧语义（不推荐）。
+	var allowed []string
+	if cwd, err := os.Getwd(); err == nil {
+		allowed = []string{cwd}
+	}
 	return &Shell{
-		defaultTimeout: 30 * time.Second,
-		whitelistMode:  true,
-		whitelist:      defaultWhitelist,
-		maxOutputSize:  defaultMaxOutputSize,
+		defaultTimeout:  30 * time.Second,
+		whitelistMode:   true,
+		whitelist:       defaultWhitelist,
+		maxOutputSize:   defaultMaxOutputSize,
+		allowedWorkdirs: allowed,
 	}
 }
 
@@ -172,6 +281,12 @@ func (s *Shell) WithBlacklist() *Shell {
 	s.whitelistMode = false
 	s.whitelist = nil
 	warnBlacklistRisk()
+	return s
+}
+
+// WithMaxOutputSize 设置 stdout/stderr 各自的最大采集字节数（<=0 表示不限制）。
+func (s *Shell) WithMaxOutputSize(n int) *Shell {
+	s.maxOutputSize = n
 	return s
 }
 
@@ -320,8 +435,10 @@ func (s *Shell) Execute(ctx context.Context, args json.RawMessage) (*tools.Resul
 		if !isWithinAllowedWorkdirs(checkDir, s.allowedWorkdirs) {
 			return tools.NewErrorResult(fmt.Sprintf("workdir '%s' is not in the allowed directories", checkDir)), nil
 		}
-		// 后续相对 token 的解析与 cmd.Dir 都基于已归一的有效 workdir。
-		effectiveWorkdir = checkDir
+		// 后续相对 token 的解析与 cmd.Dir 都基于已解析符号链接的有效 workdir。
+		// 若仍用词法路径，workdir 是指向窗外的符号链接时 cmd.Dir 会跟随链接，
+		// 使所有相对 token 的 jail 判定失真。
+		effectiveWorkdir = canonicalJailPath(checkDir)
 	}
 
 	// Sandbox 路径验证（workdir）
@@ -404,9 +521,30 @@ func (s *Shell) Execute(ctx context.Context, args json.RawMessage) (*tools.Resul
 	// 路径零校验，filesystem 工具的 rootDir jail 可被一句 cat 废弃；
 	// 2026-09-28 补齐时又只覆盖 looksLikeAbsolutePath 为真的 token，
 	// 相对穿越路径（../../etc/passwd）被整条跳过（攻击链 5b）。
+	//
+	// 2026-10-26 P0 修复：仅按 token 是否以 '/' 开头判断会被选项值绕过，
+	// 例如 `cp a --target-directory=/etc/cron.d`。这里额外解析 --opt=value
+	// 与 -oVALUE，对其中的路径值同样执行 jail 校验。
+	if len(s.allowedWorkdirs) > 0 && strings.ContainsAny(name, `/\`) {
+		// argv[0] 含路径分隔符时，白名单 basename 命中不代表路径合法。
+		// 例如 command="/tmp/x/ls" 会执行窗外的同名程序。
+		if !resolveWithinWorkdir(name, effectiveWorkdir, s.allowedWorkdirs) {
+			return tools.NewErrorResult(fmt.Sprintf("command path '%s' is outside the allowed directories", name)), nil
+		}
+	}
+	if s.sandbox != nil && strings.ContainsAny(name, `/\`) {
+		if err := s.sandbox.ValidatePath(s.sandboxAgentID, name, 1); err != nil {
+			return tools.NewErrorResult(fmt.Sprintf("sandbox denied command path access: %v", err)), nil
+		}
+	}
 	for _, tok := range cmdArgs {
-		if len(s.allowedWorkdirs) > 0 && !resolveWithinWorkdir(tok, effectiveWorkdir, s.allowedWorkdirs) {
-			return tools.NewErrorResult(fmt.Sprintf("path '%s' is outside the allowed directories", tok)), nil
+		if len(s.allowedWorkdirs) > 0 {
+			if !resolveWithinWorkdir(tok, effectiveWorkdir, s.allowedWorkdirs) {
+				return tools.NewErrorResult(fmt.Sprintf("path '%s' is outside the allowed directories", tok)), nil
+			}
+			if badValue := validateOptionPathValue(tok, effectiveWorkdir, s.allowedWorkdirs); badValue != "" {
+				return tools.NewErrorResult(fmt.Sprintf("path '%s' in option '%s' is outside the allowed directories", badValue, tok)), nil
+			}
 		}
 		if s.sandbox != nil {
 			if err := s.sandbox.ValidatePath(s.sandboxAgentID, tok, 1); err != nil {
@@ -444,7 +582,15 @@ func (s *Shell) Execute(ctx context.Context, args json.RawMessage) (*tools.Resul
 		cmd.Dir = effectiveWorkdir
 	}
 
-	output, err := cmd.CombinedOutput()
+	// 有界输出：CombinedOutput 会先把全部输出读入内存再截断，`cat` 一个大
+	// 文件即可在超时前把宿主内存打满。这里用有界 writer 边读边截断，
+	// stdout/stderr 分开采集，超限后仍继续消费管道避免子进程阻塞。
+	stdoutBuf := newCappedBuffer(s.maxOutputSize)
+	stderrBuf := newCappedBuffer(s.maxOutputSize)
+	cmd.Stdout = stdoutBuf
+	cmd.Stderr = stderrBuf
+
+	err := cmd.Run()
 	exitCode := 0
 
 	if err != nil {
@@ -453,7 +599,7 @@ func (s *Shell) Execute(ctx context.Context, args json.RawMessage) (*tools.Resul
 			exitCode = exitErr.ExitCode()
 		}
 		if execCtx.Err() == context.DeadlineExceeded || strings.Contains(err.Error(), "signal: killed") {
-			outputStr := string(output)
+			outputStr := strings.TrimSpace(stdoutBuf.String() + stderrBuf.String())
 			if outputStr == "" {
 				outputStr = "(no output before timeout)"
 			}
@@ -461,13 +607,13 @@ func (s *Shell) Execute(ctx context.Context, args json.RawMessage) (*tools.Resul
 		}
 	}
 
-	stdout := string(output)
-	stderr := ""
-
-	stdout, stderr = splitOutput(stdout)
-
-	if s.maxOutputSize > 0 && len(stdout) > s.maxOutputSize {
-		stdout = stdout[:s.maxOutputSize] + "\n... [输出已截断，总长度超过限制]"
+	stdout := stdoutBuf.String()
+	stderr := stderrBuf.String()
+	if stdoutBuf.Truncated() {
+		stdout += "\n... [输出已截断，总长度超过限制]"
+	}
+	if stderrBuf.Truncated() {
+		stderr += "\n... [输出已截断，总长度超过限制]"
 	}
 
 	result := map[string]any{
@@ -482,6 +628,55 @@ func (s *Shell) Execute(ctx context.Context, args json.RawMessage) (*tools.Resul
 		return tools.NewErrorResult(string(resultJSON)), fmt.Errorf("exit code %d", exitCode)
 	}
 	return tools.NewResult(string(resultJSON)), nil
+}
+
+// cappedBuffer 是供 os/exec 使用的有界输出缓冲。
+// stdout/stderr 可能由不同 goroutine 并发写入，必须加锁。
+type cappedBuffer struct {
+	mu        sync.Mutex
+	buf       strings.Builder
+	limit     int
+	total     int
+	truncated bool
+}
+
+func newCappedBuffer(limit int) *cappedBuffer {
+	return &cappedBuffer{limit: limit}
+}
+
+func (b *cappedBuffer) Write(p []byte) (int, error) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+
+	b.total += len(p)
+	if b.limit <= 0 {
+		_, _ = b.buf.Write(p)
+		return len(p), nil
+	}
+	remaining := b.limit - b.buf.Len()
+	if remaining > 0 {
+		if len(p) <= remaining {
+			_, _ = b.buf.Write(p)
+		} else {
+			_, _ = b.buf.Write(p[:remaining])
+			b.truncated = true
+		}
+	} else {
+		b.truncated = true
+	}
+	return len(p), nil
+}
+
+func (b *cappedBuffer) String() string {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	return b.buf.String()
+}
+
+func (b *cappedBuffer) Truncated() bool {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	return b.truncated
 }
 
 // tokenizeCommand 将命令字符串拆分为 [name, args...]

@@ -34,6 +34,7 @@ func TestShell_Execute_ScopeAllowed(t *testing.T) {
 	shell := NewShell().WithBlacklist()
 
 	dir := t.TempDir()
+	shell = shell.WithAllowedWorkdirs([]string{dir})
 	policy := tools.NewFileScopePolicy()
 	policy.SetScope("agent-1", []string{dir})
 	shell.WithScopePolicy(policy, "agent-1")
@@ -54,9 +55,8 @@ func TestShell_Execute_ScopeAllowed(t *testing.T) {
 }
 
 func TestShell_Execute_NoScopePolicy(t *testing.T) {
-	shell := NewShell().WithBlacklist()
-
 	dir := t.TempDir()
+	shell := NewShell().WithBlacklist().WithAllowedWorkdirs([]string{dir})
 	args, _ := json.Marshal(map[string]string{
 		"action":  "execute",
 		"command": "go env GOROOT",

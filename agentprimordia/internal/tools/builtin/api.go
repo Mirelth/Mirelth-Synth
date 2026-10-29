@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/tools"
@@ -26,6 +27,20 @@ type API struct {
 	timeout      time.Duration
 	maxBodySize  int64
 	allowPrivate bool
+
+	transportMu sync.Mutex
+	transport   *http.Transport
+}
+
+const apiMaxRequestBody = 10 << 20 // 10MB
+
+func (a *API) secureTransport() *http.Transport {
+	a.transportMu.Lock()
+	defer a.transportMu.Unlock()
+	if a.transport == nil {
+		a.transport = a.newSecureTransport()
+	}
+	return a.transport
 }
 
 // NewAPI 创建新的 API tool实例
@@ -153,6 +168,9 @@ func (a *API) Execute(ctx context.Context, args json.RawMessage) (*tools.Result,
 			// 不是字符串，直接使用原始 JSON 作为 body
 			bodyBytes = raw
 		}
+		if len(bodyBytes) > apiMaxRequestBody {
+			return tools.NewErrorResult(fmt.Sprintf("request body too large: %d bytes (max %d)", len(bodyBytes), apiMaxRequestBody)), nil
+		}
 	}
 
 	// 创建带超时的上下文
@@ -201,7 +219,7 @@ func (a *API) Execute(ctx context.Context, args json.RawMessage) (*tools.Result,
 		},
 	}
 	if !a.allowPrivate {
-		client.Transport = a.newSecureTransport()
+		client.Transport = a.secureTransport()
 	}
 
 	resp, err := client.Do(req)
