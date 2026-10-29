@@ -311,7 +311,7 @@ func TestMigrateGoModModuleAndRequire(t *testing.T) {
 	dir := t.TempDir()
 	mod := `module example.com/app
 
-go 1.26.9
+go 1.26.10
 
 require (
 	example.com/org/v7 v7.1.0

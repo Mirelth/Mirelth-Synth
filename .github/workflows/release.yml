@@ -36,19 +36,19 @@ jobs:
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           # 精确 pin：浮动 '1.26' 无法保证拿到已修补补丁版。
-          # go1.26.9 修复了 govulncheck 报出的 11 个可达标准库漏洞
+          # go1.26.10 修复了 govulncheck 报出的 11 个可达标准库漏洞
           # （net/http Range 头 DoS、html/template ×2、net/textproto、crypto/tls、os 等）。
-          go-version: '1.26.9'
+          go-version: '1.26.10'
 
-      - name: Assert Go toolchain is patched (>= 1.26.9)
+      - name: Assert Go toolchain is patched (>= 1.26.10)
         run: |
           set -euo pipefail
           GOV=$(go env GOVERSION)
           echo "构建工具链: ${GOV}"
           case "${GOV}" in
-            go1.26.9|go1.26.1[0-9]|go1.2[7-9]*|go1.[3-9][0-9]*) ;;
+            go1.26.10|go1.26.1[0-9]|go1.2[7-9]*|go1.[3-9][0-9]*) ;;
             *)
-              echo "::error::工具链 ${GOV} 低于安全下限 go1.26.9（含可达标准库漏洞），拒绝构建"
+              echo "::error::工具链 ${GOV} 低于安全下限 go1.26.10（含可达标准库漏洞），拒绝构建"
               exit 1
               ;;
           esac
@@ -89,7 +89,7 @@ jobs:
 
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
 
       - name: Generate Go SBOM with syft
         uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
@@ -199,7 +199,7 @@ jobs:
 
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
 
       - name: Download dependencies
         working-directory: agentprimordia

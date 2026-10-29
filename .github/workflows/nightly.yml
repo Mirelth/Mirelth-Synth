@@ -15,7 +15,7 @@ jobs:
 
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
 
       - name: Download dependencies
         run: go mod download
@@ -38,7 +38,7 @@ jobs:
 
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
 
       - name: Run govulncheck
         run: |
@@ -72,7 +72,7 @@ jobs:
 
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
 
       - name: Check for outdated dependencies
         run: |
@@ -111,7 +111,7 @@ jobs:
 
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
 
       - name: Download dependencies
         working-directory: agentprimordia
@@ -160,7 +160,7 @@ jobs:
 
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
 
       - name: Download dependencies
         run: go mod download
@@ -200,7 +200,7 @@ jobs:
 
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
 
       - name: Download dependencies
         working-directory: agentprimordia
@@ -296,7 +296,7 @@ jobs:
 
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
@@ -366,7 +366,7 @@ jobs:
 
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
 
       # R4 冻结门：题面与台账 sha256 对账，任何漂移先红再说
       - name: 题面冻结门（eval-manifest verify）

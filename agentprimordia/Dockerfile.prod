@@ -10,10 +10,10 @@
 
 # ---- Stage 1: Go builder ----
 # 基础镜像 pin 到精确补丁版：浮动 golang:1.26 无法保证拿到已修补工具链。
-# go1.26.9 修复了 govulncheck 报出的 11 个可达标准库漏洞
+# go1.26.10 修复了 govulncheck 报出的 11 个可达标准库漏洞
 # （net/http Range 头 DoS、html/template ×2、net/textproto、crypto/tls、os 等）。
-# 待补：进一步 pin 到 digest（需 registry 访问）：golang:1.26.9-alpine@sha256:<digest>
-FROM golang:1.26.9-alpine AS go-builder
+# 待补：进一步 pin 到 digest（需 registry 访问）：golang:1.26.10-alpine@sha256:<digest>
+FROM golang:1.26.10-alpine AS go-builder
 
 # 版本号经 build-arg 注入（原实现用 `git describe`，但 .dockerignore 排除了 .git，
 # 容器内必然失败并回退为 "dev" —— 导致镜像内 ap-admin 版本号恒为 dev）

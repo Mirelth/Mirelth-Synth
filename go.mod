@@ -1,6 +1,6 @@
 module github.com/Gleamseekers/AgentPrimordia/v7
 
-go 1.26.9
+go 1.26.10
 
 require (
 	github.com/redis/go-redis/v9 v9.21.0

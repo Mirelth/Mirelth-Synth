@@ -42,7 +42,17 @@ echo "Deprecated: $total_deprecated, Removed in: $total_removed"
 # v4.0-1：pkg/ 公共 API 不允许"已标记 Removed"却仍然导出的符号。
 # 简单约定：若某文件同时含 Deprecated 与 Removed in，且该文件位于 pkg/，
 # 则要求 Removed 版本必须 >= 当前主版本（v4），否则视为超期残留。
-CURRENT_MAJOR=4
+ROOT_DIR=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+VERSION_FILE="$ROOT_DIR/agentprimordia/VERSION"
+if [ -f "$VERSION_FILE" ]; then
+  CURRENT_MAJOR=$(cut -d. -f1 "$VERSION_FILE" | tr -d 'v[:space:]')
+else
+  CURRENT_MAJOR=7
+fi
+if [ -z "$CURRENT_MAJOR" ]; then
+  echo "ERROR: 无法从 $VERSION_FILE 解析当前主版本"
+  exit 1
+fi
 pkg_files=$(echo "$files" | grep -E '(^|/)pkg/' || true)
 if [ -n "$pkg_files" ]; then
   for f in $pkg_files; do

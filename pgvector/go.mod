@@ -1,6 +1,6 @@
 module github.com/Gleamseekers/AgentPrimordia/pgvector
 
-go 1.26.9
+go 1.26.10
 
 require github.com/jackc/pgx/v5 v5.10.0
 
@@ -10,6 +10,6 @@ require (
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	golang.org/x/sync v0.21.0 // indirect
-	golang.org/x/text v0.39.0 // indirect
+	golang.org/x/sync v0.24.0 // indirect
+	golang.org/x/text v0.43.0 // indirect
 )

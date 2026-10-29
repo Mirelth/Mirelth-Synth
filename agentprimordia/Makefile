@@ -1,4 +1,4 @@
-.PHONY: build test test-race test-short test-integration test-distributed-backends lint lint-all lint-go lint-ts cover cover-html cover-check \
+.PHONY: build test test-race test-short test-integration test-distributed-backends hooks-install lint lint-all lint-go lint-ts cover cover-html cover-check \
         dual-line-recall \
         deprecation-check benchmark api-diff api-extract cover-trend clean run-hello run-multi run-production \
         docker-build docker-run docker-clean \
@@ -247,3 +247,9 @@ proto:
 		--go-grpc_out=. \
 		--go-grpc_opt=module=agentprimordia \
 		internal/agent/a2a/proto/a2a/v1/a2a.proto
+
+
+# 安装仓库自带的 git hooks（pre-commit）；不会修改源码。
+hooks-install:
+	git config core.hooksPath .githooks
+	@echo "已启用 .githooks/pre-commit"
