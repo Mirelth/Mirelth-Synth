@@ -29,7 +29,7 @@ main:
       stages:
         - name: 格式与静态检查
           script: |
-            set -euo pipefail
+            set -eu
             go version
             test "$(go env GOVERSION)" = "go1.26.10"
             result="$(gofmt -l agentprimordia gateway wasm pgvector || true)"
@@ -45,18 +45,18 @@ main:
             (cd agentprimordia/operator && GOWORK=off go vet ./...)
         - name: 主模块测试
           script: |
-            set -euo pipefail
+            set -eu
             go test -count=1 -timeout=15m ./agentprimordia/...
         - name: 子模块测试
           script: |
-            set -euo pipefail
+            set -eu
             for d in gateway pgvector wasm agentprimordia/operator; do
               echo "=== $d ==="
               (cd "$d" && GOWORK=off go test -count=1 -timeout=10m ./...)
             done
         - name: 核心包 Race 检测
           script: |
-            set -euo pipefail
+            set -eu
             CGO_ENABLED=1 go test -race -count=1 -timeout=15m \
               ./agentprimordia/internal/agent/... \
               ./agentprimordia/internal/llm/... \
@@ -65,7 +65,7 @@ main:
               ./agentprimordia/internal/tools/...
         - name: 覆盖率门槛
           script: |
-            set -euo pipefail
+            set -eu
             check() {
               pkg="$1"; min="$2"
               out="$(go test -cover "./$pkg")"
@@ -82,13 +82,13 @@ main:
             check agentprimordia/pkg 65
         - name: 交叉编译
           script: |
-            set -euo pipefail
+            set -eu
             CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build ./...
             CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build ./...
         - name: 版本与文档门
           image: node:24
           script: |
-            set -euo pipefail
+            set -eu
             if ! command -v git >/dev/null 2>&1; then
               apt-get update -qq && apt-get install -y -qq git
             fi
@@ -108,7 +108,7 @@ main:
       stages:
         - name: 安装依赖
           script: |
-            set -euo pipefail
+            set -eu
             if ! command -v git >/dev/null 2>&1; then
               apt-get update -qq && apt-get install -y -qq git
             fi
