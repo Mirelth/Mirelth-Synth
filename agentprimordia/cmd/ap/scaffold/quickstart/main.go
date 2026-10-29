@@ -99,5 +99,5 @@ func main() {
 	fmt.Println("   1. 尝试修改SystemPrompt，改变Agent的行为")
 	fmt.Println("   2. 添加多轮对话，体验上下文记忆")
 	fmt.Println("   3. 使用 --template with-tools 创建带工具的Agent")
-	fmt.Println("   4. 运行 ap profile 查看 agent 成长状态")
+	fmt.Println("   4. 运行 ap doctor 检查项目状态")
 }

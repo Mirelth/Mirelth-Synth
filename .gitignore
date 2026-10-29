@@ -204,3 +204,6 @@ agentprimordia/tool-intelligence
 
 # 本地构建产物临时目录（CI/本地验证用）
 tmpbin/
+
+# profiling 工件（保留 bench/results 下的基准归档）
+agentprimordia/*.prof

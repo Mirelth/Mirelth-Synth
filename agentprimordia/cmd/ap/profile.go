@@ -55,6 +55,11 @@ func showProfile() error {
 	fmt.Println()
 
 	// 总体表现
+	// 诚实提示：SelfModel 的生产写入/持久化尚未接线，空数据不代表任务未成功。
+	if snap.TotalTasks == 0 {
+		fmt.Println("提示: SelfModel 生产接线尚未完成（Experimental），0 任务通常表示未采集，而非真实失败。")
+		fmt.Println()
+	}
 	fmt.Printf("Overall: %d%% success (%d tasks)", int(snap.SuccessRate*100), snap.TotalTasks)
 	if snap.TotalTasks > 0 {
 		fmt.Printf(", avg %.1f turns", snap.AvgTurns)
@@ -240,6 +245,9 @@ func printProfileHelp() {
   show      显示 agent 成长报告 (默认)
   history   显示成长事件历史
   export    导出 SelfModel 原始数据 (JSON)
+
+说明: SelfModel 持久化/生产接线尚未完成（Experimental），
+      新建项目通常显示 0 任务；不要把它当作已交付能力。
 
 示例:
   ap profile

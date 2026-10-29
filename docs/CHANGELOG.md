@@ -8,6 +8,14 @@
 > deliverables/gstack/版本路线-7.5.2到8.0-2026-10-10.md §八 有逐项 commit 索引）。
 > 版本号未 bump（仍 7.5.1）——发布时机与版本号由维护者按退出判据统一决定。
 
+### Changed — 行为变更（breaking，发布需通告）
+
+- **`builtin.NewShell()` 默认路径禁锢**：allowedWorkdirs 默认取进程当前目录（此前为空 = 不限制）。需要访问更多目录请显式 `WithAllowedWorkdirs`；完全关闭 jail 需显式 `WithAllowedWorkdirs(nil)`（不推荐）。`DefaultToolkit` 行为不变（仍按 RootDir 禁锢）。
+- **A2A Server 默认认证收紧**：JSON-RPC 与 gRPC Server 的默认认证从 `Noop` 改为 loopback-only；跨机访问必须显式 `WithAuth` / `WithGRPCAuth`。注意 loopback 判定基于 `RemoteAddr`/peer 地址，同机反向代理或共享主机的 Unix socket 会显示为本地，必须改用显式认证。
+- **MCP HTTP Server 默认 loopback**：未配置 APIKey 时 `Start` 拒绝非 loopback 监听地址，`ServeHTTP` 拒绝非 loopback 请求；跨机部署必须 `WithAPIKey`。
+- **流式背压超时语义**：消费者 5s 未读取时终止流，并尽力投递带 `Done` 的 error 帧；消费者完全停滞（缓冲仍满）时无法投递，调用方可能只拿到已收内容。UI 事件（`emitStream`）在消费者过慢时丢弃并告警，不影响最终内容。
+- **TS 依赖升级**：zod 3 → 4、vitest 1 → 5；覆盖率阈值按 vitest 5 / Node 24 实测重校准（lines 64 / functions 63 / branches 57 / statements 64）。
+
 ### Added — v7.6「第一印象」
 
 - **英文前门**：根 README.md 与 agentprimordia/README.md 英文化为默认落地页（中文全量移 README.zh-CN.md，双向导航）；docs/getting-started 三篇英译（five-minutes / installation / first-agent）；删必然失败的 `go get agentprimordia` 与写死 v7.3.0 的腐烂徽章（改动态 release 徽章）；「5 分钟体验」改为任意目录 `ap init` + Demo 模式（免 API key）；头条能力表 v3.3–v3.6 旧闻 → v7.x 实况；新增中英双语「What we deliberately do not claim」诚实节（世界模型 opt-in / EnhancedPlanner 反向显著 / agent 自写工具研究阻塞）
@@ -28,6 +36,16 @@
 - **英文文档最低集收尾**：docs/concepts/security-model.md（INV-0 三禁映射 A1–A8 + 验签门控，go 片段 go run 实证）+ framework-positioning.md（是什么/不是什么/竞品窄差异/何时不该用）
 - **Dependabot**（.github/dependabot.yml，github-actions weekly 分组更新）+ **ADOPTERS.md**（诚实空表 + 自报方式 + triage SLA）
 - **8.0 范围决定稿草案**（deliverables/gstack/8.0-范围决定稿-2026-10-12.md，待维护者逐项签署）：五组签署总表 + 七项 dry-run 实测前置条件 + 每项回退条件
+
+### Fixed — 2026-10-26 全面评估修复批次
+
+- **Shell jail**：拦截 `--target-directory=/abs`/`-o/abs` 选项值逃逸、argv[0] 路径逃逸、workdir 符号链接逃逸；stdout/stderr 改为有界采集（不再 `CombinedOutput` 全量入内存）。
+- **工具层**：ScopePolicy 校验全部路径（不再只取前两个）；CSV 写入固定表头顺序、检查写/刷/关错误并消敏公式；filesystem 修复 O_TRUNC 前置截断、listDir nil 解引用、editFile 读取上限、search_directory symlink 直读。
+- **LLM**：FingerprintCache 拒绝 nil 响应；流式 chunk 增加 Error 字段并上报 error 帧；9 处 provider 发送改为带 5s 超时；SQLite 缓存恢复 Model/Role。
+- **Agent 核心**：流式发送非阻塞（不再持 runMu 永久阻塞）；只有瞬时/网络错误才重试工具；恢复路径不再置空 capCache；ctx 取消不再回退二次请求；合并两次 LLM 调用 Usage；第二次 GracefulShutdown 不再假成功；HITL nil/超时不再伪装成拒绝；失败记录使用独立 ctx；memoryWriter submit/flush 同锁。
+- **Memory/Persist**：InMemoryStore 返回深拷贝；`:memory:` SQLite 每实例唯一 DSN；Leader 心跳不再重复启动；persist List 检查 rows.Err、Close 幂等并返回 ErrCheckpointStoreClosed；summarizer stop 幂等。
+- **默认安全/供应链**：MCP Server 非 loopback 且无 API key 拒绝启动；A2A interop client 增加 30s 超时；Go 工具链升到 1.26.10；TS 升 zod 4.6.7 / vitest 5.0.5（运行时 npm audit 0 漏洞）；README/AGENTS/CODE_WIKI 计数与过期路径同步；deprecation 门从 VERSION 派生主版本。
+- **测试**：修复 pipeline 黄金夹具跨架构浮点漂移、git 测试宿主 GPG 耦合、ping 缺失依赖、vitest 5 未 await/超时断言；新增 shell/fs/scope/cache/memory/leader/HITL/stream 回归测试。
 
 ### Fixed — 供应链加固与前门/模板缺陷（全部实证复现后修复）
 

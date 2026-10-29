@@ -11,7 +11,7 @@ AgentPrimordia 是从 CodeCast 生产验证的 Agent 架构中提炼出的 **通
 
 ## 2. 技术栈约束
 
-- **语言**: Go 1.26+（`go.mod` 已声明 `go 1.26.6`）
+- **语言**: Go 1.26+（`go.mod` 已声明 `go 1.26.10`）
 - **默认原则：所有新模块仅使用 Go 标准库**（net/http、database/sql、os/exec 等）
 - **不引入**：任何 Web 框架、ORM、配置解析库、CLI 框架等第三方包
 
@@ -73,7 +73,7 @@ AgentPrimordia 是从 CodeCast 生产验证的 Agent 架构中提炼出的 **通
 ```
 internal/
 ├── admin/          — Admin HTTP API（调试/管理接口）
-├── agent/          — ReActLoop 引擎 + 协议式微内核（顶层，下含 a2a/planning/reflection/tool_learning/cluster/transport 等 32 个子包，完整清单见 internal/AGENTS.md）
+├── agent/          — ReActLoop 引擎 + 协议式微内核（顶层，下含 a2a/planning/reflection/tool_learning/cluster/transport 等 34 个子包，完整清单见 internal/AGENTS.md）
 │   ├── a2a/        — Agent2Agent 协议实现（JSON-RPC / SSE / 任务管理）
 │   ├── planning/   — 任务规划器
 │   ├── reflection/ — Agent 自反思能力
@@ -100,7 +100,7 @@ operator/           — Kubernetes Operator（AgentDeployment CRD）
 pgvector/           — pgvector 向量存储扩展
 ```
 
-> 上图仅列核心分层包。其余横向支撑包（audit/chaos/eval/governance/health/jsonutil/logger/marketplace/multi_agent/observability/resilience/self_bootstrap/studio）见 [`internal/AGENTS.md`](agentprimordia/internal/AGENTS.md) 的完整 29 包表格。
+> 上图仅列核心分层包。其余横向支撑包（audit/chaos/eval/governance/health/jsonutil/logger/marketplace/multi_agent/observability/resilience/self_bootstrap/studio）见 [`internal/AGENTS.md`](agentprimordia/internal/AGENTS.md) 的完整 28 包表格。
 
 ### 4.2 依赖方向规则
 
