@@ -211,11 +211,11 @@ describeOrSkip('SQLiteCheckpointStore', () => {
     await expect(store.deleteState('nonexistent')).rejects.toThrow('checkpoint not found');
   });
 
-  it('should close database', () => {
+  it('should close database', async () => {
     const s = SQLiteCheckpointStore.inMemory();
     s.close();
     // After close, operations should throw
-    expect(s.load('test')).rejects.toThrow('database is closed');
+    await expect(s.load('test')).rejects.toThrow('database is closed');
   });
 
   it('should handle close when already closed', () => {
