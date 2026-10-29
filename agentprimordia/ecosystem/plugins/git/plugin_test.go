@@ -146,6 +146,10 @@ func TestGitTool_Execute_TagWithoutName(t *testing.T) {
 // initTestRepo 在临时目录初始化一个带初始提交的 Git 仓库，返回工作目录
 func initTestRepo(t *testing.T) string {
 	t.Helper()
+	// 隔离宿主全局 git 配置（尤其是 commit.gpgsign），否则 CI/开发机的
+	// GPG 签名包装器会让 git commit 失败，测试变成环境耦合。
+	t.Setenv("GIT_CONFIG_GLOBAL", os.DevNull)
+	t.Setenv("GIT_CONFIG_SYSTEM", os.DevNull)
 	dir := t.TempDir()
 	run := func(args ...string) {
 		t.Helper()

@@ -40,6 +40,9 @@ const pipelinePlan = `[
 // initGitRepo 在指定目录初始化带用户配置的 Git 仓库
 func initGitRepo(t *testing.T, dir string) {
 	t.Helper()
+	// 隔离宿主全局 git 配置（commit.gpgsign 等），避免测试依赖开发机环境。
+	t.Setenv("GIT_CONFIG_GLOBAL", os.DevNull)
+	t.Setenv("GIT_CONFIG_SYSTEM", os.DevNull)
 	for _, args := range [][]string{
 		{"init", "-b", "main"},
 		{"config", "user.email", "e2e@example.com"},
