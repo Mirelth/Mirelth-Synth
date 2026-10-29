@@ -101,9 +101,17 @@ func TestTCPTransport_SendWithAck(t *testing.T) {
 	}
 
 	// 启动一个 goroutine 来接收消息并发送 ACK
+	// done 用于保证 goroutine 在 defer Close 之前退出；否则 Close 先关闭
+	// receive 通道时，这里的零值 nil 会导致 received.ID 空指针 panic。
+	done := make(chan struct{})
 	go func() {
+		defer close(done)
 		select {
-		case received := <-transport2.Receive():
+		case received, ok := <-transport2.Receive():
+			if !ok || received == nil {
+				t.Error("接收通道已关闭或收到空消息")
+				return
+			}
 			// 收到消息后，handleConn 会自动发送 ACK
 			t.Logf("收到消息: %s", received.ID)
 		case <-time.After(2 * time.Second):
@@ -113,8 +121,9 @@ func TestTCPTransport_SendWithAck(t *testing.T) {
 
 	// 发送需要 ACK 的消息
 	if err := transport1.SendWithAck(ctx, transport2.Addr(), msg); err != nil {
-		t.Fatalf("发送带 ACK 的消息失败: %v", err)
+		t.Errorf("发送带 ACK 的消息失败: %v", err)
 	}
+	<-done
 }
 
 func TestTCPTransport_ConnectionPool(t *testing.T) {
