@@ -127,7 +127,7 @@ svg.append(title(1200, 52, "SYNTH", fs=38, weight=200, color="#0f172a"))
 svg.append('<text x="1200" y="84" text-anchor="middle" fill="#64748b" font-family="system-ui,sans-serif" '
            'font-size="13" letter-spacing="5" opacity="0.8">UNIVERSAL AI AGENT FRAMEWORK · GO + TYPESCRIPT DUAL SDK</text>')
 svg.append('<line x1="860" y1="100" x2="1540" y2="100" stroke="#00d4ff" stroke-width="0.5" opacity="0.3"/>')
-svg.append(sub(1200, 122, "v5.0.0  ·  38 Modules Parity  ·  Apache-2.0  ·  Zero CGO", fs=11, color="#00d4ff"))
+svg.append(sub(1200, 122, "v7.8.0  ·  34 模块双语言对等  ·  Apache-2.0  ·  Zero CGO", fs=11, color="#00d4ff"))
 
 # ============ ① 入口层 ============
 p1 = panel(60, 150, 2280, 100, "①  APPLICATION / ENTRYPOINTS", C["infra"], label_x=80)
@@ -163,7 +163,7 @@ svg.append(p3)
 # 引擎大框
 svg.append(f'<rect x="170" y="470" width="2060" height="172" rx="20" fill="url(#g_core)" stroke="{C["core"]}" stroke-opacity="0.55" stroke-width="1.6"/>')
 svg.append(title(1200, 505, "ReAct Loop Engine  ·  Go + TS 双实现", fs=20, weight=600, color="#0f172a"))
-svg.append(sub(1200, 528, "Reason → Act → Observe · 20+ Lifecycle Hooks · Planning · Reflection · Tool Learning", fs=11, color="#00d4ff"))
+svg.append(sub(1200, 528, "Reason → Act → Observe · 35 Lifecycle Hooks · Planning · Reflection · Tool Learning", fs=11, color="#00d4ff"))
 # 引擎内部流程（靠左三个紧凑框）
 flow = [("Reason", "推理", C["llm"]), ("Act", "工具决策", C["tools"]), ("Observe", "结果回读", C["mem"])]
 fx = 300
@@ -178,7 +178,7 @@ for i, (name, desc, col) in enumerate(flow):
 svg.append(chip(1020, 550, 210, 34, "#00d4ff", "Planning", fs=12))
 svg.append(chip(1250, 550, 220, 34, "#00d4ff", "Reflection", fs=12))
 svg.append(chip(1490, 550, 250, 34, "#00d4ff", "Tool Learning", fs=12))
-svg.append(chip(1760, 550, 220, 34, "#00d4ff", "20+ Hooks", fs=12))
+svg.append(chip(1760, 550, 220, 34, "#00d4ff", "35 Hooks", fs=12))
 # 引擎 → 能力四件套 连线（对准各卡片中心）
 svg.append(arrow(354, 660, 354, 712, C["core"], marker="a_c", opacity=0.55))
 svg.append(arrow(894, 660, 894, 712, C["core"], marker="a_c", opacity=0.55))
@@ -274,24 +274,30 @@ print(f"SVG 写入: {svg_path}")
 
 # ---------- 转 PNG ----------
 def try_edge():
-    html_path = os.path.join(repo, "synth", "docs", "_arch_tmp.html")
-    with open(html_path, "w", encoding="utf-8") as f:
-        f.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>'
-                '<body style="margin:0;padding:0;background:#ffffff">'
-                + svg_text + '</body></html>')
-    edge_paths = [r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-                  r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"]
+    import tempfile
+
+    edge_paths = [
+        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+        "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "/usr/bin/microsoft-edge",
+        "/usr/bin/google-chrome",
+    ]
     edge = next((p for p in edge_paths if os.path.exists(p)), None)
     if not edge:
         return False
-    cmd = [edge, "--headless=new", "--disable-gpu", "--no-sandbox",
-           f"--screenshot={png_path}", f"--window-size={W},{H}", "--hide-scrollbars",
-           "file:///" + html_path.replace(os.sep, "/")]
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
-    if os.path.exists(png_path) and os.path.getsize(png_path) > 0:
-        os.remove(html_path)
-        return True
-    return False
+    with tempfile.TemporaryDirectory() as td:
+        html_path = os.path.join(td, "arch.html")
+        with open(html_path, "w", encoding="utf-8") as f:
+            f.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>'
+                    '<body style="margin:0;padding:0;background:#ffffff">'
+                    + svg_text + '</body></html>')
+        cmd = [edge, "--headless=new", "--disable-gpu", "--no-sandbox",
+               f"--screenshot={png_path}", f"--window-size={W},{H}", "--hide-scrollbars",
+               "file://" + html_path.replace(os.sep, "/")]
+        subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+    return os.path.exists(png_path) and os.path.getsize(png_path) > 0
 
 def try_cairosvg():
     try:
