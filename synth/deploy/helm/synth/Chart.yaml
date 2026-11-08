@@ -3,7 +3,7 @@ name: synth
 description: Synth — 通用 Go Agent 开发框架生产部署
 type: application
 version: 0.1.0
-appVersion: "7.9.0"
+appVersion: "7.9.1"
 keywords:
   - agent
   - ai

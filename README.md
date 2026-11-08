@@ -389,7 +389,7 @@ bootstrap comparisons, published reports).
 
 | Version | Theme | Highlights |
 |---|---|---|
-| **v7.9.0** | Rebrand release | Module path `github.com/Mirelth/Mirelth-Synth/v7`, `package synth`, CLI `synth`, `.synth.yaml` / `SYNTH_*`, CRD group `synth.dev`, `mirelth-synth` / `@mirelth/synth` distribution names; migration guide + script, residual-name CI gate, regenerated brand assets. Breaking: import paths, package name and config contract all change — see [Migration to Synth](docs/迁移到-Synth.md) |
+| **v7.9.1** | Rebrand release | Module path `github.com/Mirelth/Mirelth-Synth/v7`, `package synth`, CLI `synth`, `.synth.yaml` / `SYNTH_*`, CRD group `synth.dev`, `mirelth-synth` / `@mirelth/synth` distribution names; migration guide + script, residual-name CI gate, regenerated brand assets. Breaking: import paths, package name and config contract all change — see [Migration to Synth](docs/迁移到-Synth.md) |
 | **v7.8.0** | Cumulative release: 7.6–7.8 | English front door, clean-room CI, API surface freeze, A2A interop demo, signed WASM supply-chain demo, v8.0 deprecation markers + `synth migrate`; 7.6/7.7 not separately released |
 | **v7.5.1** | Release pipeline fix | 6-platform binaries + checksums + cosign signatures + SBOM; `go install …@latest` works end to end |
 | v7.5 | Security & quality campaign | shell allowlist hardened against 7 verified attack chains, `jsonutil` concurrency corruption fixed, 167 disabled tests restored; module path moved to `/v7` so the framework is distributable via `GOPROXY` |
@@ -417,7 +417,7 @@ Apache-2.0 © Synth Contributors
   gate still forces an update whenever the measured numbers move.
   Update together with the code, then re-run: node scripts/doc-version-consistency.mjs
 
-  [![Version](https://img.shields.io/badge/version-7.9.0-2ea44f.svg)](synth/docs/CHANGELOG-v7.9.md)
+  [![Version](https://img.shields.io/badge/version-7.9.1-2ea44f.svg)](synth/docs/CHANGELOG-v7.9.md)
   [![Tests](https://img.shields.io/badge/tests-686%20files-green.svg)](synth/internal/)
   Red → Green → Refactor，686 个测试文件
   核心框架主模块（163 个包，1397 个 Go 文件）

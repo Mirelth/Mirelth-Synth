@@ -1,8 +1,10 @@
-# Synth v7.9 发布说明（当前版本 v7.9.0）
+# Synth v7.9 发布说明（当前版本 v7.9.1）
 
 > 发布日期：2026-11-08
-> 版本：v7.9.0
+> 版本：v7.9.1
 > 代号：改名发布（AgentPrimordia → Synth）
+> 勘误：v7.9.0 tag 因主模块 `require pgvector v0.0.0`（该版本从未发布）在干净环境下
+> 无法 `go get`，已作废并删除；v7.9.1 为修正版，`pgvector/v0.1.0` 已发布。
 > 迁移指南：[`docs/迁移到-Synth.md`](../../docs/迁移到-Synth.md)
 
 ---
@@ -11,7 +13,7 @@
 
 这是一次**不兼容的品牌与契约切换**：项目从 `AgentPrimordia`（组织 `Gleamseekers`）改名为 **Synth**（组织 `Mirelth`，仓库 `Mirelth/Mirelth-Synth`），模块路径、Go 公共包名、CLI、配置契约、环境变量、指标前缀、CRD group 与全部分发身份一起更换。框架**不提供兼容别名层**，下游需按迁移指南一次性完成。
 
-选择 7.9.0 而不是 8.0.0：`/v7` 导入版本后缀保留，语义化主版本不变；改名本身是破坏性的，但破坏面止于「路径与命名」，框架能力与行为契约未变。
+选择 7.9.1 而不是 8.0.0：`/v7` 导入版本后缀保留，语义化主版本不变；改名本身是破坏性的，但破坏面止于「路径与命名」，框架能力与行为契约未变。
 
 ## 核心变更
 
@@ -29,7 +31,7 @@
 
 ## 有意保留
 
-- **git 历史与旧 tag**：历史 commit message、16 个旧 tag、`origin` 均保持原样。旧 tag 未推送到新仓库——它们指向的提交里 `go.mod` 仍是旧模块路径，`go get …@v7.8.0` 会报模块路径不匹配。**v7.9.0 是新基线的第一个 tag。**
+- **git 历史与旧 tag**：历史 commit message、16 个旧 tag、`origin` 均保持原样。旧 tag 未推送到新仓库——它们指向的提交里 `go.mod` 仍是旧模块路径，`go get …@v7.8.0` 会报模块路径不匹配。**v7.9.1 是新基线的第一个 tag。**
 - **冻结评测题面**：`docs/evals/embedding-corpus-v1.json`、`gap-tools-v1.json`、`synth/docs/evals/v72/p4-intelligence.json` 保持原样（sha256 冻结，改动即门禁报警），内部因此仍含旧品牌字样；这是设计例外，不是残留。
 - **AELA 产品截图**：属于另一条产品线，未改名。
 
@@ -43,8 +45,8 @@
 ## 安装与升级
 
 ```bash
-go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@v7.9.0
-synth version   # 应显示 7.9.0
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@v7.9.1
+synth version   # 应显示 7.9.1
 ```
 
 > 模块依赖：`pgvector` 是独立子模块（`github.com/Mirelth/Mirelth-Synth/pgvector`），
@@ -59,4 +61,4 @@ python3 scripts/migrate-to-synth.py --target /path/to/your-agent          # 预�
 python3 scripts/migrate-to-synth.py --target /path/to/your-agent --apply  # 执行
 ```
 
-完整技术记录见 [`docs/CHANGELOG.md`](../../docs/CHANGELOG.md) 的 `[7.9.0]` 节。
+完整技术记录见 [`docs/CHANGELOG.md`](../../docs/CHANGELOG.md) 的 `[7.9.1]` 节。

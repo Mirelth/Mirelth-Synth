@@ -30,7 +30,7 @@ Verify:
 synth version
 ```
 
-> If you want a specific release, pin the tag: `…/cmd/synth@v7.9.0`. Release binaries with
+> If you want a specific release, pin the tag: `…/cmd/synth@v7.9.1`. Release binaries with
 > SHA256 checksums and cosign signatures are attached to every
 > [GitHub Release](https://github.com/Mirelth/Mirelth-Synth/releases).
 
@@ -101,7 +101,7 @@ docker run -it --rm \
 ```
 
 Replace `<release-tag>` with a tag from the
-[Releases page](https://github.com/Mirelth/Mirelth-Synth/releases) (for example `v7.9.0`).
+[Releases page](https://github.com/Mirelth/Mirelth-Synth/releases) (for example `v7.9.1`).
 
 ## Method 4: TypeScript SDK (Node.js)
 

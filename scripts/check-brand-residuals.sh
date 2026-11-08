@@ -46,7 +46,7 @@ EXCLUDES=(
   # 更名记账文档：必须写明「改了什么」，因此会引用旧名（迁移指南同理）。
   --exclude=CHANGELOG.md
   --exclude=CHANGELOG-v7.9.md
-  --exclude='发布说明-v7.9.0.md'
+  --exclude='发布说明-v7.9.1.md'
 )
 
 echo "========================================"

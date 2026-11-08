@@ -4,12 +4,12 @@
 
 ## [Unreleased]
 
-## [7.9.0] - 2026-11-08
+## [7.9.1] - 2026-11-08
 
 > 改名发布：AgentPrimordia → Synth。破坏性变更集中在「路径与命名」，框架能力与行为契约未变。
-> 版本真值：`pkg/agent.go` `const Version` = 7.9.0。
+> 版本真值：`pkg/agent.go` `const Version` = 7.9.1。
 > 面向下游的迁移步骤见 [`迁移到-Synth.md`](迁移到-Synth.md)，发版摘要见
-> [`发布说明-v7.9.0.md`](发布说明-v7.9.0.md)。
+> [`发布说明-v7.9.1.md`](发布说明-v7.9.1.md)。
 
 ### Changed — 行为变更（breaking，发布需通告）
 

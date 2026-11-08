@@ -1,5 +1,5 @@
 {
-  "version": "7.9.0",
+  "version": "7.9.1",
   "generated_at": "",
   "modules": [
     {
@@ -1680,7 +1680,7 @@
         },
         {
           "name": "Version",
-          "value": "\"7.9.0\"",
+          "value": "\"7.9.1\"",
           "doc": "Version 是 Synth 框架的当前版本号"
         }
       ],

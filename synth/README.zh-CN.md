@@ -109,7 +109,7 @@ func main() {
 
 | 版本 | 交付内容 |
 |------|----------|
-| **v7.9.0** | 改名发布：模块路径 `github.com/Mirelth/Mirelth-Synth/v7`、`package synth`、CLI `synth`、`.synth.yaml` / `SYNTH_*` 环境变量前缀、CRD group `synth.dev`、分发名 `mirelth-synth` / `@mirelth/synth`；新增迁移指南与 `scripts/migrate-to-synth.py`、残留名 CI 门禁、品牌图片物料重绘 |
+| **v7.9.1** | 改名发布：模块路径 `github.com/Mirelth/Mirelth-Synth/v7`、`package synth`、CLI `synth`、`.synth.yaml` / `SYNTH_*` 环境变量前缀、CRD group `synth.dev`、分发名 `mirelth-synth` / `@mirelth/synth`；新增迁移指南与 `scripts/migrate-to-synth.py`、残留名 CI 门禁、品牌图片物料重绘 |
 | **v7.8.0** | 累计发布 7.6–7.8：英文前门、clean-room CI、API 表面冻结、A2A 跨进程互操作、WASM 供应链签名 demo、v8.0 废弃标记 + `synth migrate`、默认安全加固 |
 | **v7.5.1** | 发布链路修正：6 平台二进制 + SHA256 校验和 + cosign 签名 + SBOM、Docker 构建上下文修复，`go install …@latest` 端到端可用 |
 | **v7.5** | 安全与质量战役：Shell 工具白名单加固（7 条实证攻击链全阻断）、`jsonutil` 并发覆写修复、Anthropic 结构化输出 panic 修复、167 个被禁用测试恢复；覆盖率 78.8% → 81.1%；模块路径迁至 `github.com/Mirelth/Mirelth-Synth/v7`，框架自此可经 GOPROXY 分发 |

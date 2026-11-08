@@ -55,7 +55,7 @@ synth -v
 synth --version
 ```
 
-输出：`Synth CLI v7.9.0`
+输出：`Synth CLI v7.9.1`
 
 ### 1.4 查看帮助
 

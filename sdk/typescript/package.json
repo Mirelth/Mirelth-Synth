@@ -1,6 +1,6 @@
 {
   "name": "@mirelth/synth",
-  "version": "7.9.0",
+  "version": "7.9.1",
   "description": "Synth - Universal AI Agent Development Framework for TypeScript",
   "type": "module",
   "main": "dist/index.js",
