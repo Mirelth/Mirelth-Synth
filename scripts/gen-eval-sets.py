@@ -312,7 +312,7 @@ for spec, t, exp in [("0 9 * * 1-5","2026-08-31T12:00:00","2026-09-01T09:00:00")
 
 GOAL_B32 = "RFC4648 base32 编码（含 = 填充）"
 for s, enc in [("hi","NBUQ===="),("Zoo","MBRU===="),("abc123","MFRGGZBT"),("hello","NBSWY3DP"),
-               ("ab","ME===="),("abcd","MFRGG==="),("synth!","M4QTEA====")]:
+               ("ab","ME===="),("abcd","MFRGG==="),("ap!","M4QTEA====")]:
     GAP.append(gap("base32-encode", GOAL_B32, f"encode:{s}", enc))
 
 GOAL_ROM = "整数转罗马数字（标准记法）"

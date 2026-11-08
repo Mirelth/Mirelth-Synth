@@ -10,7 +10,7 @@
 #
 # 说明：
 #   - 模式用字符类断开（如 agent[p]rimordia），避免脚本自身被自己命中；
-#   - 白名单文件按设计必须引用旧名（迁移指南、迁移脚本、资产说明），故排除；
+#   - 白名单文件按设计必须引用旧名（迁移指南、迁移脚本、资产说明、冻结评测语料），故排除；
 #   - .git / .workbuddy-ai / .thinkrail / node_modules / dist 等非仓库内容不扫描；
 #   - grep -I 自动跳过二进制，二进制资产的处置见 docs/品牌资产与历史说明.md。
 #
@@ -38,6 +38,11 @@ EXCLUDES=(
   --exclude=migrate-to-synth.py
   --exclude='迁移到-Synth.md'
   --exclude='品牌资产与历史说明.md'
+  # 冻结评测语料：sha256 台账由 internal/eval 的冻结门守住，内容一经冻结
+  # 不得修改（包括品牌字样）；历史评测结果的可比性依赖它们保持原样。
+  --exclude=embedding-corpus-v1.json
+  --exclude=gap-tools-v1.json
+  --exclude=p4-intelligence.json
 )
 
 echo "========================================"
@@ -64,5 +69,5 @@ if [ "$STATUS" -eq 0 ]; then
 fi
 
 echo "OK: 未发现旧品牌标识残留"
-echo "白名单（按设计引用旧名）：迁移指南、迁移脚本、资产说明、本脚本"
+echo "白名单（按设计引用旧名）：迁移指南、迁移脚本、资产说明、冻结评测语料、本脚本"
 echo "========================================"
