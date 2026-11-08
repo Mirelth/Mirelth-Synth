@@ -115,6 +115,7 @@ Version reality is maintained in [`docs/版本规范.md`](docs/版本规范.md) 
 
 | Release | What shipped |
 |---------|--------------|
+| **v7.9.0** | Rebrand release: AgentPrimordia → Synth — module path `github.com/Mirelth/Mirelth-Synth/v7`, `package synth`, CLI `synth`, `.synth.yaml` / `SYNTH_*` env prefix, CRD group `synth.dev`, distribution names `mirelth-synth` / `@mirelth/synth`; migration guide + `scripts/migrate-to-synth.py`, residual-name CI gate, regenerated brand assets |
 | **v7.8.0** | Cumulative release of 7.6–7.8: English front door, clean-room CI, API surface freeze, A2A cross-process interop, signed WASM supply-chain demo, v8.0 deprecation markers + `synth migrate`, default-deny hardening |
 | **v7.5.1** | Release pipeline fixed: 6-platform binaries + SHA256 checksums + cosign signatures + SBOM, Docker build context, `go install …@latest` works end to end |
 | **v7.5** | Security & quality campaign: shell-tool allowlist hardened against 7 verified attack chains, `jsonutil` concurrent-marshal corruption fixed, Anthropic structured-output panic fixed, 167 disabled tests restored; coverage 78.8% → 81.1%; module path moved to `github.com/Mirelth/Mirelth-Synth/v7` so the framework is distributable via `GOPROXY` |

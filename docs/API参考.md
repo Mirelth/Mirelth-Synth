@@ -2,7 +2,7 @@
 
 > 包路径：`synth/pkg` → 导入别名 `synth`
 >
-> 版本：`synth.Version` = `"7.8.0"` (Go) / `@mirelth/synth` `7.8.0` (TypeScript)
+> 版本：`synth.Version` = `"7.9.0"` (Go) / `@mirelth/synth` `7.9.0` (TypeScript)
 >
 > **TypeScript SDK 与 Go 框架 100% 功能对等**，下方 API 参考 covers Go 公共 API。
 > TypeScript SDK 完整 API 参考见 [sdk/typescript/docs/api/index.md](../sdk/typescript/docs/api/index.md)。
