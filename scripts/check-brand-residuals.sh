@@ -43,6 +43,10 @@ EXCLUDES=(
   --exclude=embedding-corpus-v1.json
   --exclude=gap-tools-v1.json
   --exclude=p4-intelligence.json
+  # 更名记账文档：必须写明「改了什么」，因此会引用旧名（迁移指南同理）。
+  --exclude=CHANGELOG.md
+  --exclude=CHANGELOG-v7.9.md
+  --exclude='发布说明-v7.9.0.md'
 )
 
 echo "========================================"
@@ -69,5 +73,5 @@ if [ "$STATUS" -eq 0 ]; then
 fi
 
 echo "OK: 未发现旧品牌标识残留"
-echo "白名单（按设计引用旧名）：迁移指南、迁移脚本、资产说明、冻结评测语料、本脚本"
+echo "白名单（按设计引用旧名）：迁移指南、迁移脚本、资产说明、冻结评测语料、更名记账文档、本脚本"
 echo "========================================"

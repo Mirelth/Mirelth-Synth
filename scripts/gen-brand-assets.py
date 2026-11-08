@@ -163,7 +163,7 @@ POSTERS.append(("docs/posters/poster-01.png", 1080, 1920, poster_head(1) + f"""
   <div class="mono" style="font-size:26px;color:{MUTED};letter-spacing:.24em">FROM SYNTH, INTELLIGENCE</div>
   <div class="rule" style="width:220px;margin:8px auto"></div>
   <div class="lead" style="text-align:center">通用 AI Agent 开发框架<br>ReActLoop · AgentPool · Tool System · Memory · LLM</div>
-  <div class="pill">v7.8.0</div>
+  <div class="pill">v7.9.0</div>
 </div>""" + poster_foot("Mirelth 团队作品"), 11))
 
 # 02 定位
@@ -422,7 +422,7 @@ SLIDES = [
 <div class="card" style="padding:32px 28px"><div class="num" style="font-size:62px">28</div><div class="sub">internal 顶层包</div></div>
 <div class="card" style="padding:32px 28px"><div class="num" style="font-size:62px">22</div><div class="sub">CLI 子命令</div></div>
 </div>
-<div class="sub" style="margin-top:28px">统计口径：`git ls-files` 范围，排除 *_test.go 与 *.pb.go；采集于 v7.8.0。</div>""", 38, "08"), "08"),
+<div class="sub" style="margin-top:28px">统计口径：`git ls-files` 范围，排除 *_test.go 与 *.pb.go；采集于 v7.9.0。</div>""", 38, "08"), "08"),
 
     ("docs/images/ppt/timeline.png", 1792, 1024,
      slide(1792, 1024, "版本弧线 · 从框架到可验证平台", """<div style="display:flex;align-items:flex-end;gap:16px;height:330px">

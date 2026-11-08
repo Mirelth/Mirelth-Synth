@@ -4,6 +4,43 @@
 
 ## [Unreleased]
 
+## [7.9.0] - 2026-11-08
+
+> 改名发布：AgentPrimordia → Synth。破坏性变更集中在「路径与命名」，框架能力与行为契约未变。
+> 版本真值：`pkg/agent.go` `const Version` = 7.9.0。
+> 面向下游的迁移步骤见 [`迁移到-Synth.md`](迁移到-Synth.md)，发版摘要见
+> [`发布说明-v7.9.0.md`](发布说明-v7.9.0.md)。
+
+### Changed — 行为变更（breaking，发布需通告）
+
+- **Go 模块路径**：`github.com/Gleamseekers/AgentPrimordia/v7` → `github.com/Mirelth/Mirelth-Synth/v7`；子模块 `gateway` / `pgvector` / `wasm` / `synth/operator` 同步（`.../v7/synth/operator`）。旧 tag 与 GOPROXY 缓存不重定向。
+- **Go 公共 API 包名**：`package ap` → `package synth`（`ap.NewAgent` → `synth.NewAgent`，51 个文件）。不提供 `package ap` 兼容别名层。
+- **CLI 与配置契约**：`ap` → `synth`；`.ap.yaml` / `.ap.json` / 含旧名的数据目录 → `.synth.*`；`AP_*`（97 个变量）→ `SYNTH_*`。
+- **指标与协议标识**：`ap_*` / `agentprimordia_*` → `synth_*`；CRD group `agent.primordia.dev` → `synth.dev`；Helm chart 目录 `agentprimordia/` → `synth/`。
+- **分发身份**：npm `@agentprimordia/sdk` → `@mirelth/synth`；PyPI / crates 分发名 `mirelth-synth`（import 名与 crate 名仍为 `synth`）；VS Code publisher `mirelth`；镜像 `ghcr.io/mirelth/mirelth-synth{,-studio,-operator}`。
+- **kv 插件数据兼容**：默认库/表改为 `synth_kv.db` / `synth_kv_store`；`Init` 在未指定 `db_path` 时沿用旧默认库，并在旧表存在且新表不存在时 `ALTER TABLE … RENAME TO` 原地迁移，存量数据不丢。
+
+### Added — 改名配套
+
+- **迁移工具**：`scripts/migrate-to-synth.py`（默认 dry-run；替换模块路径/包名/限定符/CLI 调用/配置后缀/路径段；裸词 `AP`、`ap` 只列人工确认清单而不自动改写；冲突检测、编码保持、跳过二进制与 VCS 目录）与 `docs/迁移到-Synth.md`（对照表、手工要点、验证清单、回滚）。
+- **残留名门禁**：`scripts/check-brand-residuals.sh`，接入 `.cnb.yml` 与 `.github/workflows/ci.yml`；白名单只含迁移指南、迁移脚本、品牌资产说明与三个冻结评测题面。
+- **protobuf 描述符一致性测试**：`TestProtoGoPackageMatchesImportPath`（反射取 import 路径反查 `a2a.pb.go` 的 go_package，防止「编译过、init panic」）。
+- **品牌图片物料**：`scripts/gen-brand-assets.py`（HTML → Edge headless 渲染 → 256 色调色板）重绘 10 张海报、11 张幻灯片、3 帧预览；`scripts/render_architecture_svg.py` 修复 macOS Edge 探测并重导出文档架构图。
+
+### Fixed — 改名暴露的缺陷
+
+- a2a protobuf raw descriptor 的 `go_package` 长度前缀与缩短后的字符串不同步（init panic）。
+- config 包环境变量前缀常量被误改为品牌名 `"Synth"`（应为 `"SYNTH"`）。
+- 脚手架生成清单排序期望随 `.synth.yaml` 变化。
+- `go.work` 增加本地 `pgvector` replace，避免新模块路径远端尚未创建时模块图解析失败。
+- operator metrics 适配器测试夹具残留旧指标名（`\nap_pool_active_workers` 等，字面 `\n` 让前缀改写被跳过），导致集成测试读到 0 值。
+- CAP 定理表述被盲改（「CP 优先于 AP」误改为「CP 优先于 Synth」）。
+- Dockerfile（仓库根 context）、Playground 参考服务、VS Code 扩展依赖与 `rootDir` 三处交付缺陷。
+
+### Deprecated / Removed
+
+- 旧品牌相关的全部标识（旧模块路径、`package ap`、`ap` CLI、`AP_*`、`ap_*` 指标、`agent.primordia.dev`）在本版本一次性移除，不保留兼容层。
+
 ## [7.8.0] - 2026-10-29
 
 > 本版本累计发布 v7.6 / v7.7 / v7.8 三批工作与 2026-10-26 加固批次。
