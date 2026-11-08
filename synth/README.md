@@ -199,10 +199,10 @@ zero CGO · protocol-style microkernel (capabilities are discovered via `*Capabl
 
 ## 🟦 TypeScript SDK
 
-A feature-parity TypeScript SDK for Node.js developers (`@synth/sdk`, Node 18+):
+A feature-parity TypeScript SDK for Node.js developers (`@mirelth/synth`, Node 18+):
 
 ```bash
-npm install @synth/sdk
+npm install @mirelth/synth
 ```
 
 > Go is the single authoritative implementation surface; the TS side is kept in lock-step by

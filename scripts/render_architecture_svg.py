@@ -152,8 +152,8 @@ svg.append(sub(340, 367, "synth.NewAgent() · Chain API · Type Aliases", fs=9.5
 svg.append(chip(90, 334, 150, 32, "#84cc16", "public API", fs=11))
 # TS SDK
 svg.append(box(1230, 318, 1080, 64, "#84cc16", "#84cc16", rx=12, sw=0.9, fill_op=0.05))
-svg.append(title(1480, 343, "TypeScript  ·  @synth/sdk", fs=14, color="#0f172a"))
-svg.append(sub(1480, 367, "34 模块 Go Parity · npm install @synth/sdk", fs=9.5, color="#84cc16"))
+svg.append(title(1480, 343, "TypeScript  ·  @mirelth/synth", fs=14, color="#0f172a"))
+svg.append(sub(1480, 367, "34 模块 Go Parity · npm install @mirelth/synth", fs=9.5, color="#84cc16"))
 svg.append(chip(1230, 334, 150, 32, "#84cc16", "npm SDK", fs=11))
 svg.append(arrow(1200, 400, 1200, 442, C["cfg"], dash="4 4", marker="a_l", opacity=0.5))
 

@@ -151,7 +151,7 @@ var (
 === "TypeScript"
 
     ```typescript
-    import { ReActAgent, OpenAIProvider, ToolRegistry, FileSystemTool, ShellTool } from '@synth/sdk';
+    import { ReActAgent, OpenAIProvider, ToolRegistry, FileSystemTool, ShellTool } from '@mirelth/synth';
 
     const registry = new ToolRegistry();
     registry.register(new FileSystemTool({ rootDir: '.' }));

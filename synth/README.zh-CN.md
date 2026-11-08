@@ -186,10 +186,10 @@ Sandbox/ACL、A2A 协议互操作（`synth a2a interop-check`）、可复现评�
 
 ## 🟦 TypeScript SDK
 
-为 Node.js 开发者提供与 Go 功能对等的 TypeScript SDK（`@synth/sdk`，Node 18+）：
+为 Node.js 开发者提供与 Go 功能对等的 TypeScript SDK（`@mirelth/synth`，Node 18+）：
 
 ```bash
-npm install @synth/sdk
+npm install @mirelth/synth
 ```
 
 > Go 是唯一权威实现面，TS 侧由跨语言 API 检查保持同步（一份契约、一套基准）。

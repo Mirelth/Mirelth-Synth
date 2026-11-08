@@ -1,5 +1,5 @@
 /**
- * @synth/sdk — Synth TypeScript SDK
+ * @mirelth/synth — Synth TypeScript SDK
  *
  * Build cross-platform AI Agent applications with ReAct loop,
  * multi-provider LLM support, episodic memory, and tool system.

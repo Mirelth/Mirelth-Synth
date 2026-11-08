@@ -27,7 +27,7 @@
 ## 三、依赖升级（v6.0 需要做的）
 
 - Go SDK：`go get github.com/Synth/synth/pkg@v6.0.0`
-- TS SDK：`npm install @synth/sdk@6.0.0`
+- TS SDK：`npm install @mirelth/synth@6.0.0`
 - Operator / pgvector：随 go.work 同步 tag
 
 ## 四、v5.x 期间新增的关键能力（非破坏性）

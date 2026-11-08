@@ -11,7 +11,7 @@ import {
   MetricsCollector,
   VERSION,
   ErrorCodes,
-} from '@synth/sdk';
+} from '@mirelth/synth';
 
 async function main() {
   console.log('=== Synth TypeScript SDK: Docker Demo ===\n');

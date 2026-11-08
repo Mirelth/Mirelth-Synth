@@ -84,7 +84,7 @@
 | P0-1 | 保护已验证的修复批次 | 分 3–4 个 commit 提交 24 文件：① release.yml 重写 + 断言（fix）② 工具链 1.26.9 + x/net v0.61.0 + action pin 109 处（fix/chore）③ 文档三处（docs）④ deliverables 两份报告入库（docs）。**提交后不打 tag** | 提交前复跑：`go build ./...` exit 0 + `gofmt -l` 空 + `go test ./synth/pkg/...` ok + `govulncheck ./...` = No vulnerabilities + `actionlint` exit 0 + version-sync exit 0；`git status` 干净 | 无 |
 | P0-2 | E-1 正式收口 + 翻默认否决 | ① 跑 verify-round-pending 13 单元对照（26 runs，moma 端点），两次结果全量披露；② 按计划书 §⑨ 写最终报告（不一致四格表 + 24 题逐题方向表 + **补 holdout 标记对账** + summary/raw 口径说明）；③ 三处回填：台账 E-1、V7 路线图 §十一、提案-世界模型默认策略切换.md 登记表 | 台账 E-1 状态 =「已跑完 112 对·未达标（+5.4pp, p=0.1796）·翻默认否决」附证据锚点；13 单元两次结果落盘；版本规范翻转登记表更新 | moma 端点（已恢复） |
 | P0-3 | 台账对账 | soak 重启或改「暂停」；E-4/E-5 补录 v7.1 59 对阴性；GA 发布状态更新为已发；E-2 nightly 7 天核实（查 Actions artifacts，cron 到期日 2026-09-11） | 台账每项均可指到 commit/报告/artifact；E-2 要么 7 天连续产出在案，要么登记「未达成·cron 已到期·重排计划」 | P0-2 同批做 |
-| P0-4 | 发布遗留三项分流 | ① 维护者加 NPM_TOKEN → 触发 npm publish → `npm view @synth/sdk version` = 7.5.1；② 凭 09-29 release Actions 日志定位镜像 cosign 报错并补签；③ M6 digest pin 需 registry 可达机执行 `docker buildx imagetools inspect golang:1.26.9-alpine` / `alpine:3.20` 写入两 Dockerfile（TODO 已留） | ①②③ 各自有命令级证据；未就绪项在台账登记为「凭据/环境阻塞·未闭环」 | 维护者凭据/网络 |
+| P0-4 | 发布遗留三项分流 | ① 维护者加 NPM_TOKEN → 触发 npm publish → `npm view @mirelth/synth version` = 7.5.1；② 凭 09-29 release Actions 日志定位镜像 cosign 报错并补签；③ M6 digest pin 需 registry 可达机执行 `docker buildx imagetools inspect golang:1.26.9-alpine` / `alpine:3.20` 写入两 Dockerfile（TODO 已留） | ①②③ 各自有命令级证据；未就绪项在台账登记为「凭据/环境阻塞·未闭环」 | 维护者凭据/网络 |
 
 ### P1（本月）
 

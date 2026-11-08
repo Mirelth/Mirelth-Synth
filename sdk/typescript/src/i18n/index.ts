@@ -12,7 +12,7 @@
  * - ja
  *
  * @example
- * import { setLocale, t } from '@synth/sdk/i18n';
+ * import { setLocale, t } from '@mirelth/synth/i18n';
  *
  * setLocale('zh-CN');
  * console.log(t('timeout.operation', { seconds: 30 }));

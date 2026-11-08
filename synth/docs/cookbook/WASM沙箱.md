@@ -88,7 +88,7 @@ runtime, _ := wasm.NewRuntime(wasm.RuntimeConfig{
 ## TypeScript SDK（浏览器端）
 
 ```typescript
-import { CodeSandboxV2 } from '@synth/sdk';
+import { CodeSandboxV2 } from '@mirelth/synth';
 
 const sandbox = new CodeSandboxV2({
   memoryLimitMB: 64,

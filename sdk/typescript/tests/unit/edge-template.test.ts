@@ -193,7 +193,7 @@ describe('EdgeAgentTemplate', () => {
       expect(parsed.name).toBe('my-agent');
       expect(parsed.type).toBe('module');
       expect(parsed.scripts.dev).toBeDefined();
-      expect(parsed.dependencies['@synth/sdk']).toBeDefined();
+      expect(parsed.dependencies['@mirelth/synth']).toBeDefined();
     });
   });
 

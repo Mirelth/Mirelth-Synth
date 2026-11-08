@@ -222,7 +222,7 @@ export class MCPClient {
     const resp = await this.sendRequest('initialize', {
       protocolVersion: '2024-11-05',
       capabilities: {},
-      clientInfo: { name: '@synth/sdk', version: '1.0.0' },
+      clientInfo: { name: '@mirelth/synth', version: '1.0.0' },
     })
     if (resp.error) {
       throw new MCPError(resp.error.message, resp.error.code)

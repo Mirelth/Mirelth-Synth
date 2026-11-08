@@ -3,7 +3,7 @@
 ## 安装
 
 ```bash
-npm install @synth/sdk
+npm install @mirelth/synth
 ```
 
 **环境要求：**
@@ -16,7 +16,7 @@ npm install @synth/sdk
 ### 导入 SDK 并创建 Agent
 
 ```typescript
-import { createAgent, MockProvider } from "@synth/sdk";
+import { createAgent, MockProvider } from "@mirelth/synth";
 
 // 使用 MockProvider 快速体验（无需 API Key）
 const provider = new MockProvider({ response: "你好，我是 Synth！" });
@@ -36,7 +36,7 @@ console.log(result.content);
 **OpenAI：**
 
 ```typescript
-import { OpenAIProvider } from "@synth/sdk";
+import { OpenAIProvider } from "@mirelth/synth";
 
 const provider = new OpenAIProvider({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -52,7 +52,7 @@ const agent = createAgent("assistant")
 **Anthropic：**
 
 ```typescript
-import { AnthropicProvider } from "@synth/sdk";
+import { AnthropicProvider } from "@mirelth/synth";
 
 const provider = new AnthropicProvider({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -63,7 +63,7 @@ const provider = new AnthropicProvider({
 **弹性 Provider（自动重试 + 限流）：**
 
 ```typescript
-import { ResilientProvider, OpenAIProvider } from "@synth/sdk";
+import { ResilientProvider, OpenAIProvider } from "@mirelth/synth";
 
 const base = new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY! });
 const provider = new ResilientProvider(base, {
@@ -75,7 +75,7 @@ const provider = new ResilientProvider(base, {
 ### 运行对话
 
 ```typescript
-import { Session } from "@synth/sdk";
+import { Session } from "@mirelth/synth";
 
 const session = new Session();
 
@@ -92,7 +92,7 @@ console.log(r2.content);
 ### 注册自定义工具
 
 ```typescript
-import { AgentTool } from "@synth/sdk";
+import { AgentTool } from "@mirelth/synth";
 
 // 定义一个天气查询工具
 const weatherTool = new AgentTool({
@@ -124,9 +124,9 @@ console.log(result.content);
 ### 使用内置工具模块
 
 ```typescript
-import { createAgent } from "@synth/sdk";
+import { createAgent } from "@mirelth/synth";
 // 从 tools 子路径导入内置工具集
-import { BuiltinTools } from "@synth/sdk/tools";
+import { BuiltinTools } from "@mirelth/synth/tools";
 
 const agent = createAgent("tool-assistant")
   .withProvider(provider)
@@ -137,7 +137,7 @@ const agent = createAgent("tool-assistant")
 ## 记忆系统
 
 ```typescript
-import { InMemoryStore } from "@synth/sdk";
+import { InMemoryStore } from "@mirelth/synth";
 
 const memory = new InMemoryStore();
 
@@ -154,7 +154,7 @@ await agent.run("我喜欢什么编程语言？"); // 会从记忆中检索
 ## 多 Agent 编排
 
 ```typescript
-import { createAgent, AgentPool } from "@synth/sdk";
+import { createAgent, AgentPool } from "@mirelth/synth";
 
 const researcher = createAgent("researcher")
   .withProvider(provider)
@@ -177,7 +177,7 @@ TS SDK 支持多种边缘环境：
 
 ```typescript
 // Cloudflare Workers
-import { createAgent } from "@synth/sdk";
+import { createAgent } from "@mirelth/synth";
 // Deno / Bun 同样支持
 ```
 

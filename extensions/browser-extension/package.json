@@ -1,5 +1,5 @@
 {
-  "name": "@synth/browser-extension",
+  "name": "@mirelth/browser-extension",
   "version": "5.0.0",
   "description": "Synth Agent DevTools Browser Extension (Chrome/Firefox)",
   "type": "module",

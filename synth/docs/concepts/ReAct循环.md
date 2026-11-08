@@ -67,7 +67,7 @@ ReAct 循环由 `Agent.Run()` 方法内部驱动，用户无需手动管理循�
 === "TypeScript"
 
     ```typescript
-    import { ReActAgent, OpenAIProvider, ToolRegistry } from '@synth/sdk';
+    import { ReActAgent, OpenAIProvider, ToolRegistry } from '@mirelth/synth';
 
     const agent = new ReActAgent({
       name: 'assistant',
@@ -156,7 +156,7 @@ ReAct 循环的每个阶段都可以注入自定义逻辑：
     通过 `HookManager` 注入：
 
     ```typescript
-    import { ReActAgent, HookManager, OpenAIProvider, ToolRegistry } from '@synth/sdk';
+    import { ReActAgent, HookManager, OpenAIProvider, ToolRegistry } from '@mirelth/synth';
 
     const hooks = new HookManager();
     hooks.register('before_llm', (ctx) => {
@@ -239,7 +239,7 @@ ReAct 循环中的错误处理策略：
 === "TypeScript"
 
     ```typescript
-    import { ResilientProvider } from '@synth/sdk';
+    import { ResilientProvider } from '@mirelth/synth';
 
     const resilient = new ResilientProvider(primaryProvider);
     resilient.addFallback(fallbackProvider);

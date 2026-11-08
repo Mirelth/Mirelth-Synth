@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
-  title: '@synth/sdk',
+  title: '@mirelth/synth',
   description: 'Synth TypeScript SDK Documentation',
   themeConfig: {
     nav: [

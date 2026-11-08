@@ -1,4 +1,4 @@
-# @synth/sdk
+# @mirelth/synth
 
 TypeScript SDK for Synth — Universal AI Agent Development Framework.
 
@@ -7,7 +7,7 @@ TypeScript SDK for Synth — Universal AI Agent Development Framework.
 ## Installation
 
 ```bash
-npm install @synth/sdk
+npm install @mirelth/synth
 ```
 
 ### Optional Peer Dependencies
@@ -20,7 +20,7 @@ npm install better-sqlite3
 ## Quick Start
 
 ```typescript
-import { ReActAgent, MockProvider, ToolRegistry } from '@synth/sdk';
+import { ReActAgent, MockProvider, ToolRegistry } from '@mirelth/synth';
 
 const provider = new MockProvider({ response: 'Hello!' });
 const registry = new ToolRegistry();
@@ -162,7 +162,7 @@ console.log(response.content);
 ## Adding Tools
 
 ```typescript
-import { Tool, ToolRegistry } from '@synth/sdk';
+import { Tool, ToolRegistry } from '@mirelth/synth';
 
 class WeatherTool implements Tool {
   name = 'get_weather';
@@ -190,7 +190,7 @@ registry.register(new WeatherTool());
 batch is full or the timer fires:
 
 ```typescript
-import { OpenAIProvider, BatchRequestProcessor } from '@synth/sdk';
+import { OpenAIProvider, BatchRequestProcessor } from '@mirelth/synth';
 
 const provider = new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY! });
 const batch = new BatchRequestProcessor(provider, {
@@ -213,7 +213,7 @@ batch.close();
 with automatic retry on parse failure:
 
 ```typescript
-import { OpenAIProvider, StructuredOutputExtractor } from '@synth/sdk';
+import { OpenAIProvider, StructuredOutputExtractor } from '@mirelth/synth';
 
 const provider = new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY! });
 const extractor = new StructuredOutputExtractor(provider, 'gpt-4o', {
@@ -238,7 +238,7 @@ const person = await extractor.extract<{ name: string; age: number }>(
 ## Prompt Registry & Few-Shot
 
 ```typescript
-import { PromptTemplate, TemplateRegistry, FewShotTemplate, KeywordSelector } from '@synth/sdk';
+import { PromptTemplate, TemplateRegistry, FewShotTemplate, KeywordSelector } from '@mirelth/synth';
 
 const tpl = new PromptTemplate('You are {{.Role}}. Answer: {{.Question}}');
 const reg = new TemplateRegistry();
@@ -262,7 +262,7 @@ const out = few.render('hello there', { Role: 'bot', Question: '' });
 ## Document Loaders
 
 ```typescript
-import { TextLoader, MDLoader, CodeLoader, DirectoryLoader } from '@synth/sdk';
+import { TextLoader, MDLoader, CodeLoader, DirectoryLoader } from '@mirelth/synth';
 
 const txt = await new TextLoader().load('./README.md');
 const md  = await new MDLoader().load('./CHANGELOG.md');
@@ -275,7 +275,7 @@ const all = await new DirectoryLoader(new TextLoader(), ['.md', '.ts']).load('./
 ## Using Hooks
 
 ```typescript
-import { ReActAgent, HookManager, MockProvider, ToolRegistry } from '@synth/sdk';
+import { ReActAgent, HookManager, MockProvider, ToolRegistry } from '@mirelth/synth';
 
 const hooks = new HookManager();
 hooks.register('before_llm', (ctx) => {
@@ -299,7 +299,7 @@ const agent = new ReActAgent({
 ### Health Checks
 
 ```typescript
-import { HealthServer } from '@synth/sdk';
+import { HealthServer } from '@mirelth/synth';
 import { createServer } from 'node:http';
 
 const health = new HealthServer();
@@ -319,7 +319,7 @@ server.listen(8080);
 ### Admin API
 
 ```typescript
-import { AdminHandler } from '@synth/sdk';
+import { AdminHandler } from '@mirelth/synth';
 
 const admin = new AdminHandler({
   apiToken: 'my-secret-token',
@@ -334,7 +334,7 @@ const admin = new AdminHandler({
 ### Audit Logging
 
 ```typescript
-import { AuditLogger, InMemoryAuditOutput } from '@synth/sdk';
+import { AuditLogger, InMemoryAuditOutput } from '@mirelth/synth';
 
 const logger = new AuditLogger({ output: new InMemoryAuditOutput() });
 await logger.log({ actor: 'user-1', action: 'tool.execute', resource: 'shell' });
@@ -345,7 +345,7 @@ const report = await logger.generateReport('2026-01-01', '2026-12-31');
 ### SQLite Checkpoint Persistence
 
 ```typescript
-import { SQLiteCheckpointStore } from '@synth/sdk';
+import { SQLiteCheckpointStore } from '@mirelth/synth';
 
 const store = new SQLiteCheckpointStore('./checkpoints.db');
 await store.saveState({

@@ -2,7 +2,7 @@
 
 > 包路径：`synth/pkg` → 导入别名 `synth`
 >
-> 版本：`synth.Version` = `"7.8.0"` (Go) / `@synth/sdk` `7.8.0` (TypeScript)
+> 版本：`synth.Version` = `"7.8.0"` (Go) / `@mirelth/synth` `7.8.0` (TypeScript)
 >
 > **TypeScript SDK 与 Go 框架 100% 功能对等**，下方 API 参考 covers Go 公共 API。
 > TypeScript SDK 完整 API 参考见 [sdk/typescript/docs/api/index.md](../sdk/typescript/docs/api/index.md)。
@@ -870,13 +870,13 @@ Agent 的持久化状态，包含消息历史、轮次和状态信息。
 ### 安装
 
 ```bash
-npm install @synth/sdk
+npm install @mirelth/synth
 npm install better-sqlite3  # 可选：SQLite 持久化
 ```
 
 ### 核心 API 对照表
 
-| Go (`synth.`) | TypeScript (`@synth/sdk`) | 说明 |
+| Go (`synth.`) | TypeScript (`@mirelth/synth`) | 说明 |
 |---|---|---|
 | `NewAgent()` | `new ReActAgent()` / `newAgent()` | 创建 Agent |
 | `NewOpenAIProvider()` | `new OpenAIProvider()` | OpenAI |
@@ -902,7 +902,7 @@ import {
   Inspector, InspectorServer, DebugServer, // 调试器 HTTP 服务
   SQLiteCheckpointStore,                 // SQLite 检查点持久化
   HealthServer,                          // /healthz /readyz /livez
-} from '@synth/sdk';
+} from '@mirelth/synth';
 ```
 
 详见 [TypeScript SDK API 参考](../sdk/typescript/docs/api/index.md)。

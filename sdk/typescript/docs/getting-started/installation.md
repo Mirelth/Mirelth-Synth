@@ -3,7 +3,7 @@
 ## TypeScript SDK
 
 ```bash
-npm install @synth/sdk
+npm install @mirelth/synth
 ```
 
 **要求：**
@@ -14,7 +14,7 @@ npm install @synth/sdk
 ## Python SDK
 
 ```bash
-pip install synth
+pip install mirelth-synth
 ```
 
 **要求：**

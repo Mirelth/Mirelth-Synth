@@ -23,7 +23,7 @@ docker compose up -d
 ### 2. 使用 TypeScript 客户端
 
 ```typescript
-import { PlaygroundClient } from '@synth/sdk';
+import { PlaygroundClient } from '@mirelth/synth';
 
 const pg = new PlaygroundClient({
   apiBase: 'http://localhost:8080',
@@ -58,7 +58,7 @@ await pg.deleteAgent(agent.id);
 ### 3. 使用 CLI 会话管理器
 
 ```typescript
-import { PlaygroundSession, PlaygroundManager } from '@synth/sdk';
+import { PlaygroundSession, PlaygroundManager } from '@mirelth/synth';
 
 const manager = new PlaygroundManager('http://localhost:8080', 'gpt-4');
 const session = await manager.createSession('code-helper', {

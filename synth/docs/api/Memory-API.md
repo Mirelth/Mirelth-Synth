@@ -348,7 +348,7 @@ type SummaryResult struct {
 === "TypeScript"
 
     ```typescript
-    import { ReActAgent, OpenAIProvider, SQLiteStore } from '@synth/sdk';
+    import { ReActAgent, OpenAIProvider, SQLiteStore } from '@mirelth/synth';
 
     const mem = new SQLiteStore({ dbPath: './data/memory.db' });
 

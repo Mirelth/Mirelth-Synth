@@ -20,7 +20,7 @@
 
 ```toml
 [dependencies]
-synth = "2.0.0"
+mirelth-synth = "2.0.0"
 tokio = { version = "1", features = ["full"] }
 ```
 

@@ -11,7 +11,7 @@
  *
  * 使用方式：
  *   // app/page.tsx (Server Component)
- *   import { AgentServerComponent } from '@synth/sdk/react/server-components';
+ *   import { AgentServerComponent } from '@mirelth/synth/react/server-components';
  *   export default function Page() {
  *     return <AgentServerComponent input="你好" provider={provider} toolkit={toolkit} />;
  *   }

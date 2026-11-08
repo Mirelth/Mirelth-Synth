@@ -5,13 +5,13 @@
 ### 1. Install
 
 ```bash
-npm install @synth/sdk
+npm install @mirelth/synth
 ```
 
 ### 2. Create an Agent
 
 ```typescript
-import { ReActAgent, MockProvider, ToolRegistry } from '@synth/sdk';
+import { ReActAgent, MockProvider, ToolRegistry } from '@mirelth/synth';
 
 const provider = new MockProvider({ response: 'Hello! How can I help?' });
 const registry = new ToolRegistry();
@@ -30,7 +30,7 @@ console.log(response.content); // "Hello! How can I help?"
 ### 3. Add Tools
 
 ```typescript
-import { Tool } from '@synth/sdk';
+import { Tool } from '@mirelth/synth';
 
 class WeatherTool implements Tool {
   name = 'get_weather';
@@ -54,7 +54,7 @@ registry.register(new WeatherTool());
 ### 4. Use OpenAI Provider
 
 ```typescript
-import { OpenAIProvider } from '@synth/sdk';
+import { OpenAIProvider } from '@mirelth/synth';
 
 const provider = new OpenAIProvider({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -73,7 +73,7 @@ const agent = new ReActAgent({
 ### 5. Add Resilience
 
 ```typescript
-import { ResilientProvider } from '@synth/sdk';
+import { ResilientProvider } from '@mirelth/synth';
 
 const resilient = new ResilientProvider(provider);
 resilient.addFallback(new MockProvider({ response: 'Service temporarily unavailable' }));

@@ -104,11 +104,11 @@ go run .
 === "TypeScript"
 
     ```bash
-    npm install @synth/sdk
+    npm install @mirelth/synth
     ```
 
     ```typescript
-    import { ReActAgent, OpenAIProvider, ToolRegistry } from '@synth/sdk';
+    import { ReActAgent, OpenAIProvider, ToolRegistry } from '@mirelth/synth';
 
     const agent = new ReActAgent({
       name: 'HelloAgent',

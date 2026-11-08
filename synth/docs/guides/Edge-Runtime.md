@@ -5,7 +5,7 @@
 ## 运行时检测
 
 ```ts
-import { detectRuntime, EdgeRequest, EdgeResponse, EdgeKV } from '@synth/edge';
+import { detectRuntime, EdgeRequest, EdgeResponse, EdgeKV } from '@mirelth/edge';
 
 console.log(detectRuntime());
 // 'cloudflare-workers' | 'vercel-edge' | 'deno' | 'node'
@@ -15,8 +15,8 @@ console.log(detectRuntime());
 
 ```ts
 // worker.ts
-import { Agent } from '@synth/typescript';
-import { FromHTTPRequest, ToHTTPRequest, WriteHTTPResponse } from '@synth/edge';
+import { Agent } from '@mirelth/typescript';
+import { FromHTTPRequest, ToHTTPRequest, WriteHTTPResponse } from '@mirelth/edge';
 
 export default {
   async fetch(request: Request): Promise<Response> {
@@ -43,7 +43,7 @@ export default {
 ## KV Store（边缘缓存）
 
 ```ts
-import { createEdgeKV, EdgeKV } from '@synth/edge';
+import { createEdgeKV, EdgeKV } from '@mirelth/edge';
 
 const kv: EdgeKV = createEdgeKV();
 await kv.put('session:123', JSON.stringify({ turns: 5 }), {

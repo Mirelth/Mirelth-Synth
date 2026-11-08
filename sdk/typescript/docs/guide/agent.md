@@ -5,7 +5,7 @@
 The core agent implementation using the ReAct (Reason-Act-Observe) loop pattern.
 
 ```typescript
-import { ReActAgent, MockProvider, ToolRegistry } from '@synth/sdk';
+import { ReActAgent, MockProvider, ToolRegistry } from '@mirelth/synth';
 
 const agent = new ReActAgent({
   name: 'my-agent',
@@ -47,7 +47,7 @@ for await (const chunk of agent.stream('Tell me a story')) {
 Register lifecycle hooks to observe or modify agent behavior.
 
 ```typescript
-import { HookManager } from '@synth/sdk';
+import { HookManager } from '@mirelth/synth';
 
 const hooks = new HookManager();
 
@@ -74,7 +74,7 @@ hooks.register('on_error', (ctx) => {
 Control agent execution state.
 
 ```typescript
-import { Lifecycle } from '@synth/sdk';
+import { Lifecycle } from '@mirelth/synth';
 
 const lifecycle = new Lifecycle();
 

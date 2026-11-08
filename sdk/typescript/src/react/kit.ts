@@ -2,7 +2,7 @@
  * 零样板 React Hooks kit（v3.7-4）。
  *
  * 直接可用的 useAgent / useReActLoop：
- *   import { useAgent, useReActLoop } from '@synth/sdk/react';
+ *   import { useAgent, useReActLoop } from '@mirelth/synth/react';
  *
  *   function Chat() {
  *     const { messages, run } = useAgent({ name: 'chat', model: provider });

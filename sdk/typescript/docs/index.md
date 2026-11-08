@@ -6,7 +6,7 @@
 
 - [快速开始](./getting-started/quickstart.md) — 5 分钟上手
 - [安装指南](./getting-started/installation.md) — 各语言安装说明
-- [TypeScript SDK](https://github.com/Mirelth/Synth/tree/main/sdk/typescript) — npm `@synth/sdk`
+- [TypeScript SDK](https://github.com/Mirelth/Synth/tree/main/sdk/typescript) — npm `@mirelth/synth`
 - [Python SDK](https://github.com/Mirelth/Synth/tree/main/sdk/python) — pip `synth`
 - [Go 核心框架](https://github.com/Mirelth/Synth) — `github.com/Mirelth/Synth`
 

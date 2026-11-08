@@ -51,6 +51,6 @@
 ## 四、依赖升级（v7.0 发版时生效）
 
 - Go SDK：`go get github.com/Synth/synth/pkg@v7.0.0`
-- TS SDK：`npm install @synth/sdk@7.0.0`
+- TS SDK：`npm install @mirelth/synth@7.0.0`
 - 如届时翻默认已批准：构造 `NewAgent` 的现有代码零迁移（世界模型默认开启
   后显式退出一行 `WithoutWorldModel()`）；未批准则零破坏性变更。

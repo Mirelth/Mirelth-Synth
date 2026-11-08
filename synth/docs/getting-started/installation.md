@@ -108,7 +108,7 @@ Replace `<release-tag>` with a tag from the
 For TypeScript projects there is no CLI to install — the SDK is an npm package:
 
 ```bash
-npm install @synth/sdk
+npm install @mirelth/synth
 # optional, for SQLite persistence
 npm install better-sqlite3
 ```

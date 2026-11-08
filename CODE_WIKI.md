@@ -2226,7 +2226,7 @@ sdk/typescript/src/
 ### 使用示例
 
 ```typescript
-import { ReActAgent, OpenAIProvider, ToolRegistry, AuditLogger, HealthServer } from '@synth/sdk';
+import { ReActAgent, OpenAIProvider, ToolRegistry, AuditLogger, HealthServer } from '@mirelth/synth';
 
 const provider = new OpenAIProvider({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -2342,7 +2342,7 @@ await audit.log({ actor: 'user-1', action: 'agent.run', resource: 'my-agent' });
 ```bash
 # 升级依赖
 go get synth@v2.0.0
-npm install @synth/sdk@2.0.0
+npm install @mirelth/synth@2.0.0
 synth version   # 验证: v2.0.0
 ```
 

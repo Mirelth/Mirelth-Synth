@@ -27,7 +27,7 @@ Agent 通过类型断言发现能力，而非配置文件：
 === "TypeScript"
 
     ```typescript
-    import { ReActAgent, OpenAIProvider, ToolRegistry } from '@synth/sdk';
+    import { ReActAgent, OpenAIProvider, ToolRegistry } from '@mirelth/synth';
 
     // 创建 Agent 时通过配置注入能力
     const agent = new ReActAgent({
@@ -148,7 +148,7 @@ agent, err := synth.NewAgent("assistant", "你是助手", provider,
     **`ReActAgent` 构造器：**
 
     ```typescript
-    import { ReActAgent, OpenAIProvider, ToolRegistry } from '@synth/sdk';
+    import { ReActAgent, OpenAIProvider, ToolRegistry } from '@mirelth/synth';
 
     const agent = new ReActAgent({
       name: 'assistant',
@@ -165,7 +165,7 @@ agent, err := synth.NewAgent("assistant", "你是助手", provider,
     **使用 MockProvider（无需 API Key）：**
 
     ```typescript
-    import { ReActAgent, MockProvider, ToolRegistry } from '@synth/sdk';
+    import { ReActAgent, MockProvider, ToolRegistry } from '@mirelth/synth';
 
     const agent = new ReActAgent({
       name: 'test-agent',
@@ -207,7 +207,7 @@ agent, err := synth.NewAgent("assistant", "你是助手", provider,
 === "TypeScript"
 
     ```typescript
-    import { DAGBuilder } from '@synth/sdk';
+    import { DAGBuilder } from '@mirelth/synth';
 
     // DAG 编排
     const dag = new DAGBuilder('data-analysis')

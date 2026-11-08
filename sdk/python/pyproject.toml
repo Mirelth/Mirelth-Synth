@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.backends._legacy:_Backend"
 
 [project]
-name = "synth"
+name = "mirelth-synth"
 version = "2.0.0"
-description = "Synth AI Agent Framework - Python Remote HTTP Client (lightweight REST API client, not a full SDK)"
+description = "Synth AI Agent Framework - Python Remote HTTP Client (Mirelth / Synth; lightweight REST API client, not a full SDK)"
 requires-python = ">=3.9"
 dependencies = []
 

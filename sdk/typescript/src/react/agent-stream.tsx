@@ -6,7 +6,7 @@
  *
  * 使用方式：
  *   // app/agent/page.tsx (Server Component)
- *   import { AgentStream } from '@synth/react/agent-stream'
+ *   import { AgentStream } from '@mirelth/react/agent-stream'
  *
  *   export default async function AgentPage() {
  *     return (
@@ -138,7 +138,7 @@ async function buildAgent(cfg: AgentConfig): Promise<AgentLike> {
     const { Agent } = await import('../agent/builder.js') as unknown as { Agent: new (cfg: AgentConfig) => AgentLike }
     return new Agent(cfg) as AgentLike
   } catch {
-    throw new Error('Agent builder not available. Make sure @synth/sdk is properly configured.')
+    throw new Error('Agent builder not available. Make sure @mirelth/synth is properly configured.')
   }
 }
 

@@ -1,5 +1,5 @@
 {
-  "name": "@synth/sdk",
+  "name": "@mirelth/synth",
   "version": "7.8.0",
   "description": "Synth - Universal AI Agent Development Framework for TypeScript",
   "type": "module",

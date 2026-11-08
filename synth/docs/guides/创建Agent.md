@@ -33,7 +33,7 @@
 === "TypeScript"
 
     ```typescript
-    import { ReActAgent, OpenAIProvider, ToolRegistry } from '@synth/sdk';
+    import { ReActAgent, OpenAIProvider, ToolRegistry } from '@mirelth/synth';
 
     const agent = new ReActAgent({
       name: 'my-agent',
@@ -82,7 +82,7 @@
 === "TypeScript"
 
     ```typescript
-    import { AnthropicProvider } from '@synth/sdk';
+    import { AnthropicProvider } from '@mirelth/synth';
 
     const provider = new AnthropicProvider({
       apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -104,7 +104,7 @@
 === "TypeScript"
 
     ```typescript
-    import { OllamaProvider } from '@synth/sdk';
+    import { OllamaProvider } from '@mirelth/synth';
 
     const provider = new OllamaProvider({
       baseURL: 'http://localhost:11434',
@@ -136,7 +136,7 @@
 === "TypeScript"
 
     ```typescript
-    import { ResilientProvider } from '@synth/sdk';
+    import { ResilientProvider } from '@mirelth/synth';
 
     const resilient = new ResilientProvider(primaryProvider);
     resilient.addFallback(fallbackProvider);
@@ -172,7 +172,7 @@
 === "TypeScript"
 
     ```typescript
-    import { ToolRegistry, FileSystemTool, ShellTool, WebTool } from '@synth/sdk';
+    import { ToolRegistry, FileSystemTool, ShellTool, WebTool } from '@mirelth/synth';
 
     const registry = new ToolRegistry();
     registry.register(new FileSystemTool({ rootDir: '.' }));
@@ -220,7 +220,7 @@
 === "TypeScript"
 
     ```typescript
-    import { Tool, ToolRegistry } from '@synth/sdk';
+    import { Tool, ToolRegistry } from '@mirelth/synth';
 
     class WeatherTool implements Tool {
       name = 'get_weather';
@@ -259,7 +259,7 @@
 === "TypeScript"
 
     ```typescript
-    import { InMemoryStore } from '@synth/sdk';
+    import { InMemoryStore } from '@mirelth/synth';
 
     const memory = new InMemoryStore();
 
@@ -305,7 +305,7 @@
     通过 `HookManager` 注入：
 
     ```typescript
-    import { HookManager } from '@synth/sdk';
+    import { HookManager } from '@mirelth/synth';
 
     const hooks = new HookManager();
     hooks.register('before_llm', (ctx) => {
@@ -415,7 +415,7 @@
     import {
       ReActAgent, OpenAIProvider, ToolRegistry,
       FileSystemTool, ShellTool, InMemoryStore,
-    } from '@synth/sdk';
+    } from '@mirelth/synth';
 
     async function main() {
       // 1. LLM Provider

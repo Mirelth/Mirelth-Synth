@@ -17,7 +17,7 @@
 ## 二、依赖升级（v5.0 需要做的）
 
 - Go SDK：`go get github.com/Synth/synth/pkg@v5.0.0`
-- TS SDK：`npm install @synth/sdk@5.0.0`
+- TS SDK：`npm install @mirelth/synth@5.0.0`
 
 ## 三、v4.x 期间新增/演进的关键 API（非破坏性）
 

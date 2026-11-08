@@ -12,7 +12,7 @@
  *
  * 使用方式（Node.js）：
  *
- *   import { SyncServer } from '@synth/sdk/collaboration';
+ *   import { SyncServer } from '@mirelth/synth/collaboration';
  *   const server = new SyncServer({ port: 8080, path: '/sync' });
  *   server.start();
  */

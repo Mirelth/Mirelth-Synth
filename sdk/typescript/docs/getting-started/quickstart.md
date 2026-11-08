@@ -3,11 +3,11 @@
 ## TypeScript (npm)
 
 ```bash
-npm install @synth/sdk
+npm install @mirelth/synth
 ```
 
 ```typescript
-import { ReActAgent, createAgent, MockProvider } from "@synth/sdk";
+import { ReActAgent, createAgent, MockProvider } from "@mirelth/synth";
 
 // 1. 使用 Mock Provider 快速体验
 const provider = new MockProvider({ response: "Hello from Synth!" });
@@ -27,7 +27,7 @@ console.log(result.content);
 ## Python
 
 ```bash
-pip install synth
+pip install mirelth-synth
 ```
 
 ```python

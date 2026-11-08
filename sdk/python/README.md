@@ -22,7 +22,7 @@
 ## 安装
 
 ```bash
-pip install synth
+pip install mirelth-synth
 ```
 
 ## 快速开始

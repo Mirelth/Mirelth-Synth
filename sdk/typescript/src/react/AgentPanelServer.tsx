@@ -6,7 +6,7 @@
  *
  * ʹ�÷�ʽ��
  *   // app/agent/[id]/page.tsx (Server Component)
- *   import { AgentPanelServer } from '@synth/sdk/react';
+ *   import { AgentPanelServer } from '@mirelth/synth/react';
  *   export default async function Page({ params }) {
  *     return <AgentPanelServer agentId={params.id} />;
  *   }

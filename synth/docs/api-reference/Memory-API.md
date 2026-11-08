@@ -336,7 +336,7 @@ func NewMilvusClient(config MilvusConfig) (*MilvusClient, error)   // internal/m
 === "TypeScript"
 
     ```typescript
-    import { ReActAgent, OpenAIProvider, SqliteStore } from '@synth/sdk';
+    import { ReActAgent, OpenAIProvider, SqliteStore } from '@mirelth/synth';
 
     const mem = new SqliteStore({ dbPath: './data/memory.db' });
 

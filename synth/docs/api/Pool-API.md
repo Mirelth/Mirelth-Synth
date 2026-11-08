@@ -179,7 +179,7 @@ executeTask():
 === "TypeScript"
 
     ```typescript
-    import { AgentPool } from '@synth/sdk';
+    import { AgentPool } from '@mirelth/synth';
 
     const pool = new AgentPool({
       maxConcurrency: 5,

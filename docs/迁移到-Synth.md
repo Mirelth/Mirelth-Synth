@@ -19,8 +19,8 @@ Synth 改名同时更换了模块路径、Go 公共 API 包名、CLI、配置契
 | 配置文件 | `.ap.yaml` / `.ap.json` | `.synth.yaml` / `.synth.json` |
 | 环境变量 | `AP_LLM_API_KEY`、`AP_ROOT`、`AP_*` | `SYNTH_LLM_API_KEY`、`SYNTH_ROOT`、`SYNTH_*` |
 | 指标前缀 | `ap_*`、`agentprimordia_*` | `synth_*` |
-| npm / 扩展 | `@agentprimordia/sdk`、publisher `agentprimordia`、`agentprimordia.*` 命令 ID | `@synth/sdk`、publisher `synth`、`synth.*` |
-| Python / Rust | 包 `agentprimordia` | 包 `synth` |
+| npm / 扩展 | `@agentprimordia/sdk`、publisher `agentprimordia`、`agentprimordia.*` 命令 ID | `@mirelth/synth`、publisher `mirelth`、`synth.*` 命令 ID |
+| Python / Rust | 包 `agentprimordia` | 分发名 `mirelth-synth`（Python import 名与 Rust crate 名仍为 `synth`） |
 | K8s | CRD group `agent.primordia.dev` | `synth.dev` |
 | 镜像 | `ghcr.io/gleamseekers/...` | `ghcr.io/mirelth/...` |
 

@@ -21,7 +21,7 @@ Synth SDK 支持在浏览器中直接运行 Agent，利用以下技术：
 
 ```html
 <script type="module">
-import { PlaygroundClient } from 'https://cdn.jsdelivr.net/npm/@synth/sdk/dist/browser/index.js';
+import { PlaygroundClient } from 'https://cdn.jsdelivr.net/npm/@mirelth/synth/dist/browser/index.js';
 
 const pg = new PlaygroundClient({
   apiBase: 'http://localhost:8080',
@@ -41,7 +41,7 @@ document.getElementById('output').textContent = reply.response;
 在支持 WebGPU 的浏览器中运行本地模型：
 
 ```typescript
-import { WebGPUProvider } from '@synth/sdk';
+import { WebGPUProvider } from '@mirelth/synth';
 
 // 检测 WebGPU 支持
 const supported = await WebGPUProvider.detect();
@@ -69,7 +69,7 @@ const result = await agent.run('解释量子纠缠');
 ### 降级策略
 
 ```typescript
-import { WebGPUProvider } from '@synth/sdk';
+import { WebGPUProvider } from '@mirelth/synth';
 
 // 自动降级：WebGPU → 远程 API
 const provider = await WebGPUProvider.createWithFallback({
@@ -87,7 +87,7 @@ const provider = await WebGPUProvider.createWithFallback({
 浏览器端记忆存储：
 
 ```typescript
-import { IndexedDBVectorStore } from '@synth/sdk';
+import { IndexedDBVectorStore } from '@mirelth/synth';
 
 const store = new IndexedDBVectorStore({
   dbName: 'agent-memory',
@@ -112,7 +112,7 @@ const results = await store.search(queryEmbedding, { topK: 5 });
 在浏览器中安全执行用户代码：
 
 ```typescript
-import { CodeSandboxV2 } from '@synth/sdk';
+import { CodeSandboxV2 } from '@mirelth/synth';
 
 const sandbox = new CodeSandboxV2({
   memoryLimitMB: 32,

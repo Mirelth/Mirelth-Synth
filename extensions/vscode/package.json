@@ -3,7 +3,7 @@
   "displayName": "Synth Inspector",
   "description": "Agent 调试与 ReAct 循环可视化（VS Code Inspector Webview）",
   "version": "5.0.0",
-  "publisher": "synth",
+  "publisher": "mirelth",
   "engines": {
     "vscode": "^1.85.0"
   },

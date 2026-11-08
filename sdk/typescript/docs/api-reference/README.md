@@ -6,7 +6,7 @@
 
 | 语言 | 包名 | 包管理器 |
 |------|------|---------|
-| TypeScript | `@synth/sdk` | npm |
+| TypeScript | `@mirelth/synth` | npm |
 | Go | `github.com/Mirelth/Synth` | go modules |
 | Python | `synth` | pip |
 | Java | `com.synth` | gradle/maven |

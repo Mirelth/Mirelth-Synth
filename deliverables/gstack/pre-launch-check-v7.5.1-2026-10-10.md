@@ -237,7 +237,7 @@ synth/bench/llm-bench/main.go:167:  os.Exit(1)
 | 6 | `docker pull ghcr.io/<repo>:7.5.1` | 拉取成功 | 检查 docker job 日志 |
 | 7 | `cosign verify ghcr.io/<repo>:7.5.1 --certificate-identity-regexp ...` | 验证通过 | 未签名 → 补签或回滚（M1） |
 | 8 | 镜像内 `synth-admin --version` | 显示 7.5.1（当前预期为 `dev`，即 M2） | 记录缺陷，非阻断 |
-| 9 | `npm view @synth/sdk version` | 7.5.1（若 token 已配） | 若跳过，确认 job summary 有告警 |
+| 9 | `npm view @mirelth/synth version` | 7.5.1（若 token 已配） | 若跳过，确认 job summary 有告警 |
 | 10 | `helm template` 渲染 chart | 版本 7.5.1、镜像 tag 正确 | 记录缺陷 |
 | 11 | `go install github.com/Mirelth/Synth/v7/synth/cmd/synth@v7.5.1` | 安装成功、`synth version` = 7.5.1 | 检查 GOPROXY 索引 |
 
@@ -252,7 +252,7 @@ synth/bench/llm-bench/main.go:167:  os.Exit(1)
 | 1 | **删除 Release** | GitHub → Releases → 删除 `v7.5.1`（保留 tag 便于排查）或 `gh release delete v7.5.1 --yes` |
 | 2 | **标记 tag 作废** | 在 tag 上追加说明；如需彻底阻断 `go install`，`git push --delete origin v7.5.1`（注意：GOPROXY 已缓存版本无法撤回，只能发新 patch） |
 | 3 | **处理镜像 tag** | 镜像 tag 不可删除时，重新推送一个指向**上一可用 digest** 的 `:7.5.1` 覆盖，或在 README/Release notes 显式标注"该 tag 镜像不可信，请用 7.5.2" |
-| 4 | **处理 npm 版本** | npm **不支持删除已发布版本**（72h 内可 `npm unpublish`，超期只能 `npm deprecate`）。执行 `npm deprecate @synth/sdk@7.5.1 "该版本发布链路存在缺陷，请升级至 7.5.2"` |
+| 4 | **处理 npm 版本** | npm **不支持删除已发布版本**（72h 内可 `npm unpublish`，超期只能 `npm deprecate`）。执行 `npm deprecate @mirelth/synth@7.5.1 "该版本发布链路存在缺陷，请升级至 7.5.2"` |
 | 5 | **发新版本** | 修复 B1/B2 → 升 `7.5.2` → 重跑 version-sync-check → 重打 tag |
 | 6 | **回溯 v7.5.0** | 确认 `v7.5.0` 的 Release 与 npm 版本已标记作废（`npm deprecate`），避免用户在两版之间反复踩坑 |
 

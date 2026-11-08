@@ -5,15 +5,15 @@
 ## 安装
 
 ```bash
-npm install @synth/react
+npm install @mirelth/react
 # 或
-yarn add @synth/react
+yarn add @mirelth/react
 ```
 
 ## useAgent
 
 ```tsx
-import { useAgentWithReact } from '@synth/react';
+import { useAgentWithReact } from '@mirelth/react';
 import React from 'react';
 
 const useAgent = useAgentWithReact(React, (opts) => new Agent(opts));
@@ -41,7 +41,7 @@ function ChatComponent() {
 实时显示 ReAct 思考-行动-观察过程：
 
 ```tsx
-import { useReActLoopWithReact } from '@synth/react';
+import { useReActLoopWithReact } from '@mirelth/react';
 
 const useReActLoop = useReActLoopWithReact(React);
 

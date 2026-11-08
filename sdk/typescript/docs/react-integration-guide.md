@@ -7,7 +7,7 @@
 ## 安装
 
 ```bash
-npm install @synth/sdk react react-dom
+npm install @mirelth/synth react react-dom
 ```
 
 SDK 的 React 模块通过 `peerDependencies` 声明，需确保项目中已安装 React 18+ 或 19。
@@ -19,7 +19,7 @@ SDK 的 React 模块通过 `peerDependencies` 声明，需确保项目中已安�
 ### useAgent — Agent 生命周期管理
 
 ```tsx
-import { useAgent } from '@synth/sdk';
+import { useAgent } from '@mirelth/synth';
 
 function ChatPanel() {
   const { agent, status, error } = useAgent({
@@ -38,7 +38,7 @@ function ChatPanel() {
 ### useAgentStream — 流式对话
 
 ```tsx
-import { useAgentStream } from '@synth/sdk';
+import { useAgentStream } from '@mirelth/synth';
 
 function StreamChat() {
   const { messages, send, isStreaming, abort } = useAgentStream({
@@ -67,7 +67,7 @@ function StreamChat() {
 ### useAgentSuspense — Suspense 模式
 
 ```tsx
-import { useAgentSuspense } from '@synth/sdk';
+import { useAgentSuspense } from '@mirelth/synth';
 import { Suspense } from 'react';
 
 function AgentResult({ query }: { query: string }) {
@@ -98,7 +98,7 @@ import {
   MessageFlow,
   HITLPanel,
   CollaborationReplay,
-} from '@synth/sdk';
+} from '@mirelth/synth';
 
 function CollaborationDashboard() {
   return (
@@ -140,7 +140,7 @@ SDK 支持 React Server Components：
 
 ```tsx
 // app/agent/page.tsx (Next.js App Router)
-import { AgentServerComponent } from '@synth/sdk';
+import { AgentServerComponent } from '@mirelth/synth';
 
 export default async function AgentPage() {
   return (

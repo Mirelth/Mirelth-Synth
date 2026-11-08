@@ -51,7 +51,7 @@ import { useStreamRunImpl, type StreamProvider } from './use-stream-run.js';
  *
  * 用法：
  *   import * as React from 'react';
- *   import { useAgentWithReact } from '@synth/sdk/react';
+ *   import { useAgentWithReact } from '@mirelth/synth/react';
  *   const useAgent = useAgentWithReact(React);
  *   const { run, isRunning } = useAgent({ name: 'my-agent' });
  */
