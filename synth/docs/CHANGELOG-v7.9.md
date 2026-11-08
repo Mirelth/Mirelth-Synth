@@ -47,6 +47,11 @@ go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@v7.9.0
 synth version   # 应显示 7.9.0
 ```
 
+> 模块依赖：`pgvector` 是独立子模块（`github.com/Mirelth/Mirelth-Synth/pgvector`），
+> 主模块以 `v0.1.0` 依赖它。该子模块已有 tag `pgvector/v0.1.0`，因此干净环境下
+> `go get` / `go install` 无需任何本地 replace；仓库内 `go.work` 的 replace 仅用于
+> 本地开发。
+
 下游项目从旧品牌迁移：
 
 ```bash

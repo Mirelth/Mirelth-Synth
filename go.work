@@ -23,7 +23,7 @@ use ./gateway
 
 use ./wasm
 
-// 本地子模块解析：go.mod 仍保留 pgvector 的 v0.0.0 require，
-// 但该版本尚未发布到新模块路径；显式 replace 到本地目录，
-// 避免 clone 后 go build 尝试访问尚不存在的远程仓库。
-replace github.com/Mirelth/Mirelth-Synth/pgvector v0.0.0 => ./pgvector
+// 本地子模块解析：pgvector 是独立模块，go.mod 通过 v0.1.0 依赖它
+// （已发布 tag `pgvector/v0.1.0`）；workspace 内显式 replace 到本地目录，
+// 让改本地 pgvector 时无需发版即可验证。
+replace github.com/Mirelth/Mirelth-Synth/pgvector v0.1.0 => ./pgvector
