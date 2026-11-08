@@ -12,7 +12,7 @@
  *
  * 使用方式（Node.js）：
  *
- *   import { SyncServer } from '@agentprimordia/sdk/collaboration';
+ *   import { SyncServer } from '@synth/sdk/collaboration';
  *   const server = new SyncServer({ port: 8080, path: '/sync' });
  *   server.start();
  */

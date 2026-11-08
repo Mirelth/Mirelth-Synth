@@ -7,11 +7,11 @@
  * 并用显式锚点对账，漂移即红。
  *
  * 唯一真值（Single Source of Truth）：
- *   agentprimordia/pkg/agent.go  ->  const Version = "x.y.z"
+ *   synth/pkg/agent.go  ->  const Version = "x.y.z"
  *
  * 检查项：
  *   1. 第二真值文件必须等于真值：
- *        agentprimordia/VERSION、sdk/typescript/package.json、
+ *        synth/VERSION、sdk/typescript/package.json、
  *        helm values.yaml (image.tag)、helm Chart.yaml (appVersion)
  *   2. 在"当前版本"语义的文档锚点上，捕获到的版本必须等于真值（历史表格/发布说明不在扫描范围）。
  *   3. README 统计数字必须与实测一致（测试文件数 / Go 文件数 / 包数 / agent 子包数）。
@@ -45,11 +45,11 @@ function fail(msg) {
 // ===== 1. 提取唯一真值 =====
 let truth;
 try {
-  const m = read('agentprimordia/pkg/agent.go').match(/const\s+Version\s*=\s*"([^"]+)"/);
+  const m = read('synth/pkg/agent.go').match(/const\s+Version\s*=\s*"([^"]+)"/);
   if (!m) throw new Error('未匹配 const Version');
   truth = m[1];
 } catch (e) {
-  console.error(`::error::无法从 agentprimordia/pkg/agent.go 提取版本真值: ${e.message}`);
+  console.error(`::error::无法从 synth/pkg/agent.go 提取版本真值: ${e.message}`);
   process.exit(1);
 }
 
@@ -61,19 +61,19 @@ console.log('');
 
 // ===== 2. 第二真值文件 =====
 const SECOND_TRUTHS = [
-  ['agentprimordia/VERSION', () => read('agentprimordia/VERSION').trim()],
+  ['synth/VERSION', () => read('synth/VERSION').trim()],
   ['sdk/typescript/package.json', () => JSON.parse(read('sdk/typescript/package.json')).version],
   [
-    'agentprimordia/deploy/helm/agentprimordia/values.yaml (image.tag)',
+    'synth/deploy/helm/synth/values.yaml (image.tag)',
     () => {
-      const m = read('agentprimordia/deploy/helm/agentprimordia/values.yaml').match(/tag:\s*"v?([\d.]+)"/);
+      const m = read('synth/deploy/helm/synth/values.yaml').match(/tag:\s*"v?([\d.]+)"/);
       return m ? m[1] : null;
     },
   ],
   [
-    'agentprimordia/deploy/helm/agentprimordia/Chart.yaml (appVersion)',
+    'synth/deploy/helm/synth/Chart.yaml (appVersion)',
     () => {
-      const m = read('agentprimordia/deploy/helm/agentprimordia/Chart.yaml').match(/appVersion:\s*"v?([\d.]+)"/);
+      const m = read('synth/deploy/helm/synth/Chart.yaml').match(/appVersion:\s*"v?([\d.]+)"/);
       return m ? m[1] : null;
     },
   ],
@@ -95,8 +95,8 @@ for (const [label, getter] of SECOND_TRUTHS) {
 }
 
 // ===== 3. CHANGELOG 文件名与真值对齐 =====
-// 约定：每个 minor 版本一份 agentprimordia/docs/CHANGELOG-v<major>.<minor>.md
-const changelogRel = `agentprimordia/docs/CHANGELOG-v${truth.split('.').slice(0, 2).join('.')}.md`;
+// 约定：每个 minor 版本一份 synth/docs/CHANGELOG-v<major>.<minor>.md
+const changelogRel = `synth/docs/CHANGELOG-v${truth.split('.').slice(0, 2).join('.')}.md`;
 if (existsSync(resolve(root, changelogRel))) {
   console.log(`OK: ${changelogRel} 存在`);
 } else {
@@ -107,15 +107,15 @@ if (existsSync(resolve(root, changelogRel))) {
 const ANCHORS = [
   ['README.md', /badge\/version-(\d+\.\d+\.\d+)-/],
   ['docs/路线图.md', /\*\*当前版本\*\*：Go SDK v(\d+\.\d+\.\d+)/],
-  ['docs/API参考.md', /ap\.Version`\s*=\s*`"(\d+\.\d+\.\d+)"/],
+  ['docs/API参考.md', /synth\.Version`\s*=\s*`"(\d+\.\d+\.\d+)"/],
   ['docs/部署指南.md', /镜像 tag v(\d+\.\d+\.\d+)/],
-  ['agentprimordia/docs/版本规范.md', /当前版本：`(\d+\.\d+\.\d+)`/],
-  ['agentprimordia/docs/版本规范.md', /\|\s*Go SDK\s*\|\s*v?(\d+\.\d+\.\d+)/],
-  ['agentprimordia/docs/版本规范.md', /\|\s*TypeScript SDK\s*\|\s*v?(\d+\.\d+\.\d+)/],
-  ['agentprimordia/docs/AP-开发手册-EN.md', /@agentprimordia\/sdk v(\d+\.\d+\.\d+)/],
+  ['synth/docs/版本规范.md', /当前版本：`(\d+\.\d+\.\d+)`/],
+  ['synth/docs/版本规范.md', /\|\s*Go SDK\s*\|\s*v?(\d+\.\d+\.\d+)/],
+  ['synth/docs/版本规范.md', /\|\s*TypeScript SDK\s*\|\s*v?(\d+\.\d+\.\d+)/],
+  ['synth/docs/Synth-开发手册-EN.md', /@synth\/sdk v(\d+\.\d+\.\d+)/],
   ['sdk/typescript/docs/cross-language-guide.md', /Go SDK: v(\d+\.\d+\.\d+)/],
   ['sdk/typescript/docs/cross-language-guide.md', /TypeScript SDK: v(\d+\.\d+\.\d+)/],
-  ['agentprimordia/ecosystem/docs/ap-guide.md', /AgentPrimordia CLI v(\d+\.\d+\.\d+)/],
+  ['synth/ecosystem/docs/synth-guide.md', /Synth CLI v(\d+\.\d+\.\d+)/],
 ];
 
 for (const [file, re] of ANCHORS) {
@@ -135,7 +135,7 @@ for (const [file, re] of ANCHORS) {
 }
 
 // ===== 5. README 统计数字对账 =====
-const MODULE = 'agentprimordia';
+const MODULE = 'synth';
 
 /** 递归收集模块内 .go 文件（排除 operator 独立模块、node_modules、.git） */
 function collectGoFiles(dir, acc = []) {
@@ -193,7 +193,7 @@ console.log('');
 
 if (errors.length > 0) {
   console.error(`::error::版本文档一致性检查失败（${errors.length} 项漂移）`);
-  console.error('  版本真值唯一来源: agentprimordia/pkg/agent.go 的 const Version');
+  console.error('  版本真值唯一来源: synth/pkg/agent.go 的 const Version');
   console.error('  修复后请重跑: node scripts/doc-version-consistency.mjs');
   process.exit(1);
 }

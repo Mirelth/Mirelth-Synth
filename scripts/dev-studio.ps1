@@ -1,5 +1,5 @@
 # ============================================================
-# AgentPrimordia Studio - One-click launcher (Windows)
+# Synth Studio - One-click launcher (Windows)
 #
 # Starts backend (:8090) + frontend (:5173) together.
 # Ctrl+C stops both. Opens browser when ready.
@@ -16,10 +16,10 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $Root = Split-Path -Parent $PSScriptRoot
-$BackendDir = Join-Path $Root 'agentprimordia'
-$FrontendDir = Join-Path $Root 'agentprimordia\studio\web'
+$BackendDir = Join-Path $Root 'synth'
+$FrontendDir = Join-Path $Root 'synth\studio\web'
 
-Write-Host "==> AgentPrimordia Studio launcher" -ForegroundColor Cyan
+Write-Host "==> Synth Studio launcher" -ForegroundColor Cyan
 Write-Host "    backend  :$BackendPort  (go run ./cmd/studio)"
 Write-Host "    frontend :$FrontendPort  (npm run dev)"
 

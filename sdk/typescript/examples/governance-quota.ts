@@ -6,7 +6,7 @@
 import { TenantManager, QuotaManager, TokenBucket, PolicyEnforcer } from '../src/governance/index.js';
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Governance & Quota ===\n');
+  console.log('=== Synth TS SDK: Governance & Quota ===\n');
 
   // 1. 租户管理
   console.log('--- Tenant Management ---');

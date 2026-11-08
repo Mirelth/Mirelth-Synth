@@ -1,4 +1,4 @@
-// ESLint 9 flat config — AgentPrimordia TypeScript SDK
+// ESLint 9 flat config — Synth TypeScript SDK
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 

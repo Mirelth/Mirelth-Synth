@@ -152,9 +152,9 @@ export class OTelBridge implements OTelBridgeLike {
   exportOTLP(): Record<string, unknown> {
     return {
       resourceSpans: [{
-        resource: { attributes: [{ key: 'service.name', value: { stringValue: 'agentprimordia-ts' } }] },
+        resource: { attributes: [{ key: 'service.name', value: { stringValue: 'synth-ts' } }] },
         scopeSpans: [{
-          scope: { name: 'agentprimordia' },
+          scope: { name: 'synth' },
           spans: this.spans.map(s => ({
             traceId: '00000000000000000000000000000000',
             spanId: '0000000000000000',
@@ -215,9 +215,9 @@ export class OTLPExporter {
 
     const payload = {
       resourceSpans: [{
-        resource: { attributes: [{ key: 'service.name', value: { stringValue: 'agentprimordia-ts' } }] },
+        resource: { attributes: [{ key: 'service.name', value: { stringValue: 'synth-ts' } }] },
         scopeSpans: [{
-          scope: { name: 'agentprimordia' },
+          scope: { name: 'synth' },
           spans: spans.map(s => ({
             name: s.name,
             startTimeUnixNano: String(s.startTime * 1_000_000),
@@ -290,9 +290,9 @@ export class MetricExporter {
 
     const payload = {
       resourceMetrics: [{
-        resource: { attributes: [{ key: 'service.name', value: { stringValue: 'agentprimordia-ts' } }] },
+        resource: { attributes: [{ key: 'service.name', value: { stringValue: 'synth-ts' } }] },
         scopeMetrics: [{
-          scope: { name: 'agentprimordia' },
+          scope: { name: 'synth' },
           metrics: metrics.map(m => ({
             name: m.name,
             unit: '1',

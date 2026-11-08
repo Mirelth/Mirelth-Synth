@@ -7,7 +7,7 @@ import { GuardrailEngine, PromptInjectionRule, PIIDetector } from '../src/securi
 import { ACL } from '../src/security/sandbox.js';
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Guardrails & Security ===\n');
+  console.log('=== Synth TS SDK: Guardrails & Security ===\n');
 
   // 1. 注入检测
   console.log('--- Prompt Injection Detection ---');

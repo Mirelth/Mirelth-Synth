@@ -2,7 +2,7 @@
  * pipeline.ts — v6.2「内化」蒸馏管道工件消费者（TypeScript 端，矩阵 #2）
  *
  * 双线定位（docs/双线豁免矩阵.md #2）：训练连接器 Go-only（HTTP 端点调用）；
- * TS 以**工件消费者**身份对等——数据集格式（ap-dataset-v1）与影子评测报告
+ * TS 以**工件消费者**身份对等——数据集格式（synth-dataset-v1）与影子评测报告
  * 为双线契约，本文件实现：
  *   - DatasetManifest / DistillationExample / ShadowReport 类型（与 Go
  *     internal/agent/learning/pipeline/types.go 逐字段对齐）；
@@ -17,7 +17,7 @@
 // ===== 数据集契约（与 Go types.go 逐字段对齐）=====
 
 /** 数据集格式版本（与 Go FormatVersion 一致）。 */
-export const FORMAT_VERSION = 'ap-dataset-v1';
+export const FORMAT_VERSION = 'synth-dataset-v1';
 
 /** 数据集消息（OpenAI chat 格式对齐）。 */
 export interface DatasetMessage {

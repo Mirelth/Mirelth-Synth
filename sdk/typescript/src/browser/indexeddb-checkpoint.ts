@@ -51,7 +51,7 @@ export class IndexedDBCheckpointStore implements CheckpointStore {
   private readonly retryBaseDelay = 500;
   private readonly maxRows = 1000; // 最大行数，超过后 LRU 清理
 
-  constructor(dbName = 'agentprimordia') {
+  constructor(dbName = 'synth') {
     this.dbName = dbName;
   }
 

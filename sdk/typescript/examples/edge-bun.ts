@@ -27,7 +27,7 @@ const mockProvider: Provider = {
 };
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Edge Bun Agent ===\n');
+  console.log('=== Synth TS SDK: Edge Bun Agent ===\n');
 
   const agent = new BunEdgeAgent({
     name: 'edge-agent',

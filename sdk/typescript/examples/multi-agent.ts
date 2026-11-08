@@ -29,7 +29,7 @@ function createNamedProvider(name: string): Provider {
 }
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Multi-Agent Orchestration ===\n');
+  console.log('=== Synth TS SDK: Multi-Agent Orchestration ===\n');
 
   // Pipeline 模式：Agent 按顺序执行，前一个的输出作为后一个的输入
   console.log('--- Pipeline Mode ---');

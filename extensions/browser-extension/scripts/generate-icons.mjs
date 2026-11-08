@@ -1,10 +1,10 @@
 /**
- * 用 Node.js 内置模块生成 AgentPrimordia 扩展图标（PNG）
+ * 用 Node.js 内置模块生成 Synth 扩展图标（PNG）
  *
  * 不依赖任何第三方库：直接构造 PNG 文件格式 + zlib.deflateSync 压缩。
  * 输出：icons/icon16.png / icon48.png / icon128.png
  *
- * 设计：紫色渐变圆角方块 + 白色 "AP" 文字（字号按尺寸缩放）。
+ * 设计：紫色渐变圆角方块 + 白色 "Synth" 文字（字号按尺寸缩放）。
  */
 import { deflateSync } from 'node:zlib';
 import { writeFileSync, mkdirSync } from 'node:fs';

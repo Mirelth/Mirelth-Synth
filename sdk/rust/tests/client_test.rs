@@ -1,13 +1,13 @@
-// client_test.rs — AgentPrimordiaClient 最小测试套件（评估报告 §8.2：Rust SDK 此前零测试）
+// client_test.rs — SynthClient 最小测试套件（评估报告 §8.2：Rust SDK 此前零测试）
 //
 // 使用 std TcpListener 本地 mock HTTP 服务，不引入额外依赖：
 //   - create_agent / chat / list_agents 正常路径
-//   - 401 响应 → 返回 Err（AgentPrimordiaError）
+//   - 401 响应 → 返回 Err（SynthError）
 use std::io::{Read, Write};
 use std::net::TcpListener;
 
-use agentprimordia::client::AgentPrimordiaClient;
-use agentprimordia::models::AgentConfig;
+use synth::client::SynthClient;
+use synth::models::AgentConfig;
 
 /// 启动一次性 mock 服务器：接受一个连接，读取请求头，按请求路径回放固定 JSON。
 /// 返回服务器 base_url。
@@ -57,7 +57,7 @@ fn write_response(stream: &mut std::net::TcpStream, status: u16, body: &str) {
 #[tokio::test]
 async fn create_agent_parses_response() {
     let base = spawn_mock_server();
-    let client = AgentPrimordiaClient::new(&base, "test-key");
+    let client = SynthClient::new(&base, "test-key");
     let agent = client
         .create_agent("mock", &AgentConfig::default())
         .await
@@ -69,7 +69,7 @@ async fn create_agent_parses_response() {
 #[tokio::test]
 async fn chat_returns_response() {
     let base = spawn_mock_server();
-    let client = AgentPrimordiaClient::new(&base, "test-key");
+    let client = SynthClient::new(&base, "test-key");
     let resp = client.chat("a1", "hello").await.expect("chat 应成功");
     assert_eq!(resp.response, "hi there");
 }
@@ -77,7 +77,7 @@ async fn chat_returns_response() {
 #[tokio::test]
 async fn list_agents_parses_list() {
     let base = spawn_mock_server();
-    let client = AgentPrimordiaClient::new(&base, "test-key");
+    let client = SynthClient::new(&base, "test-key");
     let agents = client.list_agents().await.expect("list_agents 应成功");
     assert_eq!(agents.len(), 1);
     assert_eq!(agents[0].id, "a1");
@@ -86,7 +86,7 @@ async fn list_agents_parses_list() {
 #[tokio::test]
 async fn unauthorized_returns_error() {
     let base = spawn_mock_server();
-    let client = AgentPrimordiaClient::new(&base, "bad-key");
+    let client = SynthClient::new(&base, "bad-key");
     let err = client.chat("unauth", "x").await;
     assert!(err.is_err(), "401 应返回 Err");
     let msg = err.unwrap_err().to_string();

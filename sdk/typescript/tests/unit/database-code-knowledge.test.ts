@@ -156,13 +156,13 @@ describe('DatabaseTool', () => {
 
 describe('CodeExecutionTool', () => {
   // 保存和恢复环境变量
-  const origEnv = process.env.AP_ALLOW_CODE_EXECUTION;
+  const origEnv = process.env.SYNTH_ALLOW_CODE_EXECUTION;
 
   afterEach(() => {
     if (origEnv === undefined) {
-      delete process.env.AP_ALLOW_CODE_EXECUTION;
+      delete process.env.SYNTH_ALLOW_CODE_EXECUTION;
     } else {
-      process.env.AP_ALLOW_CODE_EXECUTION = origEnv;
+      process.env.SYNTH_ALLOW_CODE_EXECUTION = origEnv;
     }
   });
 
@@ -178,43 +178,43 @@ describe('CodeExecutionTool', () => {
   });
 
   it('should reject empty code', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'javascript', code: '' });
     expect(result).toContain('Error: parameter "code" cannot be empty');
   });
 
   it('should reject whitespace-only code', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'javascript', code: '   ' });
     expect(result).toContain('Error: parameter "code" cannot be empty');
   });
 
   it('should be disabled by default for security', async () => {
-    delete process.env.AP_ALLOW_CODE_EXECUTION;
+    delete process.env.SYNTH_ALLOW_CODE_EXECUTION;
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'javascript', code: 'console.log("hello")' });
     expect(result).toContain('disabled by default');
-    expect(result).toContain('AP_ALLOW_CODE_EXECUTION');
+    expect(result).toContain('SYNTH_ALLOW_CODE_EXECUTION');
   });
 
   it('should reject missing language parameter', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ code: 'console.log("hello")' });
     expect(result).toContain('Error: parameter "language" is required');
   });
 
   it('should reject unsupported language', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'ruby', code: 'puts "hello"' });
     expect(result).toContain('unsupported language');
   });
 
   it('should execute JavaScript code and return output', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'javascript', code: 'console.log("hello world")' });
     expect(result).toContain('hello world');
@@ -222,7 +222,7 @@ describe('CodeExecutionTool', () => {
   });
 
   it('should return JSON output format with language and exit_code', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'javascript', code: 'console.log("test")' });
     const parsed = JSON.parse(result);
@@ -233,14 +233,14 @@ describe('CodeExecutionTool', () => {
   });
 
   it('should capture stderr output', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'javascript', code: 'console.error("error msg")' });
     expect(result).toContain('error msg');
   });
 
   it('should handle code errors with non-zero exit code', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'javascript', code: 'throw new Error("test error")' });
     expect(result).toContain('Error:');
@@ -248,28 +248,28 @@ describe('CodeExecutionTool', () => {
   });
 
   it('should use custom timeout from args', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'javascript', code: 'console.log("ok")', timeout: 5 });
     expect(result).toContain('ok');
   });
 
   it('should handle execution timeout', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'javascript', code: 'setTimeout(() => {}, 99999)', timeout: 1 });
     expect(result).toContain('timed out');
   }, 10000);
 
   it('should truncate output exceeding maxOutputLength', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool({ maxOutputLength: 10 });
     const result = await tool.execute({ language: 'javascript', code: 'console.log("x".repeat(100))' });
     expect(result).toContain('truncated');
   });
 
   it('should support Python language parameter', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     // Just verify the language is accepted (python3 may not be installed)
     const result = await tool.execute({ language: 'python', code: 'print("hello")' });
@@ -279,14 +279,14 @@ describe('CodeExecutionTool', () => {
 
   // go run 会触发真实 Go 工具链编译，在负载机器上可能超过默认 5s，放宽超时
   it('should support Go language parameter', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'go', code: 'package main\nfunc main() { println("hello") }' });
     expect(typeof result).toBe('string');
   }, 20000);
 
   it('should use default timeout when not specified', async () => {
-    process.env.AP_ALLOW_CODE_EXECUTION = 'true';
+    process.env.SYNTH_ALLOW_CODE_EXECUTION = 'true';
     const tool = new CodeExecutionTool();
     const result = await tool.execute({ language: 'javascript', code: 'console.log("fast")' });
     expect(result).toContain('fast');

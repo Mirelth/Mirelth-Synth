@@ -1,5 +1,5 @@
 /**
- * AgentPrimordia Studio 后端 API 客户端
+ * Synth Studio 后端 API 客户端
  *
  * 提供对 Studio REST 接口的类型安全封装。所有方法在不可达时 rejected，
  * 由调用方决定降级策略。

@@ -1,5 +1,5 @@
 /**
- * AgentPrimordia Status Bar — 状态栏组件。
+ * Synth Status Bar — 状态栏组件。
  *
  * 职责：
  * 1. 显示当前 Agent 名 + 状态（空闲/运行/错误）
@@ -98,8 +98,8 @@ export class StatusBarManager {
     this.item = deps.createItem({
       alignment,
       priority: 100,
-      command: 'agentprimordia.chat.focus',
-      tooltip: 'AgentPrimordia',
+      command: 'synth.chat.focus',
+      tooltip: 'Synth',
     });
     this.refresh();
     this.item.show();

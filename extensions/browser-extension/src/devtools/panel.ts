@@ -145,7 +145,7 @@ async function exportJson(): Promise<void> {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `ap-traces-${Date.now()}.json`;
+        a.download = `synth-traces-${Date.now()}.json`;
         a.click();
         URL.revokeObjectURL(url);
     } catch {

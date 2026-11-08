@@ -1,0 +1,14 @@
+services:
+  go-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["sh", "/opt/synth-demo/run-go.sh"]
+    container_name: synth-go-demo
+
+  ts-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["sh", "/opt/synth-demo/run-ts.sh"]
+    container_name: synth-ts-demo

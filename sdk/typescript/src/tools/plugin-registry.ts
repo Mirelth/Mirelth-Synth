@@ -11,7 +11,7 @@
  *
  * 使用方式：
  *   const registry = new PluginRegistry({ loader, sandbox, registry: toolRegistry });
- *   await registry.install('email');           // 解析为 @agentprimordia/plugin-email
+ *   await registry.install('email');           // 解析为 @synth/plugin-email
  *   const tools = registry.search('mail');
  *   const result = await registry.executeTool({ id: '1', name: 'sendEmail', arguments: '{}' });
  */
@@ -23,7 +23,7 @@ import type { ToolCall, ToolResult } from '../types.js';
 
 /** 插件元数据（安装后登记到 registry） */
 export interface PluginMetadata {
-  /** 完整包名（含前缀），如 @agentprimordia/plugin-email */
+  /** 完整包名（含前缀），如 @synth/plugin-email */
   name: string;
   version: string;
   description?: string;
@@ -44,7 +44,7 @@ export interface PluginRegistryOptions {
   sandbox?: PluginSandbox;
   /** 工具注册表（无 sandbox 时直接执行工具） */
   registry?: ToolRegistry;
-  /** 插件名前缀，默认 @agentprimordia/plugin- */
+  /** 插件名前缀，默认 @synth/plugin- */
   pluginPrefix?: string;
 }
 
@@ -60,7 +60,7 @@ export class PluginRegistry {
     this.loader = options?.loader ?? new AgentPluginLoader({ registry: options?.registry });
     this.sandbox = options?.sandbox;
     this.registry = options?.registry;
-    this.prefix = options?.pluginPrefix ?? '@agentprimordia/plugin-';
+    this.prefix = options?.pluginPrefix ?? '@synth/plugin-';
   }
 
   /** 安装并注册一个插件（支持完整包名或短名），记录元数据 */

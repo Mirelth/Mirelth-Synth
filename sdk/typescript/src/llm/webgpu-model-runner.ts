@@ -201,7 +201,7 @@ export class WebGPUModelRunner implements WebGPURuntime {
     this.inferenceConfig = { ...DEFAULT_INFERENCE_CONFIG, ...config.inference };
     this.cacheStrategy = {
       useIndexedDB: true,
-      cacheName: 'ap-webgpu-models',
+      cacheName: 'synth-webgpu-models',
       maxCacheSize: 4 * 1024 * 1024 * 1024, // 4GB
       ...config.cache,
     };

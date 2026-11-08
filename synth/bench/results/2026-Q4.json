@@ -1,0 +1,163 @@
+{
+  "date": "2026-Q4",
+  "version": "5.0.0",
+  "environment": {
+    "go": "1.26.5",
+    "os": "windows/amd64",
+    "cpu": "Intel(R) Core(TM) Ultra 5 250K Plus",
+    "memory": "24GB",
+    "note": "开发机基准；生产标准化环境应为 4C/8GB/linux/amd64。v4.9-1 性能优化（SQLite WAL + EventBus 锁分离）后刷新关键路径 P95。"
+  },
+  "status": "completed",
+  "run_instructions": "cd synth && go test -bench=Benchmark -benchmem -benchtime=200ms -run=^$ -count=1 ./bench/suite",
+  "results": {
+    "agent_run_throughput": {
+      "description": "单 Agent 运行吞吐量（MockLLM）",
+      "unit": "ns/op",
+      "value": 3387,
+      "note": "BenchmarkAgentRun: 3387 ns/op, 4123 B/op, 24 allocs/op（MockLLM）"
+    },
+    "pool_10_concurrent": {
+      "description": "10 并发 Agent 吞吐量",
+      "unit": "ns/op",
+      "value": 4260,
+      "note": "BenchmarkQPS_PoolDispatch: 4260 ns/op（MockLLM, 10 并发 Dispatch）"
+    },
+    "vector_search_10k": {
+      "description": "10K 向量搜索延迟",
+      "unit": "ms",
+      "value": 1.561,
+      "note": "BenchmarkVectorSearch: 1561005 ns/op"
+    },
+    "memory_search_1k": {
+      "description": "1K 记忆搜索延迟",
+      "unit": "ms",
+      "value": 0.0286,
+      "note": "BenchmarkMemoryStore/Search: 28626 ns/op"
+    },
+    "p95_agent_run": {
+      "description": "Agent 单轮关键路径 P50/P95/P99 延迟分布",
+      "unit": "ns",
+      "value": {
+        "p50": 2963,
+        "p95": 10763,
+        "p99": 15843
+      },
+      "note": "BenchmarkP95AgentRun：EventBus 锁分离优化后"
+    },
+    "p95_tool_call": {
+      "description": "工具调用关键路径 P50/P95/P99",
+      "unit": "ns",
+      "value": {
+        "p50": 5104,
+        "p95": 15031,
+        "p99": 19000
+      },
+      "note": "BenchmarkP95ToolCall；基线取 3 次运行中位数（2026-08-09 开发机）"
+    },
+    "p95_memory_search": {
+      "description": "记忆检索关键路径 P50/P95/P99",
+      "unit": "ns",
+      "value": {
+        "p50": 43889,
+        "p95": 58123,
+        "p99": 62000
+      },
+      "note": "BenchmarkP95MemorySearch；基线取 3 次运行中位数（2026-08-09 开发机）"
+    },
+    "p95_failure_sqlite_record": {
+      "description": "SQLiteFailureStore Record P50/P95/P99（v4.1 真实接线产物）",
+      "unit": "ns",
+      "value": {
+        "p50": 20160,
+        "p95": 108423,
+        "p99": 128400
+      },
+      "note": "BenchmarkP95FailureSQLite_Record：WAL 模式（v4.9-1 优化）后单条写入 108µs（优化前 6.9ms，-98%）"
+    },
+    "p95_failure_sqlite_get": {
+      "description": "SQLiteFailureStore Get P50/P95/P99",
+      "unit": "ns",
+      "value": {
+        "p50": 9940,
+        "p95": 15770,
+        "p99": 17568
+      },
+      "note": "BenchmarkP95FailureSQLite_Get：WAL 后 -49%"
+    },
+    "p95_failure_sqlite_list": {
+      "description": "SQLiteFailureStore List（10 条）P50/P95/P99",
+      "unit": "ns",
+      "value": {
+        "p50": 25851,
+        "p95": 35853,
+        "p99": 38046
+      },
+      "note": "BenchmarkP95FailureSQLite_List：WAL 后 -30%"
+    },
+    "p95_failure_memory_record": {
+      "description": "MemoryFailureStore Record 延迟（对照）",
+      "unit": "ns",
+      "value": 32,
+      "note": "BenchmarkP95FailureMemory_Record：30 ns/op（内存对照，SQLite 落盘为 7.0ms）"
+    }
+  },
+  "v40_p95_suites": {
+    "agent_run": {
+      "description": "关键路径一：Agent 单轮运行延迟分布",
+      "file": "bench/suite/p95_latency_test.go",
+      "value": "PASS",
+      "details": "P50: 3490 ns; P95: 10758 ns; P99: 15949 ns（MockLLM, MaxTurns=1）"
+    },
+    "tool_call": {
+      "description": "关键路径二：工具调用延迟分布",
+      "file": "bench/suite/p95_latency_test.go",
+      "value": "PASS",
+      "details": "P50: 4116 ns; P95: 11028 ns; P99: 19324 ns（MockLLM + 文件系统工具）"
+    },
+    "memory_search": {
+      "description": "关键路径三：记忆检索延迟分布（1K 条目 FTS）",
+      "file": "bench/suite/p95_latency_test.go",
+      "value": "PASS",
+      "details": "P50: 29631 ns; P95: 46289 ns; P99: 50284 ns"
+    }
+  },
+  "v40_suites": {
+    "capacity": {
+      "description": "容量规划基准（Pool 并发上限 / 内存增长曲线）",
+      "file": "bench/suite/capacity_test.go",
+      "value": "PASS",
+      "details": "MemoryStore Add: 49.68 ns/op; Search: 28626 ns/op; AgentRun: 3387 ns/op"
+    },
+    "cluster": {
+      "description": "集群消息总线延迟与吞吐",
+      "file": "bench/suite/cluster_bench_test.go",
+      "value": "PASS",
+      "details": "ConsistentHash GetNode(10): 20.18 ns/op; GetNode(50): 26.53 ns/op; DistributedState SetGet: 96.32/53.03 ns/op"
+    },
+    "latency": {
+      "description": "端到端延迟分布（P50/P95/P99）",
+      "file": "bench/suite/latency_test.go",
+      "value": "PASS",
+      "details": "Agent 单轮延迟: 3621 ns/op（MockLLM）; FirstToken 流式延迟: 11800 ns/op"
+    },
+    "learning": {
+      "description": "知识蒸馏管道吞吐量",
+      "file": "bench/suite/learning_bench_test.go",
+      "value": "PASS",
+      "details": "Distill: 1793 ns/op; Pipeline: 15141 ns/op; BuildSystemPrompt: 16197 ns/op; FeedbackLearner: 740 ns/op; CapabilityEvolver: 584 ns/op"
+    },
+    "privacy": {
+      "description": "PII 检测 + 路由延迟",
+      "file": "bench/suite/privacy_bench_test.go",
+      "value": "PASS",
+      "details": "Route(NoPII): 62.05 ns/op; Route(WithPII): 918.5 ns/op; RegisterCapability: 73.74 ns/op"
+    },
+    "tool_calling": {
+      "description": "工具调用端到端延迟",
+      "file": "bench/suite/tool_calling_test.go",
+      "value": "PASS",
+      "details": "ToolCalling(MockLLM): 4154 ns/op, 5267 B/op, 34 allocs/op; 准确率需 LLM API Key"
+    }
+  }
+}

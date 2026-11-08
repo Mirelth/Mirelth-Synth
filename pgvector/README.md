@@ -1,4 +1,4 @@
-# pgvector Provider for AgentPrimordia
+# pgvector Provider for Synth
 
 [PostgreSQL](https://www.postgresql.org/) + [pgvector](https://github.com/pgvector/pgvector) 向量存储提供者。
 
@@ -19,10 +19,10 @@
 ## 使用方式
 
 ```go
-import "github.com/Gleamseekers/AgentPrimordia/pgvector"
+import "github.com/Mirelth/Synth/pgvector"
 
 cfg := pgvector.Config{
-    ConnString:    "postgres://localhost:5432/ap",
+    ConnString:    "postgres://localhost:5432/synth",
     TableName:     "agent_memory",
     Dimensions:    1536,     // OpenAI text-embedding-3-large
     Distance:      pgvector.CosineDistance,
@@ -45,27 +45,27 @@ results, err := store.Search(ctx, queryVec, 10, map[string]string{"tenant": "t1"
 
 `pgvector.Store` 不直接读取环境变量，全部配置经 `pgvector.Config{...}` 结构体传入 `pgvector.New(ctx, cfg)`。
 
-框架侧接入路径：`internal/memory/pgvector_store.go` 中的 `PgVectorVectorStore` 适配器实现了 memory 的 `VectorStore` 接口（Insert/Delete/Search/CreateCollection/DropCollection），公共入口为 `ap.NewPgVectorVectorStore(ctx, ap.PgVectorConfig{...})`。RAG 混合检索与 HNSW 内存向量库的公共构造器：
+框架侧接入路径：`internal/memory/pgvector_store.go` 中的 `PgVectorVectorStore` 适配器实现了 memory 的 `VectorStore` 接口（Insert/Delete/Search/CreateCollection/DropCollection），公共入口为 `synth.NewPgVectorVectorStore(ctx, synth.PgVectorConfig{...})`。RAG 混合检索与 HNSW 内存向量库的公共构造器：
 
 ```go
-import ap "github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/pkg"
+import synth "github.com/Mirelth/Synth/v7/synth/pkg"
 
 // RAG 混合检索（Memory + Embedding + 向量通道）
-embedder := ap.NewEmbeddingAdapter(provider, 1536) // llm.Provider 适配为 EmbeddingProvider
-rag := ap.NewRAGStore(memStore, embedder)
+embedder := synth.NewEmbeddingAdapter(provider, 1536) // llm.Provider 适配为 EmbeddingProvider
+rag := synth.NewRAGStore(memStore, embedder)
 
 // HNSW 内存向量库（pgvector 之外的默认实现）
-vec := ap.NewVectorStoreWithHNSW(1536, ap.HNSWConfig{...})
+vec := synth.NewVectorStoreWithHNSW(1536, synth.HNSWConfig{...})
 
 // pgvector 后端（经适配器接入 memory.VectorStore 接口）
-pv, err := ap.NewPgVectorVectorStore(ctx, ap.PgVectorConfig{
-    ConnString: "postgres://localhost:5432/ap",
+pv, err := synth.NewPgVectorVectorStore(ctx, synth.PgVectorConfig{
+    ConnString: "postgres://localhost:5432/synth",
     TableName:  "agent_vectors",
     Dimensions: 1536,
 })
 ```
 
-> 注意：`ap.NewRAGStore` 内部使用内置向量通道，pgvector 后端经 `internal/memory/pgvector_store.go`
+> 注意：`synth.NewRAGStore` 内部使用内置向量通道，pgvector 后端经 `internal/memory/pgvector_store.go`
 > 的适配接入，两者维度需与 EmbeddingProvider 保持一致。
 
 ## 配置

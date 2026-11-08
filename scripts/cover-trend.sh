@@ -12,7 +12,7 @@ output=$(go test -cover ./internal/... ./pkg/... -count=1 2>&1 | grep "coverage:
   echo ""
   echo '| Package | Coverage |'
   echo '|---------|--------:|'
-  echo "$output" | sed -E 's|.*agentprimordia/([^ ]+) +.*coverage: ([0-9.]+)%.*|\| `\1` | \2% |'
+  echo "$output" | sed -E 's|.*synth/([^ ]+) +.*coverage: ([0-9.]+)%.*|\| `\1` | \2% |'
   echo ""
 } >> ../docs/coverage-history.md
 

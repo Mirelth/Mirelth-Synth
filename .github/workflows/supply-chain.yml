@@ -72,7 +72,7 @@ jobs:
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
-          file: agentprimordia/Dockerfile.sbomlabel
+          file: synth/Dockerfile.sbomlabel
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
@@ -82,8 +82,8 @@ jobs:
             VERSION=${{ github.ref_name }}
             REVISION=${{ github.sha }}
           labels: |
-            com.agentprimordia.sbom=sbom.json
-            com.agentprimordia.sbom.format=cyclonedx-json
+            com.synth.sbom=sbom.json
+            com.synth.sbom.format=cyclonedx-json
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3

@@ -97,7 +97,7 @@ func TestV72RegistryFrozen(t *testing.T) {
 
 - [ ] **Step 2: 运行测试确认失败**
 
-Run: `cd agentprimordia && go test ./internal/eval/ -run TestV72RegistryFrozen -v`
+Run: `cd synth && go test ./internal/eval/ -run TestV72RegistryFrozen -v`
 Expected: FAIL — manifest.json 不存在
 
 - [ ] **Step 3: 创建 manifest 骨架**
@@ -179,7 +179,7 @@ func V72TaskCount(prop string) (total, holdout int, err error) {
 
 - [ ] **Step 5: 运行测试确认通过**
 
-Run: `cd agentprimordia && go test ./internal/eval/ -run TestV72RegistryFrozen -v`
+Run: `cd synth && go test ./internal/eval/ -run TestV72RegistryFrozen -v`
 Expected: PASS
 
 - [ ] **Step 6: 提交**
@@ -237,13 +237,13 @@ git commit -m "feat: v7.2 任务注册框架 + 冻结门"
 
 ```bash
 # 预筛脚本（复用 bench/gap/main.go 的 A 臂逻辑）
-cd agentprimordia && go run ./bench/v72/ -prescreen -prop p1
+cd synth && go run ./bench/v72/ -prescreen -prop p1
 ```
 
 - [ ] **Step 3: 更新 manifest 哈希**
 
 ```bash
-cd agentprimordia && python3 -c "
+cd synth && python3 -c "
 import json, hashlib
 files = ['p1-worldmodel.json']
 manifest = {'version': 'v7.2', 'files': [], 'holdout_ratio': 0.3}
@@ -410,7 +410,7 @@ git commit -m "feat: v7.2 P5 多模态硬任务集（30+ 道，含 vision 验证
 - [ ] **Step 1: 计算最终 manifest 哈希**
 
 ```bash
-cd agentprimordia && python3 -c "
+cd synth && python3 -c "
 import json, hashlib, os
 files = ['p1-worldmodel.json', 'p2-planning.json', 'p4-intelligence.json', 'p5-multimodal.json']
 manifest = {'version': 'v7.2', 'files': [], 'holdout_ratio': 0.3}
@@ -430,7 +430,7 @@ print('Manifest frozen:', manifest['sha256'])
 
 - [ ] **Step 2: 运行冻结门测试**
 
-Run: `cd agentprimordia && go test ./internal/eval/ -run TestV72RegistryFrozen -v`
+Run: `cd synth && go test ./internal/eval/ -run TestV72RegistryFrozen -v`
 Expected: PASS
 
 - [ ] **Step 3: 提交冻结**
@@ -464,8 +464,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/tools/intelligence/create"
-	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/tools/intelligence/optimize"
+	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence/create"
+	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence/optimize"
 )
 
 func TestIntelligenceHook_BridgeToHookManager(t *testing.T) {
@@ -496,7 +496,7 @@ func TestIntelligenceHook_BridgeToHookManager(t *testing.T) {
 
 - [ ] **Step 2: 运行测试确认失败**
 
-Run: `cd agentprimordia && go test ./internal/tools/intelligence/ -run TestIntelligenceHook_BridgeToHookManager -v`
+Run: `cd synth && go test ./internal/tools/intelligence/ -run TestIntelligenceHook_BridgeToHookManager -v`
 Expected: FAIL — `fmt` 未导入（编译错误）
 
 - [ ] **Step 3: 修复测试 + 确认现有 hook 已满足**
@@ -559,7 +559,7 @@ type ReActConfig struct {
 
 - [ ] **Step 7: 运行全量测试**
 
-Run: `cd agentprimordia && go test ./internal/agent/ ./internal/tools/intelligence/ -v -count=1`
+Run: `cd synth && go test ./internal/agent/ ./internal/tools/intelligence/ -v -count=1`
 Expected: PASS
 
 - [ ] **Step 8: 提交**
@@ -591,7 +591,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/tools/intelligence"
+	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence"
 )
 
 // mockLLMForCreator 返回预设的 LLM 响应
@@ -647,7 +647,7 @@ for row in data:
 
 - [ ] **Step 2: 运行测试确认失败**
 
-Run: `cd agentprimordia && go test ./internal/tools/intelligence/create/ -run TestLLMCreator -v`
+Run: `cd synth && go test ./internal/tools/intelligence/create/ -run TestLLMCreator -v`
 Expected: FAIL — `NewLLMCreator` 未定义
 
 - [ ] **Step 3: 实现 LLMCreator**
@@ -662,7 +662,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/tools/intelligence"
+	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence"
 )
 
 // LLMCompleter 是 LLM 调用的最小接口（避免 import cycle）
@@ -736,7 +736,7 @@ func cleanLLMResponse(response string) string {
 
 - [ ] **Step 4: 运行测试确认通过**
 
-Run: `cd agentprimordia && go test ./internal/tools/intelligence/create/ -run TestLLMCreator -v`
+Run: `cd synth && go test ./internal/tools/intelligence/create/ -run TestLLMCreator -v`
 Expected: PASS
 
 - [ ] **Step 5: 提交**
@@ -769,8 +769,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/tools"
-	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/tools/intelligence/create"
+	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence/create"
 )
 
 func TestRegisteringCreator_RegistersTool(t *testing.T) {
@@ -822,7 +822,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/tools"
+	"github.com/Mirelth/Synth/v7/synth/internal/tools"
 )
 
 // RegisteringCreator 包装 ToolCreator，创建的工具自动注册到 Registry
@@ -866,7 +866,7 @@ func (rc *RegisteringCreator) Create(ctx context.Context, gap GapCandidate) (*To
 - [ ] **Step 3: 运行测试 + 提交**
 
 ```bash
-cd agentprimordia && go test ./internal/tools/intelligence/ -run TestRegisteringCreator -v
+cd synth && go test ./internal/tools/intelligence/ -run TestRegisteringCreator -v
 git add internal/tools/intelligence/registering.go internal/tools/intelligence/registering_test.go internal/agent/react_loop_tools.go
 git commit -m "feat: RegisteringCreator——创建工具自动注册到 Agent Registry"
 ```
@@ -891,9 +891,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/tools"
-	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/tools/intelligence/create"
-	"github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/internal/tools/intelligence/optimize"
+	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence/create"
+	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence/optimize"
 )
 
 func TestToolIntelligence_EndToEnd(t *testing.T) {
@@ -944,7 +944,7 @@ func TestToolIntelligence_EndToEnd(t *testing.T) {
 - [ ] **Step 2: 运行测试 + 提交**
 
 ```bash
-cd agentprimordia && go test ./internal/tools/intelligence/ -run TestToolIntelligence_EndToEnd -v
+cd synth && go test ./internal/tools/intelligence/ -run TestToolIntelligence_EndToEnd -v
 git add internal/tools/intelligence/integration_test.go
 git commit -m "test: P4 工具智能端到端集成测试"
 ```
@@ -1104,7 +1104,7 @@ func tokenize(s string) []string {
 - [ ] **Step 3: 运行测试 + 提交**
 
 ```bash
-cd agentprimordia && go test ./internal/agent/planning/ -run TestPlanCache -v
+cd synth && go test ./internal/agent/planning/ -run TestPlanCache -v
 git add internal/agent/planning/cache.go internal/agent/planning/cache_test.go
 git commit -m "feat: 规划缓存——基于任务相似度复用已有 plan 骨架"
 ```
@@ -1144,7 +1144,7 @@ if capCache.planner != nil {
 - [ ] **Step 2: 运行测试 + 提交**
 
 ```bash
-cd agentprimordia && go test ./internal/agent/ -run TestReActLoop -v -count=1
+cd synth && go test ./internal/agent/ -run TestReActLoop -v -count=1
 git add internal/agent/react_loop_core.go
 git commit -m "feat: DeadlockDetector 接入 ReAct 循环——连续失败自动恢复"
 ```
@@ -1233,7 +1233,7 @@ func TestObservability_EndToEnd(t *testing.T) {
 - [ ] **Step 2: 运行测试 + 修复 + 提交**
 
 ```bash
-cd agentprimordia && go test ./internal/observability/ -run TestObservability_EndToEnd -v
+cd synth && go test ./internal/observability/ -run TestObservability_EndToEnd -v
 git add internal/observability/integration_test.go
 git commit -m "test: P3 可观测性端到端集成测试（OTel + 告警 + Dashboard）"
 ```
@@ -1366,7 +1366,7 @@ func PredictStateDeltas(ctx context.Context, llm interface{ Complete(context.Con
 - [ ] **Step 3: 运行测试 + 提交**
 
 ```bash
-cd agentprimordia && go test ./internal/agent/worldmodel/ -run TestPredictPrompt -v
+cd synth && go test ./internal/agent/worldmodel/ -run TestPredictPrompt -v
 git add internal/agent/worldmodel/predict.go internal/agent/worldmodel/predict_test.go
 git commit -m "feat: LLM-as 状态预演——行动前预测状态增量"
 ```
@@ -1456,7 +1456,7 @@ if capCache.worldTracker != nil && capCache.lastPrediction != nil {
 - [ ] **Step 3: 运行测试 + 提交**
 
 ```bash
-cd agentprimordia && go test ./internal/agent/worldmodel/ ./internal/agent/ -v -count=1
+cd synth && go test ./internal/agent/worldmodel/ ./internal/agent/ -v -count=1
 git add internal/agent/worldmodel/predict.go internal/agent/react_loop_core.go
 git commit -m "feat: 回溯校验——预演 vs 实际差异记录进失败库"
 ```
@@ -1570,7 +1570,7 @@ if msg.MultimodalContent != nil {
 - [ ] **Step 3: 运行测试 + 提交**
 
 ```bash
-cd agentprimordia && go test ./internal/llm/ -run TestOpenAIProvider_Vision -v
+cd synth && go test ./internal/llm/ -run TestOpenAIProvider_Vision -v
 git add internal/llm/openai_provider.go internal/llm/vision_test.go
 git commit -m "feat: OpenAI Provider vision 路径——多模态 content 数组格式"
 ```
@@ -1649,7 +1649,7 @@ git commit -m "feat: v7.2 统一 bench 运行器"
 - [ ] **Step 1: 跑全部 4 个命题的 A/B 实验**
 
 ```bash
-cd agentprimordia
+cd synth
 bash bench/v72/run.sh p1   # 世界模型
 bash bench/v72/run.sh p2   # 规划增强
 bash bench/v72/run.sh p4   # 工具智能
@@ -1659,7 +1659,7 @@ bash bench/v72/run.sh p5   # 多模态
 - [ ] **Step 2: P3 集成测试**
 
 ```bash
-cd agentprimordia && go test ./internal/observability/ -run TestObservability_EndToEnd -v
+cd synth && go test ./internal/observability/ -run TestObservability_EndToEnd -v
 ```
 
 - [ ] **Step 3: 撰写验收报告**

@@ -1,6 +1,6 @@
 // embedding-recall.test.ts — S0-3 真实 corpus 双线召回基准（TS 臂）。
 //
-// 口径（与 Go 侧 agentprimordia/internal/memory/embedding_recall_test.go 逐位对齐）：
+// 口径（与 Go 侧 synth/internal/memory/embedding_recall_test.go 逐位对齐）：
 //   - 语料：docs/evals/embedding-corpus-v1.json（S0-2 题面台账注册，sha256 冻结）；
 //     CI 回归只跑 visible 子集（holdout=false），holdout 子集留给 S0-3 终验；
 //   - 嵌入：LexicalEmbedder（无 key 降级位，回归底档臂；语义臂见 describe('语义臂')）；
@@ -9,7 +9,7 @@
 //     插入顺序（mulberry32 Fisher-Yates 洗牌）与层级生成随机源（HNSWConfig.random）；
 //   - recall@10：|HNSW top-10 ∩ gold| / |gold|（gold ≤ 8）；
 //   - 结果写入 sdk/typescript/bench/results/s0-3-recall-ts.json
-//     （仅 AP_WRITE_S03_RESULTS=1 时落盘）；双线对账：node scripts/dual-line-recall-check.mjs。
+//     （仅 SYNTH_WRITE_S03_RESULTS=1 时落盘）；双线对账：node scripts/dual-line-recall-check.mjs。
 import { describe, it, expect } from 'vitest';
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -158,7 +158,7 @@ describe('Embedding corpus recall — lexical 臂（回归底档）', () => {
     expect(stats.misses).toBe(corpus.queries.length);
     expect(stats.hitRate).toBe(0.5);
 
-    if (process.env.AP_WRITE_S03_RESULTS === '1') {
+    if (process.env.SYNTH_WRITE_S03_RESULTS === '1') {
       writeResultJSON('s0-3-recall-ts.json', {
         arm: 'lexical-fallback',
         semantic: false,
@@ -179,8 +179,8 @@ describe('Embedding corpus recall — lexical 臂（回归底档）', () => {
 
 describe('语义臂（需真实端点，S0-3 验收 ≥0.95）', () => {
   it('无 secrets 时降级豁免；端点就位时同一语料同一三档种子真跑', async (ctx) => {
-    if (!process.env.AP_EMBEDDINGS_BASE_URL && !process.env.AP_EMBEDDINGS_PROVIDER) {
-      console.warn('A1 运营依赖未就位 → 降级豁免（docs/V7路线图.md §九）：未设置 AP_EMBEDDINGS_BASE_URL/AP_EMBEDDINGS_PROVIDER，语义臂 recall@10 ≥0.95 待端点就位后真跑');
+    if (!process.env.SYNTH_EMBEDDINGS_BASE_URL && !process.env.SYNTH_EMBEDDINGS_PROVIDER) {
+      console.warn('A1 运营依赖未就位 → 降级豁免（docs/V7路线图.md §九）：未设置 SYNTH_EMBEDDINGS_BASE_URL/SYNTH_EMBEDDINGS_PROVIDER，语义臂 recall@10 ≥0.95 待端点就位后真跑');
       ctx.skip();
       return;
     }
@@ -193,7 +193,7 @@ describe('语义臂（需真实端点，S0-3 验收 ≥0.95）', () => {
     const mean = recalls.reduce((a, b) => a + b, 0) / recalls.length;
     expect(mean).toBeGreaterThanOrEqual(0.95);
 
-    if (process.env.AP_WRITE_S03_RESULTS === '1') {
+    if (process.env.SYNTH_WRITE_S03_RESULTS === '1') {
       writeResultJSON('s0-3-recall-ts-semantic.json', {
         arm: 'semantic',
         semantic: true,

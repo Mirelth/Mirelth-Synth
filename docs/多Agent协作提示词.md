@@ -1,7 +1,7 @@
 # 多智能体协同编程系统提示词
 
 > 本提示词用于指导多个编程智能体在复杂软件开发任务中高效协作。
-> 适用于基于 AgentPrimordia 框架的 DAG 编排、GroupChat 协作、Pipeline 流水线等模式。
+> 适用于基于 Synth 框架的 DAG 编排、GroupChat 协作、Pipeline 流水线等模式。
 
 ---
 
@@ -683,7 +683,7 @@ Step 4: 检索 Progress Board
 |------|----------|----------|------|
 | 后端语言 | Go | ≥ 1.26 | 主开发语言，零 CGO 依赖 |
 | 前端语言 | TypeScript | ≥ 5.4 | SDK 对等实现 |
-| Agent 框架 | AgentPrimordia | ≥ v1.0.0 | 编排、协作、记忆、工具 |
+| Agent 框架 | Synth | ≥ v1.0.0 | 编排、协作、记忆、工具 |
 | 数据库 | SQLite (modernc.org/sqlite) | 纯 Go 驱动 | 记忆持久化，零 CGO |
 | 配置 | YAML (gopkg.in/yaml.v3) | — | 声明式配置 |
 
@@ -965,8 +965,8 @@ result, err := orch.Run(ctx, "为项目添加用户认证模块")
 
 ```go
 // 架构方案讨论
-groupChat, err := ap.NewGroupChat(ap.GroupChatConfig{
-    Agents: []ap.Agent{
+groupChat, err := synth.NewGroupChat(synth.GroupChatConfig{
+    Agents: []synth.Agent{
         architect,        // 架构师提出方案
         seniorDeveloper,  // 资深开发评估可行性
         securityExpert,   // 安全专家评估风险
@@ -975,10 +975,10 @@ groupChat, err := ap.NewGroupChat(ap.GroupChatConfig{
     MaxRounds: 3,
 })
 
-result, err := groupChat.Run(ctx, ap.UserMessage("讨论认证模块技术方案: JWT vs Session"))
+result, err := groupChat.Run(ctx, synth.UserMessage("讨论认证模块技术方案: JWT vs Session"))
 
 // 共识决策
-consensus, err := groupChat.RunConsensus(ctx, ap.UserMessage("请投票选择最终认证方案"))
+consensus, err := groupChat.RunConsensus(ctx, synth.UserMessage("请投票选择最终认证方案"))
 ```
 
 ---
@@ -1005,18 +1005,18 @@ consensus, err := groupChat.RunConsensus(ctx, ap.UserMessage("请投票选择最
 
 ```go
 // 方式一: 作为 Coordinator 的系统提示词
-coordinator := ap.NewAgent(
+coordinator := synth.NewAgent(
     "Coordinator",
     multiAgentCollaborationPrompt, // 本提示词全文
     provider,
-    ap.WithMaxTurns(50),
+    synth.WithMaxTurns(50),
 )
 
 // 方式二: 拆分为各角色提示词
 analystPrompt := extractRolePrompt("RequirementsAnalyst")
-analyst := ap.NewAgent("RequirementsAnalyst", analystPrompt, provider, ...)
+analyst := synth.NewAgent("RequirementsAnalyst", analystPrompt, provider, ...)
 ```
 
 ---
 
-*本提示词设计基于 AgentPrimordia 框架的多 Agent 编排能力，结合 DAG 工作流、GroupChat 协作、SharedStore 知识共享和 Reflection 自反思机制，确保多智能体在复杂编程场景中高效协作。*
+*本提示词设计基于 Synth 框架的多 Agent 编排能力，结合 DAG 工作流、GroupChat 协作、SharedStore 知识共享和 Reflection 自反思机制，确保多智能体在复杂编程场景中高效协作。*

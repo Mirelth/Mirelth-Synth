@@ -17,7 +17,7 @@ describe('JSONLoader (builtin)', () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ap-json-'));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'synth-json-'));
   });
 
   afterEach(() => {
@@ -54,7 +54,7 @@ describe('CSVLoader (builtin)', () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ap-csv-'));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'synth-csv-'));
   });
 
   afterEach(() => {
@@ -112,7 +112,7 @@ describe('HTMLLoader (builtin)', () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ap-html-'));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'synth-html-'));
   });
 
   afterEach(() => {
@@ -157,7 +157,7 @@ describe('MarkdownLoader (builtin)', () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ap-md-'));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'synth-md-'));
   });
 
   afterEach(() => {

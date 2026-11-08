@@ -266,7 +266,7 @@ export class ColdStartOptimizer {
   /** 生成 Cloudflare Workers 部署配置 */
   generateCloudflareConfig(): string {
     return `// wrangler.toml — Cloudflare Workers 部署配置
-name = "agentprimordia-worker"
+name = "synth-worker"
 main = "src/edge/worker.ts"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]

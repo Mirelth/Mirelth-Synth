@@ -1,0 +1,196 @@
+site_name: Synth Documentation
+site_description: Go AI Agent 开发框架官方文档
+site_url: https://docs.synth.dev
+site_author: Synth Team
+
+repo_name: Synth/synth
+repo_url: https://github.com/Synth/synth
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; 2026 Synth Team
+
+theme:
+  name: material
+  language: zh
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: 切换到暗色模式
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: 切换到亮色模式
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+
+plugins:
+  - search:
+      separator: '[\s\-\.]+'
+      lang:
+        - zh
+        - en
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - tags
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Synth/synth
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/synth
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/Synth
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+  alternate:
+    - name: 中文
+      link: /zh/
+      lang: zh
+    - name: English
+      link: /en/
+      lang: en
+
+nav:
+  - 首页: index.md
+  - 实施进度:
+    - 阶段总览:: 项目状态.md
+    - 版本路线图: ../../docs/路线图.md
+  - 快速开始:
+    - 安装指南:: getting-started/安装指南.md
+    - 5分钟入门:: getting-started/五分钟入门.md
+    - 第一个Agent:: getting-started/第一个Agent.md
+  - 核心概念:
+    - Agent架构:: concepts/Agent架构.md
+    - ReAct循环:: concepts/ReAct循环.md
+    - 工具系统:: concepts/工具系统.md
+    - 记忆系统:: concepts/记忆系统.md
+    - RAG检索增强:: concepts/RAG检索增强.md
+    - 多Agent编排:: concepts/多Agent编排.md
+    - A2A通信:: concepts/A2A通信.md
+    - 事件总线:: concepts/事件总线.md
+    - 安全护栏:: concepts/安全护栏.md
+    - 状态持久化:: concepts/状态持久化.md
+    - 任务规划:: concepts/任务规划.md
+    - 自反思:: concepts/自反思.md
+    - 工具学习:: concepts/工具学习.md
+  - 使用指南:
+    - 创建Agent:: guides/创建Agent.md
+    - 添加工具:: guides/添加工具.md
+    - 配置记忆:: guides/配置记忆.md
+    - 配置护栏:: guides/配置护栏.md
+    - 一体化 Coding Harness:: guides/Coding-Harness.md
+    - 多Agent协作:: guides/多Agent协作.md
+    - 多租户部署:: guides/多租户.md
+    - 并发调度:: guides/并发调度.md
+    - 流式输出:: guides/流式输出.md
+    - 多模态:: guides/多模态.md
+    - 人机协作:: guides/人机协作.md
+    - 提示词模板:: guides/提示词模板.md
+    - 配置热加载:: guides/配置热加载.md
+    - React Hooks:: guides/React-Hooks.md
+    - VS Code 扩展:: guides/VSCode扩展.md
+    - Edge Runtime:: guides/Edge-Runtime.md
+    - 部署到生产:: guides/部署到生产.md
+  - API参考:
+    - Agent API:: api/Agent-API.md
+    - LLM API:: api/LLM-API.md
+    - Tools API:: api/Tools-API.md
+    - Memory API:: api/Memory-API.md
+    - Pool API:: api/Pool-API.md
+    - A2A API:: api/A2A-API.md
+    - Guardrail API:: api/Guardrail-API.md
+    - Orchestration API:: api/Orchestration-API.md
+    - Config API:: api/配置API.md
+    - Metrics API:: api/指标API.md
+  - 实战菜谱:
+    - 菜谱索引: cookbook/index.md
+    - RAG Agent:: cookbook/RAG-Agent.md
+    - 多 Agent 协作:: cookbook/多Agent协作.md
+    - 代码审查 Bot:: cookbook/代码审查Bot.md
+    - 客服 Agent:: cookbook/客服Agent.md
+    - 数据分析 Agent:: cookbook/数据分析Agent.md
+    - 自定义 Provider:: cookbook/自定义Provider.md
+    - 自定义工具:: cookbook/自定义工具.md
+    - K8s 部署:: cookbook/K8s部署.md
+  - 进阶主题:
+    - 性能优化:: advanced/性能优化.md
+    - PGO性能调优:: advanced/PGO调优.md
+    - 安全最佳实践:: advanced/安全最佳实践.md
+    - 供应链安全:: advanced/供应链安全.md
+    - 并发原语:: advanced/并发原语.md
+    - 自定义Provider:: advanced/自定义Provider.md
+    - 插件开发:: advanced/插件开发.md
+    - Admin API:: advanced/管理API.md
+    - Debugger调试器:: advanced/调试器.md
+    - Metrics指标:: advanced/指标.md
+    - OpenTelemetry:: advanced/OpenTelemetry.md
+  - 基准测试:
+    - Go vs TypeScript:: benchmarks/Go与TypeScript对比.md
+    - 性能对比2026:: benchmarks/性能对比-2026.md
+  - 版本管理:
+    - 版本策略:: 版本规范.md
+  - 教程系列:
+    - 5分钟入门:: guide/入门.md
+    - 核心概念:: guide/核心概念.md
+    - ReAct 循环:: guide/ReAct循环.md
+    - 工具系统:: guide/工具系统.md
+    - 记忆系统:: guide/记忆系统.md
+    - 多 Agent 编排:: guide/多Agent编排.md
+    - 部署与运维:: guide/部署与运维.md
+    - 安全最佳实践:: guide/安全最佳实践.md
+    - 性能调优:: guide/性能调优.md
+  - API 参考（完整版）:
+    - API 索引: api-reference/index.md
+    - Agent API:: api-reference/Agent-API.md
+    - Tools API:: api-reference/Tools-API.md
+    - Memory API:: api-reference/Memory-API.md
+    - LLM API:: api-reference/LLM-API.md
+    - Orchestration API:: api-reference/Orchestration-API.md
+    - Pool API:: api-reference/Pool-API.md
+    - Guardrail API:: api-reference/Guardrail-API.md
+    - Security API:: api-reference/Security-API.md

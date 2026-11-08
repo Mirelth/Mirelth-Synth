@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""AgentPrimordia Python SDK 最小测试套件（评估报告 §8.2：Python SDK 此前零测试）。
+"""Synth Python SDK 最小测试套件（评估报告 §8.2：Python SDK 此前零测试）。
 
 使用 stdlib http.server 起本地 mock 服务，无第三方测试依赖：
   - create_agent / send_message / list_agents / get_stats 正常路径
@@ -11,8 +11,8 @@ import threading
 import unittest
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-from agentprimordia.client import AgentPrimordia
-from agentprimordia.exceptions import AuthenticationError, APIError
+from synth.client import Synth
+from synth.exceptions import AuthenticationError, APIError
 
 
 class MockHandler(BaseHTTPRequestHandler):
@@ -60,7 +60,7 @@ class TestClient(unittest.TestCase):
         cls.thread.start()
         host, port = cls.server.server_address
         cls.base = f"http://{host}:{port}"
-        cls.client = AgentPrimordia(api_key="test-key", base_url=cls.base)
+        cls.client = Synth(api_key="test-key", base_url=cls.base)
 
     @classmethod
     def tearDownClass(cls):

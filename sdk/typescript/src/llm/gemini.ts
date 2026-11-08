@@ -7,7 +7,7 @@ import { APIError } from './openai.js';
 
 const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
 const DEFAULT_TIMEOUT = 120_000;
-const USER_AGENT = 'AgentPrimordia-TS/1.0';
+const USER_AGENT = 'Synth-TS/1.0';
 
 interface GeminiPart {
   text?: string;

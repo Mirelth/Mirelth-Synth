@@ -3,7 +3,7 @@
 ## TypeScript SDK
 
 ```bash
-npm install @agentprimordia/sdk
+npm install @synth/sdk
 ```
 
 **要求：**
@@ -14,7 +14,7 @@ npm install @agentprimordia/sdk
 ## Python SDK
 
 ```bash
-pip install agentprimordia
+pip install synth
 ```
 
 **要求：**
@@ -23,7 +23,7 @@ pip install agentprimordia
 ## Go Framework
 
 ```bash
-go get github.com/agentprimordia/ap
+go get github.com/Mirelth/Synth
 ```
 
 **要求：**
@@ -32,8 +32,8 @@ go get github.com/agentprimordia/ap
 ## 从源码构建
 
 ```bash
-git clone https://github.com/agentprimordia/ap.git
-cd ap
+git clone https://github.com/Mirelth/Synth.git
+cd synth
 make build
 ```
 

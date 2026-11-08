@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ============================================================
-# AgentPrimordia Studio — 一键启动（macOS / Linux）
+# Synth Studio — 一键启动（macOS / Linux）
 #
 # 同时启动后端（:8090）与前端（:5173），Ctrl+C 一起停止，
 # 启动完成后自动打开浏览器。
@@ -26,10 +26,10 @@ while getopts "b:f:h" opt; do
 done
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BACKEND_DIR="$ROOT/agentprimordia"
-FRONTEND_DIR="$ROOT/agentprimordia/studio/web"
+BACKEND_DIR="$ROOT/synth"
+FRONTEND_DIR="$ROOT/synth/studio/web"
 
-echo "==> AgentPrimordia Studio 启动器"
+echo "==> Synth Studio 启动器"
 echo "    后端 :$BACKEND_PORT (go run ./cmd/studio)"
 echo "    前端 :$FRONTEND_PORT (npm run dev)"
 

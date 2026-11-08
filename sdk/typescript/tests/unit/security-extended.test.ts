@@ -110,7 +110,7 @@ describe('resolvePathSafe', () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ap-sec-'));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'synth-sec-'));
   });
 
   afterEach(() => {
@@ -136,7 +136,7 @@ describe('resolvePathSafe', () => {
 
   it.skipIf(process.platform === 'win32')('should detect symlink escape', () => {
     // Create a symlink to a directory outside root
-    const outsideDir = path.join(os.tmpdir(), 'ap-outside');
+    const outsideDir = path.join(os.tmpdir(), 'synth-outside');
     fs.mkdirSync(outsideDir, { recursive: true });
     try {
       const linkPath = path.join(tmpDir, 'escape-link');

@@ -16,7 +16,7 @@ import {
 } from '../src/llm/webgpu-model-runner.js';
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: WebGPU Inference Backend ===\n');
+  console.log('=== Synth TS SDK: WebGPU Inference Backend ===\n');
 
   // 自动检测可用推理后端
   const backend = await detectInferenceBackend();

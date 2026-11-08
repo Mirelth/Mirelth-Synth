@@ -35,7 +35,7 @@ const fallbackProvider: Provider = {
 };
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Resilient Provider ===\n');
+  console.log('=== Synth TS SDK: Resilient Provider ===\n');
 
   const resilient = new ResilientProvider({
     primary: unstableProvider,

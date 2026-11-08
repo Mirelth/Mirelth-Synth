@@ -74,7 +74,7 @@ class OfflineRequestQueue {
   private idbFlushPending = false;
   private idbAvailable: boolean | null = null;
 
-  private static readonly DB_NAME = 'agent-primordia';
+  private static readonly DB_NAME = 'agent-synth';
   private static readonly DB_STORE = 'offline-queue';
   private static readonly DB_VERSION = 1;
   private static readonly LS_KEY = 'agent-offline-queue';

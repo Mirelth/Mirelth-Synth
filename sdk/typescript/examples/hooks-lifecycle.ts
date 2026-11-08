@@ -21,7 +21,7 @@ const provider: Provider = {
 };
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Hooks & Lifecycle ===\n');
+  console.log('=== Synth TS SDK: Hooks & Lifecycle ===\n');
 
   const hooks = new HookManager();
 

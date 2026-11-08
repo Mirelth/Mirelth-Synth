@@ -1,16 +1,16 @@
 # API Reference
 
-本目录提供 AgentPrimordia 多语言 SDK 的 API 参考文档。
+本目录提供 Synth 多语言 SDK 的 API 参考文档。
 
 ## 语言
 
 | 语言 | 包名 | 包管理器 |
 |------|------|---------|
-| TypeScript | `@agentprimordia/sdk` | npm |
-| Go | `github.com/agentprimordia/ap` | go modules |
-| Python | `agentprimordia` | pip |
-| Java | `com.agentprimordia` | gradle/maven |
-| Rust | `agentprimordia` | cargo |
+| TypeScript | `@synth/sdk` | npm |
+| Go | `github.com/Mirelth/Synth` | go modules |
+| Python | `synth` | pip |
+| Java | `com.synth` | gradle/maven |
+| Rust | `synth` | cargo |
 
 ## 文档结构
 

@@ -1,7 +1,7 @@
 /**
- * Playground 客户端 — AgentPrimordia Playground 的 TypeScript SDK。
+ * Playground 客户端 — Synth Playground 的 TypeScript SDK。
  *
- * 提供与 AgentPrimordia Playground HTTP API 交互的高级封装，包括：
+ * 提供与 Synth Playground HTTP API 交互的高级封装，包括：
  * - Agent 生命周期管理（创建/删除/列表）
  * - 同步 / 流式对话
  * - SSE 事件订阅

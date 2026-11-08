@@ -87,7 +87,7 @@ describe('ShellTool', () => {
   });
 
   it('should use custom working directory', async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ap-shell-'));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'synth-shell-'));
     const tool = new ShellTool({ workingDir: tmpDir });
     const result = await tool.execute({ command: 'echo hello' });
     expect(result.trim()).toBe('hello');
@@ -225,7 +225,7 @@ describe('FileSystemTool', () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ap-fs-'));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'synth-fs-'));
   });
 
   afterEach(() => {

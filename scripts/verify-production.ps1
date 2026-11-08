@@ -1,16 +1,16 @@
-# AgentPrimordia 生产就绪验证脚本
+# Synth 生产就绪验证脚本
 #
 # 用途：在普通 PowerShell（不通过 AI agent 环境）跑这个脚本，
 #       绕过任何工作区恢复机制，得到干净的验证结果。
 #
 # 用法：
-#   cd e:\ap\AgentPrimordia\agentprimordia
+#   cd e:\synth\Synth\synth
 #   ..\scripts\verify-production.ps1
 #
 # 前置：需安装 golangci-lint（go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest）
 
 $ErrorActionPreference = "Continue"
-Set-Location $PSScriptRoot\..\agentprimordia
+Set-Location $PSScriptRoot\..\synth
 
 Write-Host "=== 1. 清理可能被恢复机制复活的死代码配套测试 ===" -ForegroundColor Cyan
 # 这些测试文件测的是已删除的死代码，如果被 IDE/快照恢复会导致 typechecking error

@@ -24,7 +24,7 @@ const visionProvider: Provider = {
 };
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Multimodal ===\n');
+  console.log('=== Synth TS SDK: Multimodal ===\n');
 
   const fusion = new MultimodalFusion({ provider: visionProvider });
 

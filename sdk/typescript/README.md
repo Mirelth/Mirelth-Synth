@@ -1,13 +1,13 @@
-# @agentprimordia/sdk
+# @synth/sdk
 
-TypeScript SDK for AgentPrimordia — Universal AI Agent Development Framework.
+TypeScript SDK for Synth — Universal AI Agent Development Framework.
 
 **100% feature parity with the Go framework.**
 
 ## Installation
 
 ```bash
-npm install @agentprimordia/sdk
+npm install @synth/sdk
 ```
 
 ### Optional Peer Dependencies
@@ -20,7 +20,7 @@ npm install better-sqlite3
 ## Quick Start
 
 ```typescript
-import { ReActAgent, MockProvider, ToolRegistry } from '@agentprimordia/sdk';
+import { ReActAgent, MockProvider, ToolRegistry } from '@synth/sdk';
 
 const provider = new MockProvider({ response: 'Hello!' });
 const registry = new ToolRegistry();
@@ -162,7 +162,7 @@ console.log(response.content);
 ## Adding Tools
 
 ```typescript
-import { Tool, ToolRegistry } from '@agentprimordia/sdk';
+import { Tool, ToolRegistry } from '@synth/sdk';
 
 class WeatherTool implements Tool {
   name = 'get_weather';
@@ -190,7 +190,7 @@ registry.register(new WeatherTool());
 batch is full or the timer fires:
 
 ```typescript
-import { OpenAIProvider, BatchRequestProcessor } from '@agentprimordia/sdk';
+import { OpenAIProvider, BatchRequestProcessor } from '@synth/sdk';
 
 const provider = new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY! });
 const batch = new BatchRequestProcessor(provider, {
@@ -213,7 +213,7 @@ batch.close();
 with automatic retry on parse failure:
 
 ```typescript
-import { OpenAIProvider, StructuredOutputExtractor } from '@agentprimordia/sdk';
+import { OpenAIProvider, StructuredOutputExtractor } from '@synth/sdk';
 
 const provider = new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY! });
 const extractor = new StructuredOutputExtractor(provider, 'gpt-4o', {
@@ -238,7 +238,7 @@ const person = await extractor.extract<{ name: string; age: number }>(
 ## Prompt Registry & Few-Shot
 
 ```typescript
-import { PromptTemplate, TemplateRegistry, FewShotTemplate, KeywordSelector } from '@agentprimordia/sdk';
+import { PromptTemplate, TemplateRegistry, FewShotTemplate, KeywordSelector } from '@synth/sdk';
 
 const tpl = new PromptTemplate('You are {{.Role}}. Answer: {{.Question}}');
 const reg = new TemplateRegistry();
@@ -262,7 +262,7 @@ const out = few.render('hello there', { Role: 'bot', Question: '' });
 ## Document Loaders
 
 ```typescript
-import { TextLoader, MDLoader, CodeLoader, DirectoryLoader } from '@agentprimordia/sdk';
+import { TextLoader, MDLoader, CodeLoader, DirectoryLoader } from '@synth/sdk';
 
 const txt = await new TextLoader().load('./README.md');
 const md  = await new MDLoader().load('./CHANGELOG.md');
@@ -275,7 +275,7 @@ const all = await new DirectoryLoader(new TextLoader(), ['.md', '.ts']).load('./
 ## Using Hooks
 
 ```typescript
-import { ReActAgent, HookManager, MockProvider, ToolRegistry } from '@agentprimordia/sdk';
+import { ReActAgent, HookManager, MockProvider, ToolRegistry } from '@synth/sdk';
 
 const hooks = new HookManager();
 hooks.register('before_llm', (ctx) => {
@@ -299,7 +299,7 @@ const agent = new ReActAgent({
 ### Health Checks
 
 ```typescript
-import { HealthServer } from '@agentprimordia/sdk';
+import { HealthServer } from '@synth/sdk';
 import { createServer } from 'node:http';
 
 const health = new HealthServer();
@@ -319,7 +319,7 @@ server.listen(8080);
 ### Admin API
 
 ```typescript
-import { AdminHandler } from '@agentprimordia/sdk';
+import { AdminHandler } from '@synth/sdk';
 
 const admin = new AdminHandler({
   apiToken: 'my-secret-token',
@@ -334,7 +334,7 @@ const admin = new AdminHandler({
 ### Audit Logging
 
 ```typescript
-import { AuditLogger, InMemoryAuditOutput } from '@agentprimordia/sdk';
+import { AuditLogger, InMemoryAuditOutput } from '@synth/sdk';
 
 const logger = new AuditLogger({ output: new InMemoryAuditOutput() });
 await logger.log({ actor: 'user-1', action: 'tool.execute', resource: 'shell' });
@@ -345,7 +345,7 @@ const report = await logger.generateReport('2026-01-01', '2026-12-31');
 ### SQLite Checkpoint Persistence
 
 ```typescript
-import { SQLiteCheckpointStore } from '@agentprimordia/sdk';
+import { SQLiteCheckpointStore } from '@synth/sdk';
 
 const store = new SQLiteCheckpointStore('./checkpoints.db');
 await store.saveState({
@@ -370,7 +370,7 @@ const state = await store.loadState('agent-1');
 
 ## Go Framework Parity
 
-This SDK maintains 100% feature parity with the Go framework (`agentprimordia/internal/`).
+This SDK maintains 100% feature parity with the Go framework (`synth/internal/`).
 Every Go module has a corresponding TypeScript implementation:
 
 | Go (`internal/`) | TS (`src/`) | Status |

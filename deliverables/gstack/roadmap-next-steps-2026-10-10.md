@@ -1,4 +1,4 @@
-# AgentPrimordia 下一步路线图规划
+# Synth 下一步路线图规划
 
 **日期**：2026-10-10
 **场景**：全流程交付 · 规划（plan）
@@ -35,7 +35,7 @@
 | 信号 | 实况 | 证据锚点 |
 |---|---|---|
 | 发布能力 | v7.5.1 正式发布成功，供应链门（SBOM/cosign/校验和）首次真正闭环 | docs/项目深度评估报告-2026-09-28.md §8.9；commit fa622aac |
-| 分发能力 | 模块路径迁移后**首次可 `go install`**（此前从未可被 GOPROXY 解析） | 同上 §8.8；`go install .../v7/agentprimordia/cmd/ap@v7.5.1` 实证 |
+| 分发能力 | 模块路径迁移后**首次可 `go install`**（此前从未可被 GOPROXY 解析） | 同上 §8.8；`go install .../v7/synth/cmd/synth@v7.5.1` 实证 |
 | 研究侧 | V7 弧线 A/B 命题：v7.1 六个全负；v7.2 四命题 1 反向显著（P2 规划增强 **-47.8pp, p=0.001**）、2 正向趋势、1 打平 | docs/superpowers/specs/2026-09-07-v72-design.md:14-23；docs/v7.2-验收实验报告.md |
 | 产品侧 | v7.3 零门槛入口 → v7.4 七项实验性能力接线（清单 §三全 ✅）→ v7.5 发布链路 | git tag v7.1.0…v7.5.1；docs/实验性能力清单.md |
 | 工程健康 | 5298 测试在跑、覆盖 81.1%、-race 零竞争、A1–A8 + 红队双 0 全绿 | 深度评估报告 §3.2/§8.3 |
@@ -81,17 +81,17 @@
 
 | # | 目标 | 具体动作 | 验收判据（机器验证优先） | 依赖 |
 |---|------|---------|------------------------|------|
-| P0-1 | 保护已验证的修复批次 | 分 3–4 个 commit 提交 24 文件：① release.yml 重写 + 断言（fix）② 工具链 1.26.9 + x/net v0.61.0 + action pin 109 处（fix/chore）③ 文档三处（docs）④ deliverables 两份报告入库（docs）。**提交后不打 tag** | 提交前复跑：`go build ./...` exit 0 + `gofmt -l` 空 + `go test ./agentprimordia/pkg/...` ok + `govulncheck ./...` = No vulnerabilities + `actionlint` exit 0 + version-sync exit 0；`git status` 干净 | 无 |
+| P0-1 | 保护已验证的修复批次 | 分 3–4 个 commit 提交 24 文件：① release.yml 重写 + 断言（fix）② 工具链 1.26.9 + x/net v0.61.0 + action pin 109 处（fix/chore）③ 文档三处（docs）④ deliverables 两份报告入库（docs）。**提交后不打 tag** | 提交前复跑：`go build ./...` exit 0 + `gofmt -l` 空 + `go test ./synth/pkg/...` ok + `govulncheck ./...` = No vulnerabilities + `actionlint` exit 0 + version-sync exit 0；`git status` 干净 | 无 |
 | P0-2 | E-1 正式收口 + 翻默认否决 | ① 跑 verify-round-pending 13 单元对照（26 runs，moma 端点），两次结果全量披露；② 按计划书 §⑨ 写最终报告（不一致四格表 + 24 题逐题方向表 + **补 holdout 标记对账** + summary/raw 口径说明）；③ 三处回填：台账 E-1、V7 路线图 §十一、提案-世界模型默认策略切换.md 登记表 | 台账 E-1 状态 =「已跑完 112 对·未达标（+5.4pp, p=0.1796）·翻默认否决」附证据锚点；13 单元两次结果落盘；版本规范翻转登记表更新 | moma 端点（已恢复） |
 | P0-3 | 台账对账 | soak 重启或改「暂停」；E-4/E-5 补录 v7.1 59 对阴性；GA 发布状态更新为已发；E-2 nightly 7 天核实（查 Actions artifacts，cron 到期日 2026-09-11） | 台账每项均可指到 commit/报告/artifact；E-2 要么 7 天连续产出在案，要么登记「未达成·cron 已到期·重排计划」 | P0-2 同批做 |
-| P0-4 | 发布遗留三项分流 | ① 维护者加 NPM_TOKEN → 触发 npm publish → `npm view @agentprimordia/sdk version` = 7.5.1；② 凭 09-29 release Actions 日志定位镜像 cosign 报错并补签；③ M6 digest pin 需 registry 可达机执行 `docker buildx imagetools inspect golang:1.26.9-alpine` / `alpine:3.20` 写入两 Dockerfile（TODO 已留） | ①②③ 各自有命令级证据；未就绪项在台账登记为「凭据/环境阻塞·未闭环」 | 维护者凭据/网络 |
+| P0-4 | 发布遗留三项分流 | ① 维护者加 NPM_TOKEN → 触发 npm publish → `npm view @synth/sdk version` = 7.5.1；② 凭 09-29 release Actions 日志定位镜像 cosign 报错并补签；③ M6 digest pin 需 registry 可达机执行 `docker buildx imagetools inspect golang:1.26.9-alpine` / `alpine:3.20` 写入两 Dockerfile（TODO 已留） | ①②③ 各自有命令级证据；未就绪项在台账登记为「凭据/环境阻塞·未闭环」 | 维护者凭据/网络 |
 
 ### P1（本月）
 
 | # | 目标 | 具体动作 | 验收判据 | 依赖 |
 |---|------|---------|---------|------|
-| P1-1 | 以 v7.5.2 受控验证 24 文件批次 | 版本 bump 四方（VERSION/const/package.json/Helm）→ tag → 发布后立即执行 pre-launch §6.4 冒烟清单 11 项 | 资产 ≥13；`sha256sum -c` 6/6 OK；`cosign verify-blob` 过；`docker pull` + 镜像内 `ap-admin --version` = 7.5.2（验 M2）；`sbom-node.spdx.json` 产出（验 M7）；`go install @v7.5.2` e2e；npm/cosign 遗留若就绪同批收 | P0-1；维护者定发布时机 |
-| P1-2 | 干净环境 quickstart 走查（DX 第一优先级） | 按 README 从零：go install → ap start → 首个真实 agent 运行；记录每个断点 | 15 分钟内首胜，或产出分级修复清单并闭环 Top 3 | 无 |
+| P1-1 | 以 v7.5.2 受控验证 24 文件批次 | 版本 bump 四方（VERSION/const/package.json/Helm）→ tag → 发布后立即执行 pre-launch §6.4 冒烟清单 11 项 | 资产 ≥13；`sha256sum -c` 6/6 OK；`cosign verify-blob` 过；`docker pull` + 镜像内 `synth-admin --version` = 7.5.2（验 M2）；`sbom-node.spdx.json` 产出（验 M7）；`go install @v7.5.2` e2e；npm/cosign 遗留若就绪同批收 | P0-1；维护者定发布时机 |
+| P1-2 | 干净环境 quickstart 走查（DX 第一优先级） | 按 README 从零：go install → synth start → 首个真实 agent 运行；记录每个断点 | 15 分钟内首胜，或产出分级修复清单并闭环 Top 3 | 无 |
 | P1-3 | EnhancedPlanner 负面证据处置 | pkg 导出注释补「A/B 反向显著（-47.8pp, p=0.001, docs/v7.2-验收实验报告.md）+ 使用警告」；实现规划预算/深度护栏（≤20% turns、深度 ≤2、或 ReAct 失败 N 次后启用）并配测试 | 护栏有单测；导出注释含证据锚点；实验性能力清单同步 | 无 |
 | P1-4 | SHA pin 保鲜 | 接 Dependabot 或 Renovate（GitHub Actions ecosystem） | pin 更新 PR 自动出现且 CI 绿 | P0-1 入库后 |
 
@@ -194,7 +194,7 @@
 
 - gstack-product-reviewer（产品官）原始产出：本报告 §一–§五 主体（经主理人转述汇编 + 独立核验，勘误 1 处：Eng Review 第 3 条 BaseProvider 收敛编号 P2-4 → P2-2）
 - 今日前置交付物：deliverables/gstack/pre-launch-check-v7.5.1-2026-10-10.md、deliverables/gstack/fix-verification-matrix-v7.5.1-2026-10-10.md
-- 关键证据文档：docs/降级豁免登记-V7弧线.md、docs/V7路线图.md、docs/项目深度评估报告-2026-09-28.md、docs/superpowers/specs/2026-09-07-v72-design.md、agentprimordia/bench/results/v61/、agentprimordia/bench/results/v64-soak/
+- 关键证据文档：docs/降级豁免登记-V7弧线.md、docs/V7路线图.md、docs/项目深度评估报告-2026-09-28.md、docs/superpowers/specs/2026-09-07-v72-design.md、synth/bench/results/v61/、synth/bench/results/v64-soak/
 
 ---
 

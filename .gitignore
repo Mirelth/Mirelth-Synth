@@ -1,5 +1,5 @@
 # ============================================
-# AgentPrimordia Project - Git Ignore Configuration
+# Synth Project - Git Ignore Configuration
 # ============================================
 
 # ---------- Dependencies ----------
@@ -72,7 +72,7 @@ coverage/
 **/frontend-backup/
 Design/
 AGENTS.md
-!agentprimordia/internal/AGENTS.md  # 被根 AGENTS.md/README/文档索引引用的模块上下文路由，必须入库
+!synth/internal/AGENTS.md  # 被根 AGENTS.md/README/文档索引引用的模块上下文路由，必须入库
 ref_*.txt
 ref_*.png
 gen_*.py
@@ -127,7 +127,7 @@ cover_tools
 coverage_tools
 coverage_collab*
 coverage
-# go tool cover 输出（误提交历史：agentprimordia/cover_eval）
+# go tool cover 输出（误提交历史：synth/cover_eval）
 cover_eval
 cover_eval.*
 
@@ -171,7 +171,7 @@ lint-report.txt
 *.broken-sim-*
 *.interrupted-*.json
 # 压测用编译产物（3.4M Mach-O，二进制禁入）
-agentprimordia/bench/results/**/soak-bin
+synth/bench/results/**/soak-bin
 
 # ---------- 文档站 / 促销媒体与本地工具产物（2026-09-27 清理）----------
 # 与既有 *.mp4 / *.pptx / node_modules 的排除意图一致：媒体与促销构建产物不入库
@@ -179,12 +179,12 @@ docs/video/
 docs/ppt-images/
 docs/images/ppt/
 vibe_images/
-# 架构图生成/视觉校验产物（agentprimordia/docs/ap-architecture* 为正式交付物，不在此列）
-docs/agentprimordia-architecture.html
-docs/agentprimordia.architecture.json
+# 架构图生成/视觉校验产物（synth/docs/synth-architecture* 为正式交付物，不在此列）
+docs/synth-architecture.html
+docs/synth.architecture.json
 docs/*.visual-check.*
 # 促销迭代 HTML 与导出包
-docs/AgentPrimordia-Intro-*.html
+docs/Synth-Intro-*.html
 docs/Safari浏览器导出_*.zip
 # 促销文档工具链（本地 npm 工程 + 一次性脚本）
 docs/package.json
@@ -193,11 +193,11 @@ docs/generate-ppt.js
 docs/add-animations.py
 docs/fix-content-types.py
 
-# 框架开发目录内的散落项目配置（ap init/start 误运行产物，非框架文件）
-agentprimordia/.ap.yaml
+# 框架开发目录内的散落项目配置（synth init/start 误运行产物，非框架文件）
+synth/.synth.yaml
 
 .intel-tools/
-agentprimordia/tool-intelligence
+synth/tool-intelligence
 
 # 智能体工作区状态（非仓库内容）
 .workbuddy-ai/
@@ -206,4 +206,4 @@ agentprimordia/tool-intelligence
 tmpbin/
 
 # profiling 工件（保留 bench/results 下的基准归档）
-agentprimordia/*.prof
+synth/*.prof

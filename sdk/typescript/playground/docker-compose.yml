@@ -1,29 +1,29 @@
-# AgentPrimordia Playground — Docker Compose 部署
+# Synth Playground — Docker Compose 部署
 #
 # 用法：
 #   docker compose up -d
 #
 # 环境变量（通过 .env 文件或系统环境传入）：
-#   AP_LLM_API_KEY  — LLM API Key（必填）
-#   AP_LLM_MODEL    — 默认模型（可选，默认 gpt-4）
-#   AP_PLAYGROUND_PORT — 服务端口（可选，默认 8080）
+#   SYNTH_LLM_API_KEY  — LLM API Key（必填）
+#   SYNTH_LLM_MODEL    — 默认模型（可选，默认 gpt-4）
+#   SYNTH_PLAYGROUND_PORT — 服务端口（可选，默认 8080）
 
 services:
   playground:
     build:
       context: ../../..
       dockerfile: sdk/typescript/playground/Dockerfile
-    container_name: ap-playground
+    container_name: synth-playground
     ports:
-      - "${AP_PLAYGROUND_PORT:-8080}:8080"
+      - "${SYNTH_PLAYGROUND_PORT:-8080}:8080"
     environment:
       - NODE_ENV=production
-      - AP_PLAYGROUND_PORT=8080
-      - AP_LLM_PROVIDER=${AP_LLM_PROVIDER:-openai}
-      - AP_LLM_MODEL=${AP_LLM_MODEL:-gpt-4}
-      - AP_LLM_API_KEY=${AP_LLM_API_KEY:?AP_LLM_API_KEY is required}
-      - AP_MAX_AGENTS=${AP_MAX_AGENTS:-50}
-      - AP_LOG_LEVEL=${AP_LOG_LEVEL:-info}
+      - SYNTH_PLAYGROUND_PORT=8080
+      - SYNTH_LLM_PROVIDER=${SYNTH_LLM_PROVIDER:-openai}
+      - SYNTH_LLM_MODEL=${SYNTH_LLM_MODEL:-gpt-4}
+      - SYNTH_LLM_API_KEY=${SYNTH_LLM_API_KEY:?SYNTH_LLM_API_KEY is required}
+      - SYNTH_MAX_AGENTS=${SYNTH_MAX_AGENTS:-50}
+      - SYNTH_LOG_LEVEL=${SYNTH_LOG_LEVEL:-info}
     restart: unless-stopped
     deploy:
       resources:

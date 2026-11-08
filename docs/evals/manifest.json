@@ -1472,6 +1472,6 @@
   "holdout_min_rate": 0.3,
   "rule": "验收只认 holdout 子集成绩；题面一经冻结不得修改；扩充走新版本文件"
  },
- "schema": "ap-eval-registry/v1",
+ "schema": "synth-eval-registry/v1",
  "seed": 20260831
 }

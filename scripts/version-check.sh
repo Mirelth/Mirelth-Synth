@@ -2,9 +2,9 @@
 # version-check.sh — 跨语言版本一致性检查
 #
 # 检查以下三处版本定义是否一致：
-#   1. agentprimordia/pkg/agent.go    — const Version = "x.y.z"
+#   1. synth/pkg/agent.go    — const Version = "x.y.z"
 #   2. sdk/typescript/package.json    — "version": "x.y.z"
-#   3. agentprimordia/docs/版本规范.md — 版本表中 Go SDK 行
+#   3. synth/docs/版本规范.md — 版本表中 Go SDK 行
 #
 # 规则：
 #   - Go 版本 与 Docs 版本必须完全一致
@@ -17,9 +17,9 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
-GO_FILE="${REPO_ROOT}/agentprimordia/pkg/agent.go"
+GO_FILE="${REPO_ROOT}/synth/pkg/agent.go"
 TS_FILE="${REPO_ROOT}/sdk/typescript/package.json"
-DOC_FILE="${REPO_ROOT}/agentprimordia/docs/版本规范.md"
+DOC_FILE="${REPO_ROOT}/synth/docs/版本规范.md"
 
 ERRORS=0
 
@@ -93,7 +93,7 @@ FAIL=0
 # 检查 1: Go 版本 vs Docs Go 版本
 if [ "$GO_VERSION" != "$DOC_GO_VERSION" ]; then
   echo "::error::Go 版本 (${GO_VERSION}) 与 版本规范.md 中 Go SDK 版本 (${DOC_GO_VERSION}) 不一致"
-  echo "  请更新 agentprimordia/docs/版本规范.md 版本表中的 Go SDK 行"
+  echo "  请更新 synth/docs/版本规范.md 版本表中的 Go SDK 行"
   FAIL=1
 else
   echo "OK: Go 版本与 版本规范.md 一致 (${GO_VERSION})"
@@ -142,9 +142,9 @@ echo ""
 
 if [ "$FAIL" -eq 1 ]; then
   echo "::error::版本一致性检查失败！请确保以下三处版本保持同步："
-  echo "  1. agentprimordia/pkg/agent.go          — const Version"
+  echo "  1. synth/pkg/agent.go          — const Version"
   echo "  2. sdk/typescript/package.json           — \"version\""
-  echo "  3. agentprimordia/docs/版本规范.md     — 版本表"
+  echo "  3. synth/docs/版本规范.md     — 版本表"
   exit 1
 fi
 

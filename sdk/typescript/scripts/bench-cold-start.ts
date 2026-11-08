@@ -27,7 +27,7 @@ async function runBenchmark(): Promise<void> {
 
   const totalMs = performance.now() - startTime;
 
-  console.log('=== AgentPrimordia Edge Cold Start Benchmark ===');
+  console.log('=== Synth Edge Cold Start Benchmark ===');
   console.log(`Runtime: ${report.runtime}`);
   console.log(`Is Edge: ${report.isEdge}`);
   console.log(`Cold Start: ${report.coldStartMs.toFixed(2)}ms`);

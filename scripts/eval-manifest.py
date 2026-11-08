@@ -81,13 +81,13 @@ def build_entries():
 
 
 def main():
-    ap = argparse.ArgumentParser()
-    g = ap.add_mutually_exclusive_group(required=True)
+    synth = argparse.ArgumentParser()
+    g = synth.add_mutually_exclusive_group(required=True)
     g.add_argument("--write", action="store_true", help="生成/更新 manifest.json")
     g.add_argument("--verify", action="store_true", help="CI 对账（题面漂移即失败）")
     g.add_argument("--check", action="store_true", help="结构自检：留出比例与 id 唯一性")
-    ap.add_argument("--freeze-commit", default="", help="冻结 commit（题面文件的独立 commit 哈希）")
-    args = ap.parse_args()
+    synth.add_argument("--freeze-commit", default="", help="冻结 commit（题面文件的独立 commit 哈希）")
+    args = synth.parse_args()
 
     entries = build_entries()
 
@@ -141,7 +141,7 @@ def main():
     elif old_freeze != "PENDING-FREEZE-COMMIT":
         print(f"ℹ️ freeze_commit 保留既有登记 {old_freeze[:12]}")
     manifest = {
-        "schema": "ap-eval-registry/v1",
+        "schema": "synth-eval-registry/v1",
         "generated_by": GENERATOR,
         "seed": SEED,
         "policy": {

@@ -1,7 +1,7 @@
 ﻿/**
  * 国际化 (i18n) 模块
  *
- * 为 AgentPrimordia SDK 提供多语言支持，包括：
+ * 为 Synth SDK 提供多语言支持，包括：
  * - 运行时 locale 切换
  * - 参数插值
  * - 错误消息多语言化
@@ -12,7 +12,7 @@
  * - ja
  *
  * @example
- * import { setLocale, t } from '@agentprimordia/sdk/i18n';
+ * import { setLocale, t } from '@synth/sdk/i18n';
  *
  * setLocale('zh-CN');
  * console.log(t('timeout.operation', { seconds: 30 }));

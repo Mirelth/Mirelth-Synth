@@ -99,8 +99,8 @@ describe('TS coding pipeline 端到端', () => {
       provider.withResponse(pipelinePlan); // 根任务 Planning：分解为 5 个子任务
 
       const fileContent =
-        "console.log('Hello from AgentPrimordia TS coding harness!');\n" +
-        "export const hello = (): string => 'Hello from AgentPrimordia TS coding harness!';\n";
+        "console.log('Hello from Synth TS coding harness!');\n" +
+        "export const hello = (): string => 'Hello from Synth TS coding harness!';\n";
 
       // 子任务1：编写（filesystem 写文件）
       provider
@@ -117,7 +117,7 @@ describe('TS coding pipeline 端到端', () => {
           id: 'call_run', name: 'shell',
           arguments: JSON.stringify({ command: 'node hello.ts', cwd: workdir }),
         }])
-        .withToolResponse([], '运行成功：Hello from AgentPrimordia TS coding harness!')
+        .withToolResponse([], '运行成功：Hello from Synth TS coding harness!')
         .withResponse(lowCritique);
 
       // 子任务3：测试（shell 校验工作区）
@@ -173,7 +173,7 @@ describe('TS coding pipeline 端到端', () => {
       expect(fs.readFileSync(path.join(workdir, 'hello.ts'), 'utf-8')).toBe(fileContent);
       // 实施环节：程序真实可执行且输出符合预期
       expect(execFileSync('node', ['hello.ts'], { cwd: workdir, encoding: 'utf-8' }))
-        .toContain('Hello from AgentPrimordia TS coding harness!');
+        .toContain('Hello from Synth TS coding harness!');
       expect(git(workdir, 'log', '--oneline')).toContain('feat: add hello.ts');
       expect(git(workdir, 'tag', '-l')).toContain('v1.0.0');
       // write + run + status + add + commit + tag = 6 次工具调用

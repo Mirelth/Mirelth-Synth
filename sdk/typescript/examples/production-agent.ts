@@ -34,7 +34,7 @@ const productionProvider: Provider = {
 };
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Production Agent ===\n');
+  console.log('=== Synth TS SDK: Production Agent ===\n');
   const startTime = Date.now();
 
   // 1. 工具注册

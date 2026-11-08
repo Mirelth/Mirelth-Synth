@@ -1,0 +1,56 @@
+# ============================================================
+# Synth 生产镜像（Admin HTTP 服务）
+#
+# 构建（必须在仓库根执行）：docker build -f synth/Dockerfile.prod -t synth:prod .
+# 运行：docker run -p 8080:8080 -e ADMIN_TOKEN=xxx synth:prod
+#
+# 健康端点：GET /api/health（无需 token）
+# 指标端点：由 internal/metrics + otel 暴露（见 deploy/prometheus）
+# ============================================================
+
+# ---- Stage 1: Go builder ----
+# 基础镜像 pin 到精确补丁版：浮动 golang:1.26 无法保证拿到已修补工具链。
+# go1.26.10 修复了 govulncheck 报出的 11 个可达标准库漏洞
+# （net/http Range 头 DoS、html/template ×2、net/textproto、crypto/tls、os 等）。
+# 待补：进一步 pin 到 digest（需 registry 访问）：golang:1.26.10-alpine@sha256:<digest>
+FROM golang:1.26.10-alpine AS go-builder
+
+# 版本号经 build-arg 注入（原实现用 `git describe`，但 .dockerignore 排除了 .git，
+# 容器内必然失败并回退为 "dev" —— 导致镜像内 synth-admin 版本号恒为 dev）
+ARG VERSION=dev
+
+WORKDIR /build
+
+# 先拷依赖以利用层缓存
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+# 无 CGO（modernc.org/sqlite 为纯 Go 驱动）
+ENV CGO_ENABLED=0
+RUN go build -ldflags="-s -w -X main.Version=${VERSION}" \
+    -o /bin/synth-admin ./synth/cmd/admin/
+
+# ---- Stage 2: Runtime ----
+# 待补：pin 到 digest，例如 alpine:3.20@sha256:<digest>
+FROM alpine:3.20
+
+# wget 用于 HEALTHCHECK 探针；ca-certificates 用于 HTTPS 出站（LLM API 等）
+RUN apk add --no-cache wget ca-certificates tzdata && \
+    addgroup -S synth && adduser -S synth -G synth
+
+COPY --from=go-builder /bin/synth-admin /usr/local/bin/synth-admin
+
+USER synth
+
+EXPOSE 8080
+
+# HTTP 就绪/存活探针（不是 pgrep 进程检查）
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:8080/api/health > /dev/null 2>&1 || exit 1
+
+# 配置通过环境变量注入：
+#   ADDR         监听地址（默认 :8080）
+#   ADMIN_TOKEN  Admin API 访问令牌（必填）
+CMD ["sh", "-c", "exec synth-admin -addr=${ADDR:-:8080} -token=${ADMIN_TOKEN}"]

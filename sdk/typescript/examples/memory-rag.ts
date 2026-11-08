@@ -7,7 +7,7 @@ import { VectorStore } from '../src/memory/vector.js';
 import { InMemoryStore } from '../src/memory/store.js';
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Memory & RAG Example ===\n');
+  console.log('=== Synth TS SDK: Memory & RAG Example ===\n');
 
   // 1. 向量存储
   console.log('--- Vector Store ---');
@@ -29,7 +29,7 @@ async function main() {
 
   await memory.add({
     id: 'ep-1', sessionId: 's1', role: 'user',
-    content: 'AgentPrimordia 支持哪些编排模式？',
+    content: 'Synth 支持哪些编排模式？',
   });
   await memory.add({
     id: 'ep-2', sessionId: 's1', role: 'assistant',

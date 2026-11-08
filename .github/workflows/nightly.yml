@@ -61,7 +61,7 @@ jobs:
           exit-code: '1'
 
       # 修复评估报告 §7.5：原「Trivy 容器扫描」步骤以根 Dockerfile 为守卫
-      # （根目录从未存在），且扫描的 agentprimordia:latest 镜像在本 job 未构建，
+      # （根目录从未存在），且扫描的 synth:latest 镜像在本 job 未构建，
       # 属死代码——容器镜像扫描由 release.yml / supply-chain.yml 在构建时执行。
 
   dependency-freshness:
@@ -93,15 +93,14 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      # 修复评估报告 §7.5：仓库根无 Dockerfile（Dockerfile 在 agentprimordia/），
-      # 原 job 在根执行 docker build . 每次必失败。
+      # 构建上下文必须是仓库根：go.mod / go.work 在根，且 Dockerfile.prod
+      # 使用 COPY go.mod go.sum ./ 与 go build ./synth/cmd/admin/。
+      # 在 synth/ 子目录构建会因 context 中缺少 go.mod 直接失败。
       - name: Build Docker image
-        working-directory: agentprimordia
-        run: docker build . --tag agentprimordia:nightly
+        run: docker build -f synth/Dockerfile.prod . --tag synth:nightly
 
       - name: Verify image
-        working-directory: agentprimordia
-        run: docker run --rm agentprimordia:nightly echo "Docker image OK"
+        run: docker run --rm --entrypoint sh synth:nightly -c 'test -x /usr/local/bin/synth-admin && echo "Docker image OK"'
 
   chaos-engineering:
     name: Chaos Engineering Nightly
@@ -114,16 +113,16 @@ jobs:
           go-version: '1.26.10'
 
       - name: Download dependencies
-        working-directory: agentprimordia
+        working-directory: synth
         run: go mod download
 
       - name: Run chaos engineering tests
-        working-directory: agentprimordia
+        working-directory: synth
         run: |
           go test -v -race -count=1 -timeout=10m ./internal/chaos/... 2>&1 | tee chaos-report.txt
 
       - name: Run soak test (short mode)
-        working-directory: agentprimordia
+        working-directory: synth
         run: |
           go test -v -race -count=1 -timeout=5m -run TestSoak ./internal/llm/soak/... 2>&1 | tee -a chaos-report.txt || true
 
@@ -132,16 +131,16 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: chaos-nightly-report
-          path: agentprimordia/chaos-report.txt
+          path: synth/chaos-report.txt
 
       - name: Summary
         if: always()
         run: |
           echo "## 混沌工程 Nightly 报告" >> $GITHUB_STEP_SUMMARY
           echo "运行时间: $(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
-          if [ -f agentprimordia/chaos-report.txt ]; then
+          if [ -f synth/chaos-report.txt ]; then
             echo '```' >> $GITHUB_STEP_SUMMARY
-            tail -20 agentprimordia/chaos-report.txt >> $GITHUB_STEP_SUMMARY
+            tail -20 synth/chaos-report.txt >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           fi
 
@@ -166,7 +165,7 @@ jobs:
         run: go mod download
 
       - name: Run real LLM integration tests
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -190,7 +189,7 @@ jobs:
   #
   # 对 60 条真实 harness 基准集跑真实 LLM，产出 成功率/成本/耗时/恢复率 报告。
   # 版本门禁：通过率 ≥ max(基线, 阈值)，分数只升不降。
-  # 基线文件: agentprimordia/bench/llm-bench/baseline.json（发版时以 --update-baseline 刷新）。
+  # 基线文件: synth/bench/llm-bench/baseline.json（发版时以 --update-baseline 刷新）。
   # 未配置 OPENAI_API_KEY 时跳过（SKIP），不阻塞其余 nightly job。
   llm-benchmark:
     name: LLM Benchmark Gate (v3.5-2)
@@ -203,12 +202,12 @@ jobs:
           go-version: '1.26.10'
 
       - name: Download dependencies
-        working-directory: agentprimordia
+        working-directory: synth
         run: go mod download
 
       - name: Run real LLM benchmark (gate vs baseline)
         id: bench
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
@@ -231,16 +230,16 @@ jobs:
         with:
           name: llm-bench-report
           path: |
-            agentprimordia/llm-bench-report.json
-            agentprimordia/llm-bench-log.txt
+            synth/llm-bench-report.json
+            synth/llm-bench-log.txt
           if-no-files-found: ignore
 
       - name: Summary
         if: always()
         run: |
           echo "## 真实 LLM 跑分门禁" >> $GITHUB_STEP_SUMMARY
-          if [ -f agentprimordia/llm-bench-report.json ]; then
-            cat agentprimordia/llm-bench-report.json >> $GITHUB_STEP_SUMMARY
+          if [ -f synth/llm-bench-report.json ]; then
+            cat synth/llm-bench-report.json >> $GITHUB_STEP_SUMMARY
           else
             echo "未产生报告（无 API Key 或跳过）" >> $GITHUB_STEP_SUMMARY
           fi
@@ -309,7 +308,7 @@ jobs:
         run: npm ci
 
       - name: Run dual-line benchmarks and generate comparison table
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
@@ -323,7 +322,7 @@ jobs:
             --version nightly --threshold 0 --retries 1 --out go-llm-bench-report.json
           # TS 侧报告（同一模型同一基准集）
           (cd ../sdk/typescript && npx --yes tsx bench/llm-bench/main.mts \
-            --model $MODEL --threshold 0 --out ../agentprimordia/ts-llm-bench-report.json)
+            --model $MODEL --threshold 0 --out ../synth/ts-llm-bench-report.json)
           # 对照表生成（用例集一致门禁）
           node ../scripts/dual-bench-compare.mjs \
             --go-report go-llm-bench-report.json \
@@ -337,16 +336,16 @@ jobs:
         with:
           name: dual-bench-comparison
           path: |
-            agentprimordia/bench/results/dual/dual-bench-comparison.json
-            agentprimordia/bench/results/dual/dual-bench-comparison.md
+            synth/bench/results/dual/dual-bench-comparison.json
+            synth/bench/results/dual/dual-bench-comparison.md
           if-no-files-found: ignore
 
       - name: Summary
         if: always()
         run: |
           echo "## 双线真实 LLM 基准对照表" >> $GITHUB_STEP_SUMMARY
-          if [ -f agentprimordia/bench/results/dual/dual-bench-comparison.md ]; then
-            cat agentprimordia/bench/results/dual/dual-bench-comparison.md >> $GITHUB_STEP_SUMMARY
+          if [ -f synth/bench/results/dual/dual-bench-comparison.md ]; then
+            cat synth/bench/results/dual/dual-bench-comparison.md >> $GITHUB_STEP_SUMMARY
           else
             echo "未生成对照表（无 API Key 或跳过）" >> $GITHUB_STEP_SUMMARY
           fi
@@ -377,26 +376,26 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           STAMP=$(date -u +%Y%m%d)
-          mkdir -p agentprimordia/bench/results/s0
+          mkdir -p synth/bench/results/s0
           go run ./bench/eval-real --mode external --set external-general-v1.json --holdout \
-            --out agentprimordia/bench/results/s0/external-general-holdout-$STAMP.json
+            --out synth/bench/results/s0/external-general-holdout-$STAMP.json
           go run ./bench/eval-real --mode judge --set judge-calibration-v1.json --holdout \
-            --out agentprimordia/bench/results/s0/judge-calibration-holdout-$STAMP.json
+            --out synth/bench/results/s0/judge-calibration-holdout-$STAMP.json
 
       - name: Upload S0 real-track reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: s0-real-eval-reports
-          path: agentprimordia/bench/results/s0/
+          path: synth/bench/results/s0/
           if-no-files-found: ignore
 
       - name: Summary
         if: always()
         run: |
           echo "## S0 真实轨评测（R3 口径：点估计 + Wilson95 下界）" >> $GITHUB_STEP_SUMMARY
-          if ls agentprimordia/bench/results/s0/*.json >/dev/null 2>&1; then
-            for f in agentprimordia/bench/results/s0/*.json; do
+          if ls synth/bench/results/s0/*.json >/dev/null 2>&1; then
+            for f in synth/bench/results/s0/*.json; do
               echo "- $f" >> $GITHUB_STEP_SUMMARY
               python3 -c "import json;r=json.load(open('$f'));print('  ', r['mode'], r['summary'])" >> $GITHUB_STEP_SUMMARY || true
             done

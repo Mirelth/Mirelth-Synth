@@ -6,7 +6,7 @@
  * 都必须内联。background / popup / devtools 运行时可使用 modules/shared/messages.ts。
  *
  * 职责：
- * - 检测当前页面是否嵌入了 AgentPrimordia 代理
+ * - 检测当前页面是否嵌入了 Synth 代理
  * - 若检测到，在页面右下角注入悬浮按钮
  * - 通过 chrome.runtime.sendMessage 与 background 通信
  */
@@ -33,9 +33,9 @@ interface ExtensionMessage {
 /** 检测结果的缓存，避免重复通知 */
 let lastDetected = false;
 
-/** 从 <meta> 标签读取代理配置（前缀 ap-agent-） */
+/** 从 <meta> 标签读取代理配置（前缀 synth-agent-） */
 function detectFromMeta(): Record<string, string> | null {
-    const prefix = 'ap-agent-';
+    const prefix = 'synth-agent-';
     const metas = document.querySelectorAll('meta[name]');
     const config: Record<string, string> = {};
     metas.forEach((m) => {
@@ -49,9 +49,9 @@ function detectFromMeta(): Record<string, string> | null {
     return Object.keys(config).length > 0 ? config : null;
 }
 
-/** 从全局变量（window.__AP_AGENT__）读取代理配置 */
+/** 从全局变量（window.__SYNTH_AGENT__）读取代理配置 */
 function detectFromGlobal(): Record<string, string> | null {
-    const g = (window as unknown as Record<string, unknown>).__AP_AGENT__;
+    const g = (window as unknown as Record<string, unknown>).__SYNTH_AGENT__;
     if (g && typeof g === 'object') {
         const obj = g as Record<string, unknown>;
         const config: Record<string, string> = {};
@@ -97,14 +97,14 @@ function notifyAgentDetection(detected: boolean, meta?: Record<string, string>):
 
 // ---- UI 注入 -------------------------------------------------------------
 
-/** 创建悬浮按钮（右下角，紫色圆形 "AP"） */
+/** 创建悬浮按钮（右下角，紫色圆形 "Synth"） */
 function injectFloatingButton(): void {
-    if (document.getElementById('ap-ext-floating-btn')) return;
+    if (document.getElementById('synth-ext-floating-btn')) return;
 
     const btn = document.createElement('button');
-    btn.id = 'ap-ext-floating-btn';
-    btn.textContent = 'AP';
-    btn.title = 'AgentPrimordia 代理检测 — 点击打开 Studio';
+    btn.id = 'synth-ext-floating-btn';
+    btn.textContent = 'Synth';
+    btn.title = 'Synth 代理检测 — 点击打开 Studio';
     Object.assign(btn.style, {
         position: 'fixed',
         bottom: '20px',
@@ -137,7 +137,7 @@ function injectFloatingButton(): void {
 
 /** 移除悬浮按钮 */
 function removeFloatingButton(): void {
-    document.getElementById('ap-ext-floating-btn')?.remove();
+    document.getElementById('synth-ext-floating-btn')?.remove();
 }
 
 // ---- 主流程 --------------------------------------------------------------

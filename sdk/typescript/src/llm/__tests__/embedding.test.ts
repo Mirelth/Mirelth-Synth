@@ -32,7 +32,7 @@ describe('LexicalEmbedder — 无 key 降级位', () => {
     const e = new LexicalEmbedder();
     const texts = [
       'HNSW 索引与向量检索',
-      'AgentPrimordia 是通用 Go Agent 开发框架',
+      'Synth 是通用 Go Agent 开发框架',
       '',
       '   \t\n  ',
       'mixed 英文与中文 mixed 123 456',
@@ -207,13 +207,13 @@ describe('createEmbeddingProviderFromEnv — 环境装配', () => {
   });
 
   it('provider=ollama → 原生实现；openai 缺 key 报错；未知 provider 报错', () => {
-    expect(createEmbeddingProviderFromEnv({ AP_EMBEDDINGS_PROVIDER: 'ollama' })).toBeInstanceOf(OllamaEmbeddingProvider);
+    expect(createEmbeddingProviderFromEnv({ SYNTH_EMBEDDINGS_PROVIDER: 'ollama' })).toBeInstanceOf(OllamaEmbeddingProvider);
     expect(() =>
-      createEmbeddingProviderFromEnv({ AP_EMBEDDINGS_PROVIDER: 'openai', AP_EMBEDDINGS_MODEL: 'm' }),
+      createEmbeddingProviderFromEnv({ SYNTH_EMBEDDINGS_PROVIDER: 'openai', SYNTH_EMBEDDINGS_MODEL: 'm' }),
     ).toThrow(/API key is required/);
     expect(() =>
-      createEmbeddingProviderFromEnv({ AP_EMBEDDINGS_PROVIDER: 'nope', AP_EMBEDDINGS_MODEL: 'm', AP_EMBEDDINGS_API_KEY: 'k' }),
-    ).toThrow(/AP_EMBEDDINGS_PROVIDER/);
+      createEmbeddingProviderFromEnv({ SYNTH_EMBEDDINGS_PROVIDER: 'nope', SYNTH_EMBEDDINGS_MODEL: 'm', SYNTH_EMBEDDINGS_API_KEY: 'k' }),
+    ).toThrow(/SYNTH_EMBEDDINGS_PROVIDER/);
   });
 });
 

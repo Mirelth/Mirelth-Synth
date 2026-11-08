@@ -28,7 +28,7 @@ jobs:
         with:
           filters: |
             go:
-              - 'agentprimordia/**'
+              - 'synth/**'
             ts:
               - 'sdk/typescript/**'
             py:
@@ -44,8 +44,8 @@ jobs:
               - 'docs/evals/**'
               - 'scripts/dual-line-recall-check.mjs'
               - '.github/workflows/ci.yml'
-              - 'agentprimordia/Makefile'
-              - 'agentprimordia/bench/results/s0-3-recall-go.json'
+              - 'synth/Makefile'
+              - 'synth/bench/results/s0-3-recall-go.json'
               - 'sdk/typescript/bench/results/s0-3-recall-ts.json'
 
   test:
@@ -77,23 +77,23 @@ jobs:
         run: go mod download
 
       - name: Build
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           CGO_ENABLED: 0
         run: go build ./...
 
       # go vet 门（2026-09-28 增补）：copylocks/未用导入/printf 等类缺陷
-      # 曾因无 vet 门漏网（cmd/ap/autonomy.go 锁拷贝即实例）。
+      # 曾因无 vet 门漏网（cmd/synth/autonomy.go 锁拷贝即实例）。
       # vet 同时编译测试文件，可提前拦截测试代码腐烂。
       - name: Vet
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           CGO_ENABLED: 0
         run: go vet ./...
 
       - name: Test with race detector
         if: runner.os != 'Windows'
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           CGO_ENABLED: 1
           SOAK_CI_MODE: '1'  # CI 共享 runner 抖动会导致 soak 退化误报（见 studio_soak_test）
@@ -106,11 +106,11 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ${{ matrix.os }}-test-failure-log
-          path: agentprimordia/test-failure.log
+          path: synth/test-failure.log
 
       - name: Test without race detector (Windows)
         if: runner.os == 'Windows'
-        working-directory: agentprimordia
+        working-directory: synth
         # pwsh 会把 ./... 的 ... 当 spread 运算符展开（报 package .out）
         shell: bash
         env:
@@ -125,20 +125,20 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: windows-test-failure-log
-          path: agentprimordia/test-failure.log
+          path: synth/test-failure.log
 
       # 无 API Key 的集成测试（MockLLM 驱动完整链路：ReAct+工具+流式+记忆）。
       # 与 test-integration（真实 key）互补，保证 CI 无 key 环境也有集成保障。
       - name: Integration tests without API key (MockLLM)
         if: matrix.os == 'ubuntu-latest'
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           CGO_ENABLED: 0
         run: go test -tags=integration -count=1 -timeout=5m -run 'MockIntegration' ./internal/agent/...
 
       - name: "Check coverage (Phase 7.2: tiered gate, 8.1: Tier 3 soft gate)"
         if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.26.10'
-        working-directory: agentprimordia
+        working-directory: synth
         run: |
           # Total coverage (reference metric)
           COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
@@ -187,7 +187,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: coverage-report
-          path: agentprimordia/coverage.out
+          path: synth/coverage.out
 
       - name: Check Deprecated annotations (Phase 8.4)
         if: matrix.os == 'ubuntu-latest'
@@ -211,13 +211,13 @@ jobs:
           go-version: '1.26.10'
 
       - name: Run govulncheck
-        working-directory: agentprimordia
+        working-directory: synth
         run: |
           go install golang.org/x/vuln/cmd/govulncheck@latest
           govulncheck ./...
 
       - name: Go license check
-        working-directory: agentprimordia
+        working-directory: synth
         run: |
           go install github.com/google/go-licenses@latest
           go-licenses check ./... 2>&1 || echo "::warning::许可证检查发现问题（非阻塞）"
@@ -290,7 +290,7 @@ jobs:
           go-version: '1.26.10'
 
       - name: Check Go API compatibility
-        working-directory: agentprimordia
+        working-directory: synth
         run: |
           go install golang.org/x/exp/cmd/apidiff@latest
           # Compare public API against base branch
@@ -366,16 +366,16 @@ jobs:
 
       - name: Syntax check (compileall)
         working-directory: sdk/python
-        run: python -m compileall -q agentprimordia
+        run: python -m compileall -q synth
 
       - name: Import check
         working-directory: sdk/python
-        run: python -c "from agentprimordia.client import AgentPrimordia; from agentprimordia import __version__; print('Python SDK import OK, version', __version__)"
+        run: python -c "from synth.client import Synth; from synth import __version__; print('Python SDK import OK, version', __version__)"
 
       - name: Verify no mojibake (U+FFFD) in source
         working-directory: sdk/python
         run: |
-          if grep -rlP '\xEF\xBF\xBD' agentprimordia/ ; then
+          if grep -rlP '\xEF\xBF\xBD' synth/ ; then
             echo "::error::Python SDK 源码存在 U+FFFD 乱码字符（编码损坏），请修复。"
             exit 1
           fi
@@ -427,13 +427,13 @@ jobs:
         with:
           go-version: '1.26.10'
 
-      - name: Build ap CLI
-        working-directory: agentprimordia
-        run: go build -ldflags="-X main.Version=${{ github.ref_name }}" -o ap ./cmd/ap/
+      - name: Build synth CLI
+        working-directory: synth
+        run: go build -ldflags="-X main.Version=${{ github.ref_name }}" -o synth ./cmd/synth/
 
       - name: Verify CLI
-        working-directory: agentprimordia
-        run: ./ap version
+        working-directory: synth
+        run: ./synth version
 
   cross-compile:
     name: Cross-Compile Verify (${{ matrix.goos }}/${{ matrix.goarch }})
@@ -464,22 +464,22 @@ jobs:
           go-version: '1.26.10'
 
       - name: Cross-compile binary
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
           CGO_ENABLED: 0
         run: |
-          BINARY=ap-${{ matrix.goos }}-${{ matrix.goarch }}
+          BINARY=synth-${{ matrix.goos }}-${{ matrix.goarch }}
           if [ "${{ matrix.goos }}" = "windows" ]; then
             BINARY=${BINARY}.exe
           fi
-          go build -ldflags="-s -w -X main.Version=ci-${{ github.sha }}" -o ${BINARY} ./cmd/ap/
+          go build -ldflags="-s -w -X main.Version=ci-${{ github.sha }}" -o ${BINARY} ./cmd/synth/
 
       - name: Verify binary exists
-        working-directory: agentprimordia
+        working-directory: synth
         run: |
-          BINARY=ap-${{ matrix.goos }}-${{ matrix.goarch }}
+          BINARY=synth-${{ matrix.goos }}-${{ matrix.goarch }}
           if [ "${{ matrix.goos }}" = "windows" ]; then
             BINARY=${BINARY}.exe
           fi
@@ -508,7 +508,7 @@ jobs:
         run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8
 
       - name: Run golangci-lint
-        working-directory: agentprimordia
+        working-directory: synth
         run: golangci-lint run --timeout 5m 2>&1 | tee golangci-lint.log; test ${PIPESTATUS[0]} -eq 0
 
       - name: Upload lint log (diagnostic)
@@ -517,8 +517,8 @@ jobs:
         with:
           name: lint-failure-log
           path: |
-            agentprimordia/golangci-lint.log
-            agentprimordia/*.out
+            synth/golangci-lint.log
+            synth/*.out
           if-no-files-found: ignore
 
   operator-envtest:
@@ -552,7 +552,7 @@ jobs:
           echo "Fetched envtest assets at: $ENVTEST_DIR"
 
       - name: Run envtest E2E tests
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           CGO_ENABLED: 0
         run: go test -tags=envtest -v -timeout=120s ./operator/controller/...
@@ -600,7 +600,7 @@ jobs:
           timeout 60 bash -c 'until (echo > /dev/tcp/127.0.0.1/6379) 2>/dev/null; do sleep 1; done' && echo "redis ready"
 
       - name: Run etcd + Redis checkpoint integration tests
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           CGO_ENABLED: 0
         run: go test -tags=etcd,redis -count=1 -timeout=10m -v ./internal/persist/...
@@ -609,13 +609,13 @@ jobs:
       # TestLeaseManager_Integration（etcd 租约管理集成测试）。etcd tag 下该包
       # 仅含 etcd 相关测试，全量运行即可。
       - name: Run etcd cluster discovery + lease integration tests
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           CGO_ENABLED: 0
         run: go test -tags=etcd -count=1 -timeout=10m -v ./internal/agent/cluster/...
 
   # ===== 工作区子模块门禁（wasm A4 / pgvector / gateway） =====
-  # 背景：上面的 test job 只在 agentprimordia/ 下跑 `go test ./...`，嵌套模块
+  # 背景：上面的 test job 只在 synth/ 下跑 `go test ./...`，嵌套模块
   # （wasm/、pgvector/、gateway/）不在其 ./... 范围内 —— 于是 A4（零值配置回退边界，
   # 断言定义见 docs/提案-code层沙箱受控释放.md §二）长期无 CI 覆盖，与 AGENTS.md
   # §2.3「断言测试全部进 CI、失败即红」不符。本 job 补齐该缺口（2026-10-17）。
@@ -668,7 +668,7 @@ jobs:
   # 背景：scripts/dual-line-recall-check.mjs 自 S0-3 落地起就是"门存在但从不运行"——
   # 全仓（CI / Makefile / nightly / release）零消费者，对账结论只存在于人工批次里。
   # 本 job 把它接线进 CI，并且不只做"已提交夹具互相对账"（那种对账在两侧同步漂移时仍绿），
-  # 而是先用 AP_WRITE_S03_RESULTS=1 真跑两侧 lexical 底档臂，再对账，最后断言
+  # 而是先用 SYNTH_WRITE_S03_RESULTS=1 真跑两侧 lexical 底档臂，再对账，最后断言
   # 重生成结果与已提交夹具逐字节一致（夹具确定性）。两臂均为离线 lexical 降级位臂
   # （semantic=false，语义臂 ≥0.95 需真实端点，带降级豁免），实测重生成零 diff。
   dual-line-recall:
@@ -702,11 +702,11 @@ jobs:
         run: npm ci
 
       # 单一真源：四步（先删夹具重生成两臂 → 对账 → 夹具零 diff/无 untracked）都定义在
-      # agentprimordia/Makefile 的 dual-line-recall 目标里，CI 不再复制一份步骤（避免两处漂移）。
-      - name: S0-3 双线召回对账（make -C agentprimordia dual-line-recall）
+      # synth/Makefile 的 dual-line-recall 目标里，CI 不再复制一份步骤（避免两处漂移）。
+      - name: S0-3 双线召回对账（make -C synth dual-line-recall）
         env:
           CGO_ENABLED: 0
-        run: make -C agentprimordia dual-line-recall
+        run: make -C synth dual-line-recall
 
   # ===== API 契约基线检查（防 pkg/ 公共 API 契约过期） =====
 
@@ -734,12 +734,12 @@ jobs:
         run: go mod download
 
       - name: Regenerate API contract and check drift
-        working-directory: agentprimordia
+        working-directory: synth
         run: |
           go run ./scripts/api-extract/ -no-timestamp -output /tmp/api-contract.json
           if ! cmp -s /tmp/api-contract.json ../sdk/typescript/api-contract.json; then
             echo "::error::sdk/typescript/api-contract.json 与当前 pkg/ 公共 API 漂移。"
-            echo "::error::请在 agentprimordia/ 下运行 'make api-extract'（或 go run ./scripts/api-extract/ -no-timestamp -output ../sdk/typescript/api-contract.json）并提交更新。"
+            echo "::error::请在 synth/ 下运行 'make api-extract'（或 go run ./scripts/api-extract/ -no-timestamp -output ../sdk/typescript/api-contract.json）并提交更新。"
             diff ../sdk/typescript/api-contract.json /tmp/api-contract.json | head -40 || true
             exit 1
           fi
@@ -832,9 +832,12 @@ jobs:
       - name: Run version consistency check
         run: bash scripts/version-check.sh
 
+      - name: Check legacy brand residuals
+        run: bash scripts/check-brand-residuals.sh
+
       # V7.3 整改：版本真值唯一来源 = pkg/agent.go const Version。
       # 该门无条件运行（不受 path filter 影响），对账 VERSION/TS/Helm/文档锚点/README 统计，
-      # 并覆盖 sdk/typescript/docs 与 agentprimordia/docs 的"当前版本"声明。
+      # 并覆盖 sdk/typescript/docs 与 synth/docs 的"当前版本"声明。
       - name: Run doc version consistency check
         run: node scripts/doc-version-consistency.mjs
 
@@ -848,7 +851,7 @@ jobs:
           go-version: '1.26.10'
 
       - name: Run benchmark subset
-        working-directory: agentprimordia
+        working-directory: synth
         run: |
           go test -bench='BenchmarkConsistentHash_GetNode|BenchmarkDistributedState|BenchmarkAgentRun|BenchmarkMemoryStore|BenchmarkMemoryLatency|BenchmarkP95' \
             -benchmem -benchtime=500ms -run='^$' -count=3 ./bench/suite/ | tee /tmp/bench-output.txt
@@ -879,7 +882,7 @@ jobs:
           go-version: '1.26.10'
 
       - name: Run user validation script
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           CGO_ENABLED: 0
         run: bash tests/validation/user-validation.sh

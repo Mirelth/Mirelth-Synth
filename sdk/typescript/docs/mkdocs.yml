@@ -1,6 +1,6 @@
-site_name: AgentPrimordia SDK
+site_name: Synth SDK
 site_description: Universal AI Agent Development Framework
-site_url: https://agentprimordia.dev
+site_url: https://synth.dev
 
 theme:
   name: material

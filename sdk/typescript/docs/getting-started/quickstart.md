@@ -3,14 +3,14 @@
 ## TypeScript (npm)
 
 ```bash
-npm install @agentprimordia/sdk
+npm install @synth/sdk
 ```
 
 ```typescript
-import { ReActAgent, createAgent, MockProvider } from "@agentprimordia/sdk";
+import { ReActAgent, createAgent, MockProvider } from "@synth/sdk";
 
 // 1. 使用 Mock Provider 快速体验
-const provider = new MockProvider({ response: "Hello from AgentPrimordia!" });
+const provider = new MockProvider({ response: "Hello from Synth!" });
 
 // 2. 通过 Builder DSL 构建 Agent
 const agent = createAgent("assistant")
@@ -27,13 +27,13 @@ console.log(result.content);
 ## Python
 
 ```bash
-pip install agentprimordia
+pip install synth
 ```
 
 ```python
-from agentprimordia import AgentPrimordia, Tool, Session
+from synth import Synth, Tool, Session
 
-client = AgentPrimordia(api_key="your-api-key")
+client = Synth(api_key="your-api-key")
 agent = client.create_agent(name="assistant", model="gpt-4")
 session = agent.chat("Hello!")
 print(session.last_response.content)
@@ -42,11 +42,11 @@ print(session.last_response.content)
 ## Go
 
 ```bash
-go get github.com/agentprimordia/ap
+go get github.com/Mirelth/Synth
 ```
 
 ```go
-import "github.com/agentprimordia/pkg"
+import "github.com/synth/pkg"
 
 func main() {
     agent := pkg.NewAgent("assistant", "gpt-4")
@@ -59,4 +59,4 @@ func main() {
 
 - 阅读 [Installation Guide](installation.md) 了解完整安装步骤
 - 查看 [TypeScript API Reference](../api-reference/typescript.md) 获取详细 API 文档
-- 访问 GitHub 上的 [examples/](https://github.com/agentprimordia/ap/tree/main/ecosystem/examples) 查看完整示例
+- 访问 GitHub 上的 [examples/](https://github.com/Mirelth/Synth/tree/main/ecosystem/examples) 查看完整示例

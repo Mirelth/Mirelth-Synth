@@ -1,4 +1,4 @@
-module github.com/Gleamseekers/AgentPrimordia/pgvector
+module github.com/Mirelth/Synth/pgvector
 
 go 1.26.10
 

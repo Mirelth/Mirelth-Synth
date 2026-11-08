@@ -1,0 +1,162 @@
+# Synth 本地多节点集群
+#
+# 用法:
+#   docker compose -f deploy/compose/cluster.yaml up -d
+#
+# 启动 3 节点集群 + etcd + Prometheus + Grafana + Studio
+#
+# 环境变量（可选）:
+#   SYNTH_IMAGE       — 自定义镜像（默认本地构建）
+#   SYNTH_CLUSTER_SIZE — 节点数（默认 3）
+#   SYNTH_STUDIO_PORT — Studio 端口（默认 3000）
+
+x-synth-node: &synth-node-defaults
+  build:
+    context: ../..
+    dockerfile: synth/Dockerfile.prod
+  environment: &synth-node-env
+    SYNTH_CLUSTER_ENABLED: "true"
+    SYNTH_CLUSTER_DISCOVERY: "etcd"
+    SYNTH_ETCD_ENDPOINTS: "http://etcd:2379"
+    SYNTH_METRICS_ENABLED: "true"
+    SYNTH_METRICS_PORT: "9090"
+    SYNTH_LOG_LEVEL: "info"
+  depends_on:
+    etcd:
+      condition: service_healthy
+  networks:
+    - synth-cluster
+  restart: unless-stopped
+  healthcheck:
+    test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+    interval: 10s
+    timeout: 5s
+    retries: 5
+    start_period: 10s
+
+services:
+  # ─── 基础设施 ───────────────────────────────────────────────
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.12
+    environment:
+      ETCD_ADVERTISE_CLIENT_URLS: "http://etcd:2379"
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+    ports:
+      - "2379:2379"
+    networks:
+      - synth-cluster
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - etcd-data:/etcd-data
+
+  # ─── Agent 节点 ─────────────────────────────────────────────
+  synth-node-1:
+    <<: *synth-node-defaults
+    container_name: synth-node-1
+    hostname: synth-node-1
+    environment:
+      <<: *synth-node-env
+      SYNTH_NODE_ID: "node-1"
+      SYNTH_LISTEN_ADDR: ":8080"
+      SYNTH_CLUSTER_BOOTSTRAP: "true"
+    ports:
+      - "8081:8080"
+      - "9091:9090"
+
+  synth-node-2:
+    <<: *synth-node-defaults
+    container_name: synth-node-2
+    hostname: synth-node-2
+    environment:
+      <<: *synth-node-env
+      SYNTH_NODE_ID: "node-2"
+      SYNTH_LISTEN_ADDR: ":8080"
+      SYNTH_CLUSTER_SEEDS: "synth-node-1:8080"
+    ports:
+      - "8082:8080"
+      - "9092:9090"
+    depends_on:
+      etcd:
+        condition: service_healthy
+      synth-node-1:
+        condition: service_healthy
+
+  synth-node-3:
+    <<: *synth-node-defaults
+    container_name: synth-node-3
+    hostname: synth-node-3
+    environment:
+      <<: *synth-node-env
+      SYNTH_NODE_ID: "node-3"
+      SYNTH_LISTEN_ADDR: ":8080"
+      SYNTH_CLUSTER_SEEDS: "synth-node-1:8080"
+    ports:
+      - "8083:8080"
+      - "9093:9090"
+    depends_on:
+      etcd:
+        condition: service_healthy
+      synth-node-1:
+        condition: service_healthy
+
+  # ─── 可观测性 ───────────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    volumes:
+      - ../prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../prometheus/alerts-synth.yaml:/etc/prometheus/alerts.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - synth-cluster
+    depends_on:
+      - synth-node-1
+      - synth-node-2
+      - synth-node-3
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: "synth"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ../grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml:ro
+      - ../grafana:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - synth-cluster
+    depends_on:
+      - prometheus
+
+  # ─── Studio Web UI ─────────────────────────────────────────
+  studio:
+    build:
+      context: ../..
+      dockerfile: synth/Dockerfile.prod
+      target: studio
+    environment:
+      SYNTH_API_ENDPOINTS: "http://synth-node-1:8080,http://synth-node-2:8080,http://synth-node-3:8080"
+    ports:
+      - "${SYNTH_STUDIO_PORT:-3000}:3000"
+    networks:
+      - synth-cluster
+    depends_on:
+      - synth-node-1
+      - synth-node-2
+      - synth-node-3
+
+networks:
+  synth-cluster:
+    driver: bridge
+
+volumes:
+  etcd-data:
+  prometheus-data:
+  grafana-data:

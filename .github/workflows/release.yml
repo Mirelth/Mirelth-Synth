@@ -54,7 +54,7 @@ jobs:
           esac
 
       - name: Build binary
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
@@ -62,21 +62,21 @@ jobs:
         run: |
           set -euo pipefail
           VERSION=${GITHUB_REF_NAME#v}
-          BINARY=ap-${{ matrix.goos }}-${{ matrix.goarch }}
+          BINARY=synth-${{ matrix.goos }}-${{ matrix.goarch }}
           if [ "${{ matrix.goos }}" = "windows" ]; then
             BINARY=${BINARY}.exe
           fi
-          go build -ldflags="-s -w -X main.Version=${VERSION}" -o ${BINARY} ./cmd/ap/
+          go build -ldflags="-s -w -X main.Version=${VERSION}" -o ${BINARY} ./cmd/synth/
           test -s "${BINARY}"
 
       - name: Upload artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: ap-${{ matrix.goos }}-${{ matrix.goarch }}
-          # 路径相对 workspace 根解析（构建在 agentprimordia/ 子目录产出）——
-          # 此前写 ap-*（根下不存在）触发了 v4 默认的 if-no-files-found: warn，
+          name: synth-${{ matrix.goos }}-${{ matrix.goarch }}
+          # 路径相对 workspace 根解析（构建在 synth/ 子目录产出）——
+          # 此前写 synth-*（根下不存在）触发了 v4 默认的 if-no-files-found: warn，
           # 二进制从未上传（v7.3.0 及历次 Release 资产均为 0/仅校验和的根因）。
-          path: agentprimordia/ap-${{ matrix.goos }}-${{ matrix.goarch }}*
+          path: synth/synth-${{ matrix.goos }}-${{ matrix.goarch }}*
           if-no-files-found: error
 
   generate-sbom:
@@ -142,13 +142,13 @@ jobs:
 
       - name: Flatten binaries and generate SHA256 checksums
         # 关键顺序：先扁平化 → 再算校验和 → 再签名。
-        # 旧实现直接在 binaries/ 内 find，产出形如 ./ap-linux-amd64/ap-linux-amd64 的
-        # 带目录前缀条目；而 release 作业会把产物扁平化为 ap-linux-amd64，
+        # 旧实现直接在 binaries/ 内 find，产出形如 ./synth-linux-amd64/synth-linux-amd64 的
+        # 带目录前缀条目；而 release 作业会把产物扁平化为 synth-linux-amd64，
         # 导致用户侧 `sha256sum -c` 全部报 No such file or directory（校验和签名形同虚设）。
         run: |
           set -euo pipefail
           mkdir -p flat
-          find artifacts -type f -name 'ap-*' -exec cp {} flat/ \;
+          find artifacts -type f -name 'synth-*' -exec cp {} flat/ \;
           COUNT=$(ls -1 flat | wc -l | tr -d ' ')
           echo "扁平化后二进制数: ${COUNT}"
           if [ "${COUNT}" -ne 6 ]; then
@@ -157,7 +157,7 @@ jobs:
             exit 1
           fi
           cd flat
-          sha256sum ap-* > ../checksums-sha256.txt
+          sha256sum synth-* > ../checksums-sha256.txt
           cd ..
           echo "--- checksums-sha256.txt ---"
           cat checksums-sha256.txt
@@ -202,14 +202,14 @@ jobs:
           go-version: '1.26.10'
 
       - name: Download dependencies
-        working-directory: agentprimordia
+        working-directory: synth
         run: |
           set -euo pipefail
           go mod download
 
       - name: Run real LLM benchmark
         id: bench
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
@@ -236,7 +236,7 @@ jobs:
         with:
           name: llm-bench-report
           path: |
-            agentprimordia/llm-bench-report.json
+            synth/llm-bench-report.json
           if-no-files-found: ignore
 
       - name: Summary
@@ -248,8 +248,8 @@ jobs:
             echo ""
             echo "- 门禁状态: \`${{ steps.bench.outputs.gate || 'unknown' }}\`"
           } >> $GITHUB_STEP_SUMMARY
-          if [ -f agentprimordia/llm-bench-report.json ]; then
-            cat agentprimordia/llm-bench-report.json >> $GITHUB_STEP_SUMMARY
+          if [ -f synth/llm-bench-report.json ]; then
+            cat synth/llm-bench-report.json >> $GITHUB_STEP_SUMMARY
           else
             echo "未产生报告（无 API Key）" >> $GITHUB_STEP_SUMMARY
           fi
@@ -269,7 +269,7 @@ jobs:
           path: artifacts
 
       - name: Organize release files and assert completeness
-        # download-artifact@v4 按 artifact 名分目录下载（ap-<os>-<arch>/、
+        # download-artifact@v4 按 artifact 名分目录下载（synth-<os>-<arch>/、
         # signatures/、sbom/、llm-bench-report/，部分还带嵌套路径）。
         # 统一 find 扁平化拷贝；此前误写 artifacts/binaries/**（不存在该名
         # 产物）致 6 个平台二进制全部静默缺失（|| true 吞掉错误）。
@@ -289,7 +289,7 @@ jobs:
             exit 1
           fi
 
-          BIN_COUNT=$(find release-files -maxdepth 1 -type f -name 'ap-*' | wc -l | tr -d ' ')
+          BIN_COUNT=$(find release-files -maxdepth 1 -type f -name 'synth-*' | wc -l | tr -d ' ')
           echo "平台二进制数: ${BIN_COUNT}"
           if [ "${BIN_COUNT}" -ne 6 ]; then
             echo "::error::期望 6 个平台二进制，实际 ${BIN_COUNT} 个"
@@ -356,12 +356,12 @@ jobs:
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
-          file: agentprimordia/Dockerfile.prod
+          file: synth/Dockerfile.prod
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           # 注入版本号：Dockerfile.prod 原先用 `git describe`，但 .dockerignore 排除了
-          # .git，容器内必然回退为 "dev" —— 镜像内 ap-admin 版本号恒为 dev。
+          # .git，容器内必然回退为 "dev" —— 镜像内 synth-admin 版本号恒为 dev。
           build-args: |
             VERSION=${{ github.ref_name }}
           cache-from: type=gha

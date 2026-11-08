@@ -1,8 +1,8 @@
-# AgentPrimordia Python Remote HTTP Client
+# Synth Python Remote HTTP Client
 
-> **定位说明**：本包是 AgentPrimordia Go 引擎的 **轻量级远程 HTTP 客户端**，
+> **定位说明**：本包是 Synth Go 引擎的 **轻量级远程 HTTP 客户端**，
 > 而非功能对等的全功能 SDK。核心引擎（ReAct 循环、工具系统、记忆存储、编排等）
-> 均在 Go 侧实现，本客户端仅通过 REST API 与运行中的 AgentPrimordia 服务交互。
+> 均在 Go 侧实现，本客户端仅通过 REST API 与运行中的 Synth 服务交互。
 
 ## 功能范围
 
@@ -22,15 +22,15 @@
 ## 安装
 
 ```bash
-pip install agentprimordia
+pip install synth
 ```
 
 ## 快速开始
 
 ```python
-from agentprimordia import AgentPrimordia
+from synth import Synth
 
-client = AgentPrimordia(
+client = Synth(
     base_url="http://localhost:3000",
     api_key="your-api-key"
 )
@@ -54,7 +54,7 @@ Python >= 3.9 即可运行。
 
 ## 与全功能 SDK 的区别
 
-- **Go SDK**（`agentprimordia/pkg/`）：完整的 Agent 框架，包含 ReAct 引擎、工具系统、记忆、编排等
+- **Go SDK**（`synth/pkg/`）：完整的 Agent 框架，包含 ReAct 引擎、工具系统、记忆、编排等
 - **TypeScript SDK**（`sdk/typescript/`）：34 模块全功能 SDK，覆盖 Edge/Browser/React/WebGPU
 - **Python 客户端**（本包）：轻量 HTTP 封装，适合快速集成和脚本调用
 - **Rust 客户端**（`sdk/rust/`）：异步 HTTP 封装，适合高性能服务集成

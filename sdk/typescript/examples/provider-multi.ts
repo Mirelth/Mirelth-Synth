@@ -23,7 +23,7 @@ function mockProvider(name: string): Provider {
 }
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Multi-Provider Routing ===\n');
+  console.log('=== Synth TS SDK: Multi-Provider Routing ===\n');
 
   // 1. 模型路由：根据任务复杂度选择不同模型
   console.log('--- Model Router ---');

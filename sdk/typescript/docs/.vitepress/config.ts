@@ -1,8 +1,8 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
-  title: '@agentprimordia/sdk',
-  description: 'AgentPrimordia TypeScript SDK Documentation',
+  title: '@synth/sdk',
+  description: 'Synth TypeScript SDK Documentation',
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
@@ -22,7 +22,7 @@ export default defineConfig({
       ],
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/agentprimordia/ap' },
+      { icon: 'github', link: 'https://github.com/Mirelth/Synth' },
     ],
   },
 });

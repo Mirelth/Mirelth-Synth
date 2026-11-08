@@ -11,7 +11,7 @@ const streamProvider: Provider = {
   async complete(req: CompletionRequest): Promise<CompletionResponse> {
     return {
       id: 'stream-' + Date.now(),
-      content: 'This is a streamed response from AgentPrimordia.',
+      content: 'This is a streamed response from Synth.',
       role: 'assistant',
       usage: { promptTokens: 8, completionTokens: 12, totalTokens: 20 },
     };
@@ -25,7 +25,7 @@ const streamProvider: Provider = {
 };
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Streaming Example ===\n');
+  console.log('=== Synth TS SDK: Streaming Example ===\n');
 
   const agent = new ReActAgent({
     name: 'StreamAgent',

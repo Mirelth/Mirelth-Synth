@@ -174,7 +174,7 @@ describe('edgeFetch', () => {
     const callArgs = fetchSpy.mock.calls[0];
     const init = callArgs![1] as RequestInit;
     const headers = new Headers(init.headers);
-    expect(headers.get('User-Agent')).toBe('AgentPrimordia-Edge/1.0');
+    expect(headers.get('User-Agent')).toBe('Synth-Edge/1.0');
     expect(headers.get('Connection')).toBe('close');
   });
 });

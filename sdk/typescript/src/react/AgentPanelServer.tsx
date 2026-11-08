@@ -6,7 +6,7 @@
  *
  * ʹ�÷�ʽ��
  *   // app/agent/[id]/page.tsx (Server Component)
- *   import { AgentPanelServer } from '@agentprimordia/sdk/react';
+ *   import { AgentPanelServer } from '@synth/sdk/react';
  *   export default async function Page({ params }) {
  *     return <AgentPanelServer agentId={params.id} />;
  *   }
@@ -39,7 +39,7 @@ function AgentView({ agent, error }: { agent: AgentInfo | null; error?: string }
     return <div aria-busy="true" style={{ padding: 16 }}>Loading agent...</div>;
   }
   return (
-    <div className="ap-agent-panel" style={{ padding: 16, borderRadius: 8, border: '1px solid #e5e7eb' }}>
+    <div className="synth-agent-panel" style={{ padding: 16, borderRadius: 8, border: '1px solid #e5e7eb' }}>
       <header style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <h3 style={{ margin: 0 }}>{agent.id}</h3>
         <span className={"badge badge-" + (agent.status ?? 'idle')} style={{ padding: '2px 8px', borderRadius: 4, background: '#f3f4f6' }}>

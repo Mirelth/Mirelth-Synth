@@ -1,13 +1,13 @@
 # React 集成指南
 
-本指南介绍如何在 React 应用中使用 AgentPrimordia SDK 的 Hooks 和组件。
+本指南介绍如何在 React 应用中使用 Synth SDK 的 Hooks 和组件。
 
 ---
 
 ## 安装
 
 ```bash
-npm install @agentprimordia/sdk react react-dom
+npm install @synth/sdk react react-dom
 ```
 
 SDK 的 React 模块通过 `peerDependencies` 声明，需确保项目中已安装 React 18+ 或 19。
@@ -19,7 +19,7 @@ SDK 的 React 模块通过 `peerDependencies` 声明，需确保项目中已安�
 ### useAgent — Agent 生命周期管理
 
 ```tsx
-import { useAgent } from '@agentprimordia/sdk';
+import { useAgent } from '@synth/sdk';
 
 function ChatPanel() {
   const { agent, status, error } = useAgent({
@@ -38,7 +38,7 @@ function ChatPanel() {
 ### useAgentStream — 流式对话
 
 ```tsx
-import { useAgentStream } from '@agentprimordia/sdk';
+import { useAgentStream } from '@synth/sdk';
 
 function StreamChat() {
   const { messages, send, isStreaming, abort } = useAgentStream({
@@ -67,7 +67,7 @@ function StreamChat() {
 ### useAgentSuspense — Suspense 模式
 
 ```tsx
-import { useAgentSuspense } from '@agentprimordia/sdk';
+import { useAgentSuspense } from '@synth/sdk';
 import { Suspense } from 'react';
 
 function AgentResult({ query }: { query: string }) {
@@ -98,7 +98,7 @@ import {
   MessageFlow,
   HITLPanel,
   CollaborationReplay,
-} from '@agentprimordia/sdk';
+} from '@synth/sdk';
 
 function CollaborationDashboard() {
   return (
@@ -140,12 +140,12 @@ SDK 支持 React Server Components：
 
 ```tsx
 // app/agent/page.tsx (Next.js App Router)
-import { AgentServerComponent } from '@agentprimordia/sdk';
+import { AgentServerComponent } from '@synth/sdk';
 
 export default async function AgentPage() {
   return (
     <AgentServerComponent
-      apiBase={process.env.AP_API_BASE!}
+      apiBase={process.env.SYNTH_API_BASE!}
       agentConfig={{
         name: 'ssr-agent',
         model: 'gpt-4',

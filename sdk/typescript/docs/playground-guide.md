@@ -1,6 +1,6 @@
 # Playground 快速开始指南
 
-AgentPrimordia Playground 是一个交互式多 Agent 对话环境，支持通过 Web UI 或 CLI 创建、管理和调试 Agent。
+Synth Playground 是一个交互式多 Agent 对话环境，支持通过 Web UI 或 CLI 创建、管理和调试 Agent。
 
 ---
 
@@ -23,7 +23,7 @@ docker compose up -d
 ### 2. 使用 TypeScript 客户端
 
 ```typescript
-import { PlaygroundClient } from '@agentprimordia/sdk';
+import { PlaygroundClient } from '@synth/sdk';
 
 const pg = new PlaygroundClient({
   apiBase: 'http://localhost:8080',
@@ -58,7 +58,7 @@ await pg.deleteAgent(agent.id);
 ### 3. 使用 CLI 会话管理器
 
 ```typescript
-import { PlaygroundSession, PlaygroundManager } from '@agentprimordia/sdk';
+import { PlaygroundSession, PlaygroundManager } from '@synth/sdk';
 
 const manager = new PlaygroundManager('http://localhost:8080', 'gpt-4');
 const session = await manager.createSession('code-helper', {
@@ -144,27 +144,27 @@ docker compose up -d
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
-| `AP_PLAYGROUND_PORT` | `8080` | 服务监听端口 |
-| `AP_LLM_PROVIDER` | `openai` | LLM 提供商 |
-| `AP_LLM_MODEL` | `gpt-4` | 默认模型 |
-| `AP_LLM_API_KEY` | — | LLM API Key（必填） |
-| `AP_MAX_AGENTS` | `50` | 最大并发 Agent 数 |
-| `AP_LOG_LEVEL` | `info` | 日志级别 |
+| `SYNTH_PLAYGROUND_PORT` | `8080` | 服务监听端口 |
+| `SYNTH_LLM_PROVIDER` | `openai` | LLM 提供商 |
+| `SYNTH_LLM_MODEL` | `gpt-4` | 默认模型 |
+| `SYNTH_LLM_API_KEY` | — | LLM API Key（必填） |
+| `SYNTH_MAX_AGENTS` | `50` | 最大并发 Agent 数 |
+| `SYNTH_LOG_LEVEL` | `info` | 日志级别 |
 
 ### 手动构建
 
 ```bash
 # 构建镜像
-docker build -t ap-playground ./playground
+docker build -t synth-playground ./playground
 
 # 运行
-docker run -d -p 8080:8080 -e AP_LLM_API_KEY=sk-xxx ap-playground
+docker run -d -p 8080:8080 -e SYNTH_LLM_API_KEY=sk-xxx synth-playground
 ```
 
 ### 生产部署建议
 
 1. 使用反向代理（Nginx/Caddy）终结 TLS
-2. 设置 `AP_MAX_AGENTS` 限制并发，防止资源耗尽
+2. 设置 `SYNTH_MAX_AGENTS` 限制并发，防止资源耗尽
 3. 配置健康检查端点 `GET /healthz`
 4. 使用 Docker 资源限制（`--memory`, `--cpus`）
 5. 日志输出到集中式日志系统（ELK/Loki）
@@ -176,6 +176,6 @@ docker run -d -p 8080:8080 -e AP_LLM_API_KEY=sk-xxx ap-playground
 | 问题 | 解决方案 |
 |------|---------|
 | 连接超时 | 检查 `apiBase` 是否正确，服务是否启动 |
-| HTTP 401 | 检查 `AP_LLM_API_KEY` 是否配置 |
+| HTTP 401 | 检查 `SYNTH_LLM_API_KEY` 是否配置 |
 | SSE 断开 | 客户端内置 3 次自动重连，检查网络稳定性 |
-| Agent 创建失败 | 检查是否超过 `AP_MAX_AGENTS` 限制 |
+| Agent 创建失败 | 检查是否超过 `SYNTH_MAX_AGENTS` 限制 |

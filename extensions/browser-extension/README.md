@@ -1,20 +1,20 @@
-# AgentPrimordia Browser Extension
+# Synth Browser Extension
 
 > Manifest V3 browser extension (Chrome / Firefox) that lets developers inspect
-> and interact with AgentPrimordia agents on any web page.
+> and interact with Synth agents on any web page.
 
 ## Features
 
-- **Agent Detection** — Automatically detects AgentPrimordia agents embedded in a
-  page via `<meta>` tags or `window.__AP_AGENT__` global variable.
-- **Floating Button** — When an agent is detected, a small purple "AP" button
+- **Agent Detection** — Automatically detects Synth agents embedded in a
+  page via `<meta>` tags or `window.__SYNTH_AGENT__` global variable.
+- **Floating Button** — When an agent is detected, a small purple "Synth" button
   appears in the bottom-right corner of the page as a quick-entry point.
 - **Popup** — Click the toolbar icon to see agent status, Studio connection,
   a quick-chat input, recent runs, and shortcut actions.
-- **DevTools Panel** — Open Chrome DevTools and find the *AgentPrimordia* tab
+- **DevTools Panel** — Open Chrome DevTools and find the *Synth* tab
   for real-time trace timelines, agent state, memory info, cost estimates,
   and JSON trace export.
-- **Studio Backend** — Connects to a running AgentPrimordia Studio instance
+- **Studio Backend** — Connects to a running Synth Studio instance
   (default `http://localhost:8765`) with automatic polling and graceful
   degradation when unreachable.
 
@@ -61,7 +61,7 @@ the background service worker acts as the single source of truth for state.
 4. Click **Load unpacked** and select the `extensions/browser-extension` directory
    *(the directory that contains `manifest.json`)*.
 5. The extension icon will appear in the toolbar. Click it to open the popup.
-6. Open DevTools (F12) on any page to see the *AgentPrimordia* panel.
+6. Open DevTools (F12) on any page to see the *Synth* panel.
 
 > **Firefox** — the same MV3 extension loads in Firefox via
 > `about:debugging#/runtime/this-firefox` → **Load Temporary Add-on**.
@@ -111,28 +111,28 @@ can be uploaded to the Chrome Web Store or Firefox Add-ons.
 
 The extension talks to the Studio backend configured in the extension state
 (default `http://localhost:8765`). To point it at a different URL, update the
-`studioUrl` field stored under `ap_extension_state` in `chrome.storage.local`
+`studioUrl` field stored under `synth_extension_state` in `chrome.storage.local`
 via the background service worker's DevTools console, or call
-`chrome.storage.local.set({ ap_extension_state: { studioUrl: '...' } })`.
+`chrome.storage.local.set({ synth_extension_state: { studioUrl: '...' } })`.
 
 ### Per-page agent detection
 
 The content script recognizes two embedding styles:
 
-**1. Meta tags** — add `<meta>` tags with the `ap-agent-` prefix:
+**1. Meta tags** — add `<meta>` tags with the `synth-agent-` prefix:
 
 ```html
-<meta name="ap-agent-id" content="agent-007" />
-<meta name="ap-agent-name" content="My Agent" />
-<meta name="ap-agent-endpoint" content="http://localhost:8765/agents/agent-007" />
+<meta name="synth-agent-id" content="agent-007" />
+<meta name="synth-agent-name" content="My Agent" />
+<meta name="synth-agent-endpoint" content="http://localhost:8765/agents/agent-007" />
 ```
 
-**2. Global variable** — set `window.__AP_AGENT__` before the content script
+**2. Global variable** — set `window.__SYNTH_AGENT__` before the content script
 runs (e.g. in a `<script>` tag in `<head>`):
 
 ```html
 <script>
-    window.__AP_AGENT__ = {
+    window.__SYNTH_AGENT__ = {
         id: 'agent-007',
         name: 'My Agent',
         endpoint: 'http://localhost:8765/agents/agent-007',

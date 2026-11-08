@@ -1,0 +1,10 @@
+{
+  "name": "{{.ProjectName}}",
+  "version": "0.1.0",
+  "type": "tool",
+  "description": "{{.ProjectName}} — Synth plugin scaffolded via `synth init --type plugin`",
+  "author": "your-name",
+  "entry": "{{.ProjectName}}",
+  "homepage": "https://github.com/your-name/{{.ProjectName}}",
+  "license": "MIT"
+}

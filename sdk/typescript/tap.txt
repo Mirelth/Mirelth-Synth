@@ -70,7 +70,7 @@ not ok 1 - tests/unit/sandbox-v2.test.ts # time=17.00ms {
                 error:
                     name: "AssertionError"
                     message: "expected false to be true // Object.is equality"
-                at: "E:/codecast/AgentPrimordia/sdk/typescript/tests/unit/sandbox-v2.test.ts:329:30"
+                at: "E:/codecast/Synth/sdk/typescript/tests/unit/sandbox-v2.test.ts:329:30"
                 actual: "false"
                 expected: "true"
                 ...
@@ -79,7 +79,7 @@ not ok 1 - tests/unit/sandbox-v2.test.ts # time=17.00ms {
                 error:
                     name: "AssertionError"
                     message: "expected false to be true // Object.is equality"
-                at: "E:/codecast/AgentPrimordia/sdk/typescript/tests/unit/sandbox-v2.test.ts:339:30"
+                at: "E:/codecast/Synth/sdk/typescript/tests/unit/sandbox-v2.test.ts:339:30"
                 actual: "false"
                 expected: "true"
                 ...
@@ -91,7 +91,7 @@ not ok 1 - tests/unit/sandbox-v2.test.ts # time=17.00ms {
                 error:
                     name: "AssertionError"
                     message: "expected false to be true // Object.is equality"
-                at: "E:/codecast/AgentPrimordia/sdk/typescript/tests/unit/sandbox-v2.test.ts:376:30"
+                at: "E:/codecast/Synth/sdk/typescript/tests/unit/sandbox-v2.test.ts:376:30"
                 actual: "false"
                 expected: "true"
                 ...

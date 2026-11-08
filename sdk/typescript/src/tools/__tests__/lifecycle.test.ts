@@ -1,7 +1,7 @@
 /**
  * lifecycle.test.ts — 工具生命周期 TS 协议对等测试（矩阵 #3）。
  *
- * Go 权威夹具 agentprimordia/internal/tools/lifecycle/testdata/trust_fixture.json
+ * Go 权威夹具 synth/internal/tools/lifecycle/testdata/trust_fixture.json
  * （ECDSA P-256 / SHA-256 / ASN.1 DER 签名）：TS 经 WebCrypto 验证同一签名
  * ——注册客户端本地验签门与 Go VerifyCandidate 同结论。
  */
@@ -22,7 +22,7 @@ import {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FIXTURES_PATH = resolve(
   __dirname,
-  '../../../../../agentprimordia/internal/tools/lifecycle/testdata/trust_fixture.json',
+  '../../../../../synth/internal/tools/lifecycle/testdata/trust_fixture.json',
 );
 
 interface TrustFixture {

@@ -32,7 +32,7 @@ main:
             set -eu
             go version
             test "$(go env GOVERSION)" = "go1.26.10"
-            result="$(gofmt -l agentprimordia gateway wasm pgvector || true)"
+            result="$(gofmt -l synth gateway wasm pgvector || true)"
             if [ -n "$result" ]; then
               echo "以下文件未格式化："
               echo "$result"
@@ -42,15 +42,19 @@ main:
             for d in gateway pgvector wasm; do
               (cd "$d" && GOWORK=off go vet ./...)
             done
-            (cd agentprimordia/operator && GOWORK=off go vet ./...)
+            (cd synth/operator && GOWORK=off go vet ./...)
+        - name: 品牌名残留检查
+          script: |
+            set -eu
+            bash scripts/check-brand-residuals.sh
         - name: 主模块测试
           script: |
             set -eu
-            go test -count=1 -timeout=15m ./agentprimordia/...
+            go test -count=1 -timeout=15m ./synth/...
         - name: 子模块测试
           script: |
             set -eu
-            for d in gateway pgvector wasm agentprimordia/operator; do
+            for d in gateway pgvector wasm synth/operator; do
               echo "=== $d ==="
               (cd "$d" && GOWORK=off go test -count=1 -timeout=10m ./...)
             done
@@ -58,11 +62,11 @@ main:
           script: |
             set -eu
             CGO_ENABLED=1 go test -race -count=1 -timeout=15m \
-              ./agentprimordia/internal/agent/... \
-              ./agentprimordia/internal/llm/... \
-              ./agentprimordia/internal/memory/... \
-              ./agentprimordia/internal/persist/... \
-              ./agentprimordia/internal/tools/...
+              ./synth/internal/agent/... \
+              ./synth/internal/llm/... \
+              ./synth/internal/memory/... \
+              ./synth/internal/persist/... \
+              ./synth/internal/tools/...
         - name: 覆盖率门槛
           script: |
             set -eu
@@ -77,9 +81,9 @@ main:
               echo "$pkg: ${cov}% (门槛 ${min}%)"
               awk -v c="$cov" -v t="$min" 'BEGIN { exit !(c >= t) }'
             }
-            check agentprimordia/internal/agent 80
-            check agentprimordia/internal/llm 65
-            check agentprimordia/pkg 65
+            check synth/internal/agent 80
+            check synth/internal/llm 65
+            check synth/pkg 65
         - name: 交叉编译
           script: |
             set -eu

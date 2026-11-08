@@ -1,5 +1,5 @@
 /**
- * MCP TypeScript Client — 连接 AgentPrimordia Go MCP Server。
+ * MCP TypeScript Client — 连接 Synth Go MCP Server。
  *
  * 支持两种传输：
  *   - HTTP/SSE：连接 Go MCP Server 的 ServeSSE 端点（推荐，浏览器/Node 通用）
@@ -222,7 +222,7 @@ export class MCPClient {
     const resp = await this.sendRequest('initialize', {
       protocolVersion: '2024-11-05',
       capabilities: {},
-      clientInfo: { name: '@agentprimordia/sdk', version: '1.0.0' },
+      clientInfo: { name: '@synth/sdk', version: '1.0.0' },
     })
     if (resp.error) {
       throw new MCPError(resp.error.message, resp.error.code)

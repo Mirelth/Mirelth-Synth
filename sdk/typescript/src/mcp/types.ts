@@ -331,7 +331,7 @@ export class MCPClient {
       protocolVersion: MCP_PROTOCOL_VERSION,
       capabilities: {},
       clientInfo: {
-        name: this.config.name || 'AgentPrimordia-TS',
+        name: this.config.name || 'Synth-TS',
         version: this.config.version || '0.1.0',
       },
     }, timeout);

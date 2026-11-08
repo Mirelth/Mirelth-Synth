@@ -112,7 +112,7 @@ describe('ColdStartOptimizer', () => {
     it('should return valid wrangler.toml content', () => {
       const optimizer = new ColdStartOptimizer();
       const config = optimizer.generateCloudflareConfig();
-      expect(config).toContain('agentprimordia-worker');
+      expect(config).toContain('synth-worker');
       expect(config).toContain('compatibility_date');
       expect(config).toContain('LAZY_LOAD_PROVIDERS');
     });

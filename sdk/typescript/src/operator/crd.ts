@@ -111,7 +111,7 @@ export function basicAgentDeployment(name: string, opts: {
   apiSecretRef?: string;
 }): AgentDeployment {
   return {
-    apiVersion: 'agentprimordia.io/v1',
+    apiVersion: 'synth.io/v1',
     kind: 'AgentDeployment',
     metadata: { name },
     spec: {

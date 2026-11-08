@@ -3,7 +3,7 @@
 // 规则：
 //  1. 矩阵表结构合法：每行 6/7 列，豁免行必须含「理由」与「升格条件」非空；
 //  2. 已落地板块（存量基线 B*、S0 版、以及任何 Go/TS 列路径已出现在仓库中的行）：
-//     反引号引用的仓库相对路径必须真实存在（支持 agentprimordia/、sdk/typescript/src 等前缀）；
+//     反引号引用的仓库相对路径必须真实存在（支持 synth/、sdk/typescript/src 等前缀）；
 //  3. 未来版本行（v6.1+，尚未开工）跳过路径存在性检查，但豁免理由必须填。
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -19,7 +19,7 @@ let errors = [];
 let checked = 0, skipped = 0;
 
 // 路径候选解析：按仓库常见根尝试
-const roots = ['', 'agentprimordia/', 'sdk/typescript/', 'agentprimordia/sdk/typescript/'];
+const roots = ['', 'synth/', 'sdk/typescript/', 'synth/sdk/typescript/'];
 function pathExists(p) {
   const clean = p.replace(/\/$/, '');
   if (existsSync(resolve(repoRoot, clean))) return true;

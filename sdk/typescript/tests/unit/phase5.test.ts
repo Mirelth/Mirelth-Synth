@@ -504,7 +504,7 @@ describe('Phase 5.4: Edge-Native Cold Start Optimization', () => {
       const optimizer = new ColdStartOptimizer();
       const config = optimizer.generateCloudflareConfig();
       expect(config).toContain('wrangler.toml');
-      expect(config).toContain('agentprimordia-worker');
+      expect(config).toContain('synth-worker');
     });
 
     it('should generate Deno config', () => {

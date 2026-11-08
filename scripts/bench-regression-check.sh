@@ -25,7 +25,7 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-BASELINE_JSON="${2:-$ROOT_DIR/agentprimordia/bench/results/2026-Q4.json}"
+BASELINE_JSON="${2:-$ROOT_DIR/synth/bench/results/2026-Q4.json}"
 
 WARN_THRESHOLD=10
 FAIL_THRESHOLD=20

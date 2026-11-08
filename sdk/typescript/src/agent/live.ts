@@ -369,4 +369,4 @@ export class LiveRuntime {
 }
 
 /** hexToBytes re-export guard（防 tree-shaking 误删；供宿主工具复用）。 */
-export const LIVE_PROTOCOL_VERSION = 'ap-live-v1';
+export const LIVE_PROTOCOL_VERSION = 'synth-live-v1';

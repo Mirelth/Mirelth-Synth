@@ -18,14 +18,14 @@
 | R2 | 哨兵错误：`ErrImprovementScopeViolation = errors.New("learning: 自改进越界：code 层变更被沙箱禁止，需人工代码评审")` | `internal/agent/learning/feedback.go:36-37` | 全仓 grep `ErrImprovementScopeViolation` 仅 3 处：定义（:37）、抛出（:194）、对抗测试断言（feedback_test.go:87）——红线目前是**学习反馈子系统内的单点** |
 | R3 | 抛出点：`Propose` 收到 ScopeCode 建议即返回该错误 | `internal/agent/learning/feedback.go:191-195` | 建议生成端（Suggest，:139-189）也只产出 prompt/config/skill 三类建议 |
 | R4 | 建议应用须经人工批准（`Approve` 唯一生效通道），ApplyApproved 只落地 prompt/config/skill | `internal/agent/learning/feedback.go:206-213,222-253` | skill 层经 SkillSynthesizer 走 skills.Acquire（护栏+规范校验，`internal/agent/skills/acquisition.go:103-128`） |
-| R5 | 宿主侧代码执行工具明确自我声明**不是沙箱**：「This is NOT a security sandbox. Code runs directly on the host with the privileges of the AgentPrimordia process」 | `internal/tools/builtin/code_execution.go:49-54` | 且默认禁用（环境变量 `AP_ALLOW_CODE_EXECUTION` 门，:68-75），执行通道是宿主子进程（`exec.CommandContext`，:151） |
+| R5 | 宿主侧代码执行工具明确自我声明**不是沙箱**：「This is NOT a security sandbox. Code runs directly on the host with the privileges of the Synth process」 | `internal/tools/builtin/code_execution.go:49-54` | 且默认禁用（环境变量 `SYNTH_ALLOW_CODE_EXECUTION` 门，:68-75），执行通道是宿主子进程（`exec.CommandContext`，:151） |
 | R6 | 红线的治理文本载体：V6 路线图 v5.4 任务 4「自改进安全边界……代码层变更强制人工审核」（`docs/V6路线图.md:133`）；根 AGENTS.md **无** code 层条款（§2/§3/§4 无一处涉及 agent 生成代码） | `docs/V6路线图.md:133,188` | 红线今天主要靠代码单点 + 路线图文本，未进工作区宪法 AGENTS.md——这是本提案要修订的治理缺口 |
 
 ### 1.2 红线的现实缺口（为什么需要修订而不是维持现状）
 
 1. **锁死的是需求，不是能力**：能力缺口只能人肉补（V7 §五立项证据 ①）；工具系统是封闭集，封闭清单由「别人写了什么」决定。
 2. **红线覆盖面过窄**：R2 显示红线只挂在 learning.Propose 一个入口上；宿主进程内实际存在两条可执行任意代码的通道——内置 code_execution（R5，环境变量开启后宿主子进程执行）与 shell 工具（经 `internal/security` 命令白名单）。红线没有回答「agent 生成的代码从哪里执行」。
-3. **沙箱四件套已备而闭环未接**（V7 §五立项证据 ②）：wazero 运行时（`wasm/runtime.go`）、工具适配（`agentprimordia/wasm/tool_adapter.go` WASMToolAdapter.AsTool）、签名（Ed25519/cosign 两套实现）、市场协议（`internal/marketplace`）——缺的是把「生成 → 彩排 → 对抗测试 → 签名注册」接到沙箱上的**政策授权**。
+3. **沙箱四件套已备而闭环未接**（V7 §五立项证据 ②）：wazero 运行时（`wasm/runtime.go`）、工具适配（`synth/wasm/tool_adapter.go` WASMToolAdapter.AsTool）、签名（Ed25519/cosign 两套实现）、市场协议（`internal/marketplace`）——缺的是把「生成 → 彩排 → 对抗测试 → 签名注册」接到沙箱上的**政策授权**。
 
 结论：把「永久拒绝」改成「宿主永久拒绝 + 沙箱受控释放」不是放松，是把红线从单点挂到整个宿主进程边界上，同时给沙箱内开一条受审计的通道。
 
@@ -35,7 +35,7 @@
 
 ### 2.1 不变式陈述
 
-> **INV-0**：AgentPrimordia 宿主进程在运行期（含 agent 自主行为全链路）**不得写入、编译或加载任何由 agent 生成的代码到宿主进程自身的地址空间**。agent 生成代码的唯一合法执行位置是 wazero WASM 沙箱实例内；其唯一合法产出是经签名与对抗测试后的**数据工件**（WASM 字节码 + 清单），通过注册表以工具形式被消费。
+> **INV-0**：Synth 宿主进程在运行期（含 agent 自主行为全链路）**不得写入、编译或加载任何由 agent 生成的代码到宿主进程自身的地址空间**。agent 生成代码的唯一合法执行位置是 wazero WASM 沙箱实例内；其唯一合法产出是经签名与对抗测试后的**数据工件**（WASM 字节码 + 清单），通过注册表以工具形式被消费。
 
 ### 2.2 确定性断言列表（可穷尽测试）
 
@@ -43,13 +43,13 @@
 
 | # | 断言名 | 检测点 | 实现位置建议 | CI 穷尽方式 |
 |---|--------|--------|------------|------------|
-| A1 | **wazero 依赖边界封闭**：主模块内 import wazero 的 .go 文件集合 ≡ {agentprimordia/wasm/sandbox.go}（当前实测唯一命中；`agentprimordia/go.mod:7` 为依赖声明、AGENTS.md §2.1:27 为白名单边界） | go 包导入图静态扫描 | 新增 `internal/security/host_boundary_test.go`（或 scripts/ + CI job） | 对 `go list -deps ./...` 全量枚举每个包的 import，白名单外出现 wazero 即失败——包集合有限，可穷尽 |
+| A1 | **wazero 依赖边界封闭**：主模块内 import wazero 的 .go 文件集合 ≡ {synth/wasm/sandbox.go}（当前实测唯一命中；`synth/go.mod:7` 为依赖声明、AGENTS.md §2.1:27 为白名单边界） | go 包导入图静态扫描 | 新增 `internal/security/host_boundary_test.go`（或 scripts/ + CI job） | 对 `go list -deps ./...` 全量枚举每个包的 import，白名单外出现 wazero 即失败——包集合有限，可穷尽 |
 | A2 | **零动态加载**：宿主源码树不出现 `plugin.Open`，go.mod 无 cgo 激活路径；构建产物不含 dlopen 符号引用 | 源码 grep + 构建符号检查 | 同 A1 测试文件 | 全仓 grep + `go build` 后对产物做符号表扫描（nm/objdump），每次 CI 全量执行 |
-| A3 | **零宿主派生执行**：agent 生成代码不进入 `exec.CommandContext` 通道——内置 code_execution 保持默认禁用（`internal/tools/builtin/code_execution.go:69`），且该工具的开启开关不暴露给任何 agent 可写配置面 | 配置流静态断言 + 运行时断言 | 同 A1；运行时部分放 `internal/tools/builtin/code_execution_test.go` 追加用例 | ① 静态：枚举全部环境变量/配置写入点，断言 `AP_ALLOW_CODE_EXECUTION` 不在其中；② 运行时：以「agent 写配置→重启执行」的对抗用例证明开关不可被 agent 打开——配置面枚举有限，可穷尽 |
-| A4 | **沙箱资源上限强制**：每个 WASM 模块实例必须带 MemoryLimitPages 上限与 ExecutionTimeout（默认 640KB/30s，`wasm/runtime.go:25-33`）；WASI 默认关闭（`EnableWASI=false`） | 沙箱构造参数审查 | `wasm/runtime_test.go` 追加（表驱动枚举全部公共构造入口） | 枚举 `agentprimordia/wasm` 与根 `wasm/` 全部公共构造函数（当前共 2 个模块、构造入口个位），逐个断言零值配置兜底生效——入口可穷尽 |
-| A5 | **CPU 死循环可终止**：WithCloseOnContextDone(true)（`wasm/runtime.go:52-57`）下，无限循环模块在 ExecutionTimeout 内被真实终止（既有回归测试语义保留） | 沙箱执行器回归测试 | 根 `wasm/runtime_test.go` 既有无限循环用例 + `agentprimordia/wasm` 侧补齐同型用例 | 确定性测试（固定模块 + 固定超时），每次 CI 必跑 |
-| A6 | **签名前置**：任何工具进入注册表（`WASMToolAdapter.RegisterTool`，`agentprimordia/wasm/tool_adapter.go:77-111`）前，其字节码必须通过签名验证（`wasm/signing.go:15-32` VerifySignature，或 §五统一的 cosign 口径）；验签失败的注册调用必须返回错误 | 适配器注册路径 | `agentprimordia/wasm/tool_adapter_test.go` 追加负样本用例（篡改 1 字节即拒绝） | 表驱动穷举篡改位（首/尾/中间字节翻转），签名校验本身是确定性算法——判定可穷尽 |
-| A7 | **导入段白名单**：注册的 WASM 模块导入段（imports）不得包含未批准宿主函数；未显式启用 WASI 的模块不得出现 `wasi_snapshot_preview1` 导入 | 模块编译期检查（CompileModule 后枚举 ImportedFunctions） | `agentprimordia/wasm/sandbox.go` 建议新增校验函数（实现期评审）+ 对应测试 | WASM 导入段是二进制静态可枚举结构——每个注册模块逐条比对白名单，可穷尽 |
+| A3 | **零宿主派生执行**：agent 生成代码不进入 `exec.CommandContext` 通道——内置 code_execution 保持默认禁用（`internal/tools/builtin/code_execution.go:69`），且该工具的开启开关不暴露给任何 agent 可写配置面 | 配置流静态断言 + 运行时断言 | 同 A1；运行时部分放 `internal/tools/builtin/code_execution_test.go` 追加用例 | ① 静态：枚举全部环境变量/配置写入点，断言 `SYNTH_ALLOW_CODE_EXECUTION` 不在其中；② 运行时：以「agent 写配置→重启执行」的对抗用例证明开关不可被 agent 打开——配置面枚举有限，可穷尽 |
+| A4 | **沙箱资源上限强制**：每个 WASM 模块实例必须带 MemoryLimitPages 上限与 ExecutionTimeout（默认 640KB/30s，`wasm/runtime.go:25-33`）；WASI 默认关闭（`EnableWASI=false`） | 沙箱构造参数审查 | `wasm/runtime_test.go` 追加（表驱动枚举全部公共构造入口） | 枚举 `synth/wasm` 与根 `wasm/` 全部公共构造函数（当前共 2 个模块、构造入口个位），逐个断言零值配置兜底生效——入口可穷尽 |
+| A5 | **CPU 死循环可终止**：WithCloseOnContextDone(true)（`wasm/runtime.go:52-57`）下，无限循环模块在 ExecutionTimeout 内被真实终止（既有回归测试语义保留） | 沙箱执行器回归测试 | 根 `wasm/runtime_test.go` 既有无限循环用例 + `synth/wasm` 侧补齐同型用例 | 确定性测试（固定模块 + 固定超时），每次 CI 必跑 |
+| A6 | **签名前置**：任何工具进入注册表（`WASMToolAdapter.RegisterTool`，`synth/wasm/tool_adapter.go:77-111`）前，其字节码必须通过签名验证（`wasm/signing.go:15-32` VerifySignature，或 §五统一的 cosign 口径）；验签失败的注册调用必须返回错误 | 适配器注册路径 | `synth/wasm/tool_adapter_test.go` 追加负样本用例（篡改 1 字节即拒绝） | 表驱动穷举篡改位（首/尾/中间字节翻转），签名校验本身是确定性算法——判定可穷尽 |
+| A7 | **导入段白名单**：注册的 WASM 模块导入段（imports）不得包含未批准宿主函数；未显式启用 WASI 的模块不得出现 `wasi_snapshot_preview1` 导入 | 模块编译期检查（CompileModule 后枚举 ImportedFunctions） | `synth/wasm/sandbox.go` 建议新增校验函数（实现期评审）+ 对应测试 | WASM 导入段是二进制静态可枚举结构——每个注册模块逐条比对白名单，可穷尽 |
 | A8 | **宿主文件系统零写入**：agent 生成工具执行前后，宿主工作树（Go 代码目录 + 配置目录）哈希不变；生成物只允许落在沙箱数据目录 | 执行 harness 前后全量哈希对比 | `internal/eval/` 沙箱 harness 测试（复用 v6.3 彩排 harness） | 每次彩排/对抗测试自动执行；哈希覆盖面 = 仓库文件集（有限、可枚举） |
 
 ### 2.3 为什么本不变式允许 100%/0 容忍（对应 V7 新规 R3）
@@ -76,9 +76,9 @@ R3 原文（V7 路线图 §一）：「**确定性逻辑不变式**（签名校�
 1. **隔离机制（真实能力边界）**：
    - **内存隔离**：wazero 线性内存按模块独立，页数上限由 `Config.MemoryLimitPages` 强制（默认 10 页 = 640KB，`wasm/runtime.go:14-33`）；
    - **时间隔离**：执行超时经 `WithCloseOnContextDone(true)` 在解释器指令级检查 ctx 取消，真实终止无限循环（`wasm/runtime.go:52-57`，有回归测试）；
-   - **系统面隔离**：WASI 默认关闭（`EnableWASI=false`）——模块拿不到文件系统/时钟/环境变量等宿主能力；宿主数据交换只经 ABI 约定的线性内存读写（`wasm/tool_executor.go:1-11` ABI 协议；`agentprimordia/wasm/sandbox.go:103` ExecuteWithMemory）；
+   - **系统面隔离**：WASI 默认关闭（`EnableWASI=false`）——模块拿不到文件系统/时钟/环境变量等宿主能力；宿主数据交换只经 ABI 约定的线性内存读写（`wasm/tool_executor.go:1-11` ABI 协议；`synth/wasm/sandbox.go:103` ExecuteWithMemory）；
    - **宿主命令面兜底**：沙箱外的宿主命令执行仍受 `internal/security` 约束——`Sandbox.CanExecute` 检查 shell 元字符/黑名单/参数白名单（`internal/security/sandbox.go:264-297`）、`CanAccess` 无 ACL 时默认拒绝（:299-310）、`ValidatePath` 拒绝路径穿越（:312-321）、ACL deny 优先（:81-92）。该层是**命令白名单**不是系统调用沙箱——这正是 agent 生成代码绝不允许走宿主通道的原因（§3.2）。
-2. **注册与消费**：生成工具经 `WASMToolAdapter.AsTool`（`agentprimordia/wasm/tool_adapter.go:186-193`）转为 `tools.Tool` 进注册表，被 ReActAgent 运行时直接调用——工具系统第一次成为开放集。
+2. **注册与消费**：生成工具经 `WASMToolAdapter.AsTool`（`synth/wasm/tool_adapter.go:186-193`）转为 `tools.Tool` 进注册表，被 ReActAgent 运行时直接调用——工具系统第一次成为开放集。
 3. **治理面**：注册工具照常受 `governance.Enforcer.CheckToolCall`（`internal/governance/policy_enforcer.go:104-120`）与策略文件（`internal/governance/policy_loader.go:16-35`，YAML Policy 的 ToolRestriction.RequireApproval/MaxCallsPerRun/BlockedArgs，`policy.go:59-66`）约束——释放的是「造」，不豁免任何「用」的策略。
 
 ### 3.2 不释放：宿主进程（永久拒绝，无例外通道）
@@ -125,7 +125,7 @@ R3 原文（V7 路线图 §一）：「**确定性逻辑不变式**（签名校�
 
 | 实现 | 位置 | 算法 | 用途 |
 |------|------|------|------|
-| WASM 字节码签名 | `agentprimordia/wasm/signing.go:15-32`（VerifySignature）、:34-43（SignWASM）、:45-49（GenerateKeyPair）、:52-55（KeyFingerprint 指纹） | Ed25519 over SHA-256(wasmBytes) | 沙箱字节码完整性 |
+| WASM 字节码签名 | `synth/wasm/signing.go:15-32`（VerifySignature）、:34-43（SignWASM）、:45-49（GenerateKeyPair）、:52-55（KeyFingerprint 指纹） | Ed25519 over SHA-256(wasmBytes) | 沙箱字节码完整性 |
 | 市场工件签名 | `internal/marketplace/marketplace.go:48-81`（VerifyCosignSignature，SHA-256 摘要 + ECDSA P-256，ASN.1 DER，cosign 默认格式）；Manifest 结构 :28-46；安装强制验签 :262-315（:293-296 拒绝安装）；路径字段防穿越 :174-182 | ECDSA P-256（cosign verify-blob 口径） | 插件/工件分发 |
 | 技能清单签名 | `internal/agent/skills/skill_market.go:21-33`（SkillManifest）、:35-36（SignSkillManifest）、:65-78（VerifySkillManifest，验签不匹配即错误）；包注释声明与 marketplace cosign 同强度 | ECDSA P-256 | 技能发布/订阅 |
 
@@ -146,7 +146,7 @@ R3 原文（V7 路线图 §一）：「**确定性逻辑不变式**（签名校�
 
 | 级别 | 动作 | 影响 |
 |------|------|------|
-| L1 工具级 | 注销单个生成工具（WASMToolAdapter.UnregisterTool，`agentprimordia/wasm/tool_adapter.go:114-130`） | 仅该工具下线 |
+| L1 工具级 | 注销单个生成工具（WASMToolAdapter.UnregisterTool，`synth/wasm/tool_adapter.go:114-130`） | 仅该工具下线 |
 | L2 注册表级 | 停用生成工具注册表消费（运行时开关，实现期落 governance 策略） | 全部生成工具下线，预定义工具不受影响 |
 | L3 通道级 | 关闭沙箱生成通道（v6.3 特性开关默认关闭语义） | 回到 v6.2 末行为：工具集封闭、红线回到全拒绝——**红线的宿主侧部分永远不回滚** |
 
@@ -170,7 +170,7 @@ R3 原文（V7 路线图 §一）：「**确定性逻辑不变式**（签名校�
    - 红队样本集回归全过（`docs/evals/adversarial-holdout-v1.json` 留出子集 + 宿主边界断言 A1–A8 全绿）；
    - **先于功能代码合并**：治理文本修订 commit 先行，功能代码 PR 在其后。
 3. **禁止事项**：不得以「实验性」「临时豁免」「随行小改」名义绕过本流程（V7 新规 R1 容量诚实同样适用于安全文本）；不得在未修订文本的情况下先合并弱化断言的代码。
-4. **记录**：每次安全承诺变更在 `agentprimordia/docs/版本规范.md`（废弃/迁移记录）与本文档 §九评审记录双登记。
+4. **记录**：每次安全承诺变更在 `synth/docs/版本规范.md`（废弃/迁移记录）与本文档 §九评审记录双登记。
 
 ---
 
@@ -184,7 +184,7 @@ R3 原文（V7 路线图 §一）：「**确定性逻辑不变式**（签名校�
 ### 2.3 code 层安全边界（宿主永久拒绝 + 沙箱受控释放）
 
 - INV-0：宿主进程运行期零写入、零编译、零加载任何 agent 生成的代码；
-  agent 生成代码唯一合法执行位置是 wazero WASM 沙箱（agentprimordia/wasm/、
+  agent 生成代码唯一合法执行位置是 wazero WASM 沙箱（synth/wasm/、
   工作区根 wasm/ 模块），且必须经签名验证与对抗测试后方可注册为工具。
 - 宿主边界由确定性断言 A1–A8 保证（定义见 docs/提案-code层沙箱受控释放.md §二），
   断言测试全部进 CI、失败即红；本边界属于确定性安全不变式，允许 100%/0 容忍
@@ -200,13 +200,13 @@ R3 原文（V7 路线图 §一）：「**确定性逻辑不变式**（签名校�
 原文（AGENTS.md:27）：
 
 ```
-- `github.com/tetratelabs/wazero` — 纯 Go（CGO-free）WebAssembly 运行时（G3-3 WASM 执行）。**仅限工作区根 `wasm/` 模块与主模块内 `wasm/` 包**（`agentprimordia/wasm/`）使用。WASM 运行时无标准库等价实现，wazero 为 CGO-free 纯 Go 实现，符合 §2.2 硬性需求豁免。
+- `github.com/tetratelabs/wazero` — 纯 Go（CGO-free）WebAssembly 运行时（G3-3 WASM 执行）。**仅限工作区根 `wasm/` 模块与主模块内 `wasm/` 包**（`synth/wasm/`）使用。WASM 运行时无标准库等价实现，wazero 为 CGO-free 纯 Go 实现，符合 §2.2 硬性需求豁免。
 ```
 
 新文（末尾追加一句，白名单范围不变）：
 
 ```
-- `github.com/tetratelabs/wazero` — 纯 Go（CGO-free）WebAssembly 运行时（G3-3 WASM 执行）。**仅限工作区根 `wasm/` 模块与主模块内 `wasm/` 包**（`agentprimordia/wasm/`）使用。WASM 运行时无标准库等价实现，wazero 为 CGO-free 纯 Go 实现，符合 §2.2 硬性需求豁免。该依赖同时是 code 层「沙箱受控释放」（§2.3）的隔离底座：除上述两处外任何包不得 import wazero（CI 断言 A1 强制）。
+- `github.com/tetratelabs/wazero` — 纯 Go（CGO-free）WebAssembly 运行时（G3-3 WASM 执行）。**仅限工作区根 `wasm/` 模块与主模块内 `wasm/` 包**（`synth/wasm/`）使用。WASM 运行时无标准库等价实现，wazero 为 CGO-free 纯 Go 实现，符合 §2.2 硬性需求豁免。该依赖同时是 code 层「沙箱受控释放」（§2.3）的隔离底座：除上述两处外任何包不得 import wazero（CI 断言 A1 强制）。
 ```
 
 ### 8.3 §3 代码规范（确定性安全不变式测试要求）
@@ -244,7 +244,7 @@ R3 原文（V7 路线图 §一）：「**确定性逻辑不变式**（签名校�
 
 ```
 - **code 层生成工具通道（v6.3 起）**：agent 生成工具的生成/彩排/注册链路位于
-  internal/tools/lifecycle/（生命周期框架）与 agentprimordia/wasm/（沙箱执行），
+  internal/tools/lifecycle/（生命周期框架）与 synth/wasm/（沙箱执行），
   依赖方向同上层规则；生成工件（WASM 字节码+清单）是数据不是代码——宿主编译
   与加载边界由 §2.3 INV-0 与断言 A1–A8 强制。TS 侧仅协议对等（签名/工具包格式/
   注册客户端），沙箱执行 Go-only（docs/双线豁免矩阵.md B4/#3 豁免）。

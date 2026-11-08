@@ -1,7 +1,7 @@
 ﻿/**
  * Playground CLI 前端 鈥?多 Agent 会话管理器。
  *
- * 提供与 AgentPrimordia Playground API 交互的会话层封装：
+ * 提供与 Synth Playground API 交互的会话层封装：
  * - PlaygroundSession: 单个 Agent 的对话会话，支持 SSE 流式、abort、统计
  * - PlaygroundManager: 多 Agent 生命周期管理（创建、列表）
  *

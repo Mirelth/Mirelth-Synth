@@ -1,0 +1,52 @@
+# Binaries
+# 注意：必须锚定到本目录（/synth），否则裸 `synth` 会同时匹配 cmd/synth/ 目录，
+# 静默吞掉该目录下任何新增未跟踪文件（2026-09-27 修复，此前已误伤 cmd/synth/start_test.go）。
+/synth
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+dist/
+bin/
+
+# Test / Coverage artifacts
+coverage.out
+coverage.html
+*.test
+*_cover/
+*_cover
+*_cover.out
+coverage/
+llm_cover
+pkg_cov
+pkg_cover
+metrics_cover
+tools_cover
+internal_cov
+cov
+cov_tools
+cover
+cover2
+cover_metrics
+cover_tools
+coverage_tools
+coverage_collab*
+*.cover.out
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vendor (if used)
+vendor/
+
+# Environment
+.env
+.env.local

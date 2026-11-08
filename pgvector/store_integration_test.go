@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-const testConnString = "postgres://postgres:postgres@localhost:5432/ap_test"
+const testConnString = "postgres://postgres:postgres@localhost:5432/synth_test"
 
 func getTestStore(t *testing.T) *Store {
 	t.Helper()

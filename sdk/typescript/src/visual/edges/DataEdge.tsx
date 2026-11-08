@@ -23,11 +23,11 @@ export function DataEdge({ x1, y1, x2, y2 }: DataEdgeProps): ReactElement {
   return (
     <path
       d={d}
-      className="ap-edge"
+      className="synth-edge"
       fill="none"
       stroke="#94a3b8"
       strokeWidth={2}
-      markerEnd="url(#ap-arrow)"
+      markerEnd="url(#synth-arrow)"
     />
   );
 }

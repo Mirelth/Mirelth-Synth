@@ -1,6 +1,6 @@
 ﻿/**
  * 英文语言包 (默认)
- * Default locale strings for the AgentPrimordia SDK.
+ * Default locale strings for the Synth SDK.
  */
 
 export const en = {

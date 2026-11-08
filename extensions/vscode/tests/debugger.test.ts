@@ -118,7 +118,7 @@ describe('normalizeApConfig', () => {
 describe('toDebugConfig', () => {
   it('使用默认值补全字段', () => {
     const cfg = toDebugConfig({}, '/work', false);
-    expect(cfg.agentName).toBe('agentprimordia-agent');
+    expect(cfg.agentName).toBe('synth-agent');
     expect(cfg.maxTurns).toBe(DEFAULT_MAX_TURNS);
     expect(cfg.trace).toBe(false);
     expect(cfg.cwd).toBe('/work');
@@ -165,16 +165,16 @@ describe('buildLaunchJson', () => {
   it('生成 VS Code 兼容配置', () => {
     const cfg = toDebugConfig({ name: 'a' }, '/w');
     const json = buildLaunchJson(cfg);
-    expect(json['type']).toBe('agentprimordia');
+    expect(json['type']).toBe('synth');
     expect(json['request']).toBe('launch');
     expect(json['cwd']).toBe('/w');
   });
 });
 
 describe('pickApYamlFilename', () => {
-  it('按优先级选择 .ap.yaml > ap.yaml > agent.yaml', () => {
-    expect(pickApYamlFilename(['ap.yaml', 'agent.yaml', '.ap.yaml'])).toBe('.ap.yaml');
-    expect(pickApYamlFilename(['agent.yaml', 'ap.yaml'])).toBe('ap.yaml');
+  it('按优先级选择 .synth.yaml > synth.yaml > agent.yaml', () => {
+    expect(pickApYamlFilename(['synth.yaml', 'agent.yaml', '.synth.yaml'])).toBe('.synth.yaml');
+    expect(pickApYamlFilename(['agent.yaml', 'synth.yaml'])).toBe('synth.yaml');
     expect(pickApYamlFilename(['agent.yaml'])).toBe('agent.yaml');
   });
 
@@ -189,7 +189,7 @@ describe('generateLaunchJsonTemplate', () => {
     const parsed = JSON.parse(tpl);
     expect(parsed.version).toBe('0.2.0');
     expect(Array.isArray(parsed.configurations)).toBe(true);
-    expect(parsed.configurations[0].type).toBe('agentprimordia');
+    expect(parsed.configurations[0].type).toBe('synth');
   });
 });
 

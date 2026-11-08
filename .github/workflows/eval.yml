@@ -46,7 +46,7 @@ jobs:
         run: go mod download
 
       - name: Build (sanity)
-        working-directory: agentprimordia
+        working-directory: synth
         env:
           CGO_ENABLED: 0
         run: go build ./...
@@ -59,7 +59,7 @@ jobs:
           EVAL_THRESHOLD: ${{ inputs.threshold || '0.8' }}
         run: |
           set -uo pipefail
-          cd agentprimordia
+          cd synth
           # 阈值合法性预检（run_eval.sh 亦会校验；此处提前失败并给出明确报错）
           case "${EVAL_THRESHOLD}" in
             ''|*[!0-9.]*)
@@ -84,7 +84,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: eval-result-${{ github.run_id }}
-          path: agentprimordia/eval-result.json
+          path: synth/eval-result.json
           if-no-files-found: ignore
 
       - name: Comment on PR
@@ -94,6 +94,6 @@ jobs:
           header: agent-eval
           message: |
             ## Eval Suite Results
-            $(cat agentprimordia/eval-result.json 2>/dev/null || echo '{}')
+            $(cat synth/eval-result.json 2>/dev/null || echo '{}')
 
             See artifact `eval-result-${{ github.run_id }}` for full output.

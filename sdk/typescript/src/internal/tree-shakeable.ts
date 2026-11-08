@@ -31,4 +31,4 @@ export type {
 export const __treeShakeable = true;
 
 /** 模块版本标识 */
-export const __bundlerMarker = '@agentprimordia/sdk' as const;
+export const __bundlerMarker = '@synth/sdk' as const;

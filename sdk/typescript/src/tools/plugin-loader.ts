@@ -5,7 +5,7 @@
  * 跨平台的动态加载机制。Go 的 plugin 包仅支持 Linux/macOS 且有限制。
  *
  * 这是 TS SDK 相对 Go SDK 的核心架构优势：
- * - npm 包即插件：`@agentprimordia/plugin-*` 自动发现
+ * - npm 包即插件：`@synth/plugin-*` 自动发现
  * - 无需编译期链接
  * - 支持 ESM 动态导入
  * - 跨平台（Node.js / Deno / Bun）
@@ -13,7 +13,7 @@
  * 使用方式：
  *   const loader = new PluginLoader();
  *   await loader.load('my-plugin');
- *   await loader.loadFromPackage('@agentprimordia/plugin-email');
+ *   await loader.loadFromPackage('@synth/plugin-email');
  *   const tools = loader.getTools();
  */
 
@@ -60,7 +60,7 @@ interface LoadedPlugin {
 export interface PluginLoaderConfig {
   /** 插件搜索路径（默认 ['node_modules']） */
   searchPaths?: string[];
-  /** 插件名前缀（默认 '@agentprimordia/plugin-'） */
+  /** 插件名前缀（默认 '@synth/plugin-'） */
   pluginPrefix?: string;
   /** 是否自动发现（默认 false） */
   autoDiscover?: boolean;
@@ -78,7 +78,7 @@ export class AgentPluginLoader {
   constructor(config?: PluginLoaderConfig) {
     this.config = {
       searchPaths: config?.searchPaths ?? ['node_modules'],
-      pluginPrefix: config?.pluginPrefix ?? '@agentprimordia/plugin-',
+      pluginPrefix: config?.pluginPrefix ?? '@synth/plugin-',
       autoDiscover: config?.autoDiscover ?? false,
       registry: config?.registry,
     };
@@ -158,7 +158,7 @@ export class AgentPluginLoader {
     );
   }
 
-  /** 自动发现并加载所有 @agentprimordia/plugin-* 包 */
+  /** 自动发现并加载所有 @synth/plugin-* 包 */
   async autoDiscover(): Promise<string[]> {
     const discovered: string[] = [];
 
@@ -289,7 +289,7 @@ export class AgentPluginLoader {
   }
 
   /**
-   * 扫描搜索路径下的 node_modules，发现所有 @agentprimordia/plugin-* 包。
+   * 扫描搜索路径下的 node_modules，发现所有 @synth/plugin-* 包。
    *
    * 处理 scoped 包目录（@scope/name）与普通包目录（name）。
    * 仅返回候选包名，不直接加载（加载请使用 load/loadAll）。

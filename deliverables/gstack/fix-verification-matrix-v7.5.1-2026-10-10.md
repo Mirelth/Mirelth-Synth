@@ -1,4 +1,4 @@
-# AgentPrimordia v7.5.1 — 问题复验与修复验证矩阵
+# Synth v7.5.1 — 问题复验与修复验证矩阵
 
 **日期**：2026-10-10
 **范围**：对《上线前检查报告》中 17 条问题逐项复验（含证伪）+ 实施修复 + 回归验证
@@ -39,7 +39,7 @@
 
 | # | 原判 | 复验结论 | 验证依据（可复跑） | 修复状态 | 修复内容 | 残留风险 |
 |---|------|---------|------------------|---------|---------|---------|
-| **B1** | 🔴 | ✅ **确认存在** | 复刻旧逻辑：`find . -name 'ap-*' \| xargs sha256sum` 产出 `a23de36... ./ap-linux-amd64/ap-linux-amd64`；release 阶段扁平化为 `ap-linux-amd64`；`sha256sum -c` → `No such file or directory` | ✅ **已修复** | `sign-binaries` 改为**先扁平化到 `flat/` → 再 `sha256sum ap-*`**，清单条目为裸文件名；并加 `sha256sum -c` 自校验回归门。复刻正向测试：6/6 `OK` | 无（逻辑层已闭环；仍需真实 tag 触发一次 CI 确认） |
+| **B1** | 🔴 | ✅ **确认存在** | 复刻旧逻辑：`find . -name 'synth-*' \| xargs sha256sum` 产出 `a23de36... ./synth-linux-amd64/synth-linux-amd64`；release 阶段扁平化为 `synth-linux-amd64`；`sha256sum -c` → `No such file or directory` | ✅ **已修复** | `sign-binaries` 改为**先扁平化到 `flat/` → 再 `sha256sum synth-*`**，清单条目为裸文件名；并加 `sha256sum -c` 自校验回归门。复刻正向测试：6/6 `OK` | 无（逻辑层已闭环；仍需真实 tag 触发一次 CI 确认） |
 | **B2** | 🔴 | ✅ **确认存在**（条件触发） | `bench/llm-bench/main.go:166-167`：`pass_rate < gate` → `os.Exit(1)`；`release.yml` 原 `needs: [sign-binaries, llm-benchmark]`；`docker` 仅 `needs: [build-binaries]` → 镜像先推、Release 被跳过 | ✅ **已修复** | ① `llm-benchmark` 加 job 级 `continue-on-error: true`；② 从 `release.needs` 移除；③ 门禁结果写入 `$GITHUB_OUTPUT` 与 job summary；④ `docker.needs` 改为 `[build-binaries, sign-binaries]` | ⚠️ 门禁语义由**阻断**降为 **advisory**。若需硬门禁，应在 `ci.yml`（打 tag 前）实现 —— 已在报告中建议，未实施 |
 | **B3**<br>（**派生项**，见下方说明） | 🟠 | ✅ **确认存在** | 实测：`find <空目录> -type f -exec cp …` **退出码 0**（不报错）；`printf "" \| xargs sha256sum` **退出码 0 且产出 0 字节文件**（该空清单会被 cosign 正常签名并发布） | ✅ **已修复** | release 作业新增 4 重断言：同名覆盖检测（`SRC != DST`）、6 个平台二进制计数、`checksums-sha256.txt`/`.sig`/`.pem` 非空（`test -s`）、SBOM 存在；并执行用户侧同款 `sha256sum -c`。负向测试 3/3 全部阻断 | 无 |
 
@@ -54,8 +54,8 @@
 | # | 原判 | 复验结论 | 验证依据 | 修复状态 | 修复内容 | 残留风险 |
 |---|------|---------|---------|---------|---------|---------|
 | **M1** | 🟠 | ✅ **确认存在** | 原代码 `if … elif … else echo "::warning::"` —— 签名失败不阻断 | ✅ **已修复** | 改为**硬失败**：`digest` 为空即 `exit 1`；`cosign sign` 失败即 job 失败。同时移除 `COSIGN_EXPERIMENTAL` | ⚠️ cosign 瞬时故障将导致发布失败（属供应链门的预期行为，可一行回退） |
-| **M2** | 🟠 | ✅ **确认存在** | 实测无 `.git` 目录下 `git describe --tags --always --dirty \|\| echo dev` → 输出 `dev`；`.dockerignore:5` 排除 `.git` | ✅ **已修复** | `Dockerfile.prod` 新增 `ARG VERSION=dev`，ldflags 改 `${VERSION}`；`release.yml` docker 作业加 `build-args: VERSION=${{ github.ref_name }}` | ⚠️ 需 CI 实测镜像内 `ap-admin` 版本号 |
-| **M3** | 🟠 | ✅ **确认存在**（范围比原判更大） | 逐模式核验：`.env` / `.env.local` / `*.pem` / `*.key` / `id_rsa` / `*.p12` **均未排除**。复验中另发现**第二处** `agentprimordia/.env.local`，同样含真实 `AP_LLM_API_KEY`/`OPENAI_API_KEY` | ✅ **已修复** | 两个 `.dockerignore`（仓库根 + `agentprimordia/`）均新增 13 类敏感模式。影响面核验：仅命中 2 个 `.env.local`，`go:embed` 目标（`scaffold/`、`benchmark_cases.json`、`static/editor.html`）**无误伤** | 无 |
+| **M2** | 🟠 | ✅ **确认存在** | 实测无 `.git` 目录下 `git describe --tags --always --dirty \|\| echo dev` → 输出 `dev`；`.dockerignore:5` 排除 `.git` | ✅ **已修复** | `Dockerfile.prod` 新增 `ARG VERSION=dev`，ldflags 改 `${VERSION}`；`release.yml` docker 作业加 `build-args: VERSION=${{ github.ref_name }}` | ⚠️ 需 CI 实测镜像内 `synth-admin` 版本号 |
+| **M3** | 🟠 | ✅ **确认存在**（范围比原判更大） | 逐模式核验：`.env` / `.env.local` / `*.pem` / `*.key` / `id_rsa` / `*.p12` **均未排除**。复验中另发现**第二处** `synth/.env.local`，同样含真实 `SYNTH_LLM_API_KEY`/`OPENAI_API_KEY` | ✅ **已修复** | 两个 `.dockerignore`（仓库根 + `synth/`）均新增 13 类敏感模式。影响面核验：仅命中 2 个 `.env.local`，`go:embed` 目标（`scaffold/`、`benchmark_cases.json`、`static/editor.html`）**无误伤** | 无 |
 | **M4** | 🟠 | ✅ **确认存在** | `release`、`build-binaries`、`generate-sbom`、`llm-benchmark`、`npm-publish` 均未声明 `permissions`，继承工作流级 `contents:write + packages:write` | ✅ **已修复** | 删除工作流级 `permissions`，改为 7 个 job 各自精确声明（构建类 `contents: read`，`release` 为 `contents: write`，`docker` 为 `contents: read + packages: write + id-token: write`） | 无 |
 | **M5** | 🟠 | ✅ **确认存在** | `grep` 列出全部未 pin 引用；`aquasecurity/trivy-action@master` 直接跟踪浮动分支 | ✅ **已修复** | **109 处 action 引用全部 pin 到 commit SHA**（附 `# vX` 可读注释）；`trivy-action` 由 `@master` 改 pin 正式版 **v0.36.0**；`dtolnay/rust-toolchain` 因 pin 后 `github.action_ref` 失效，**补显式 `toolchain: stable`** | ⚠️ pin 需定期更新，建议接入 Dependabot/Renovate |
 | **M6** | 🟠 | ✅ **确认存在** | 4 处 `FROM` 均未 pin digest | ⚠️ **部分修复** | `golang:1.26` → **`golang:1.26.9-alpine`**（精确补丁版，同时落实 M9）；两个 Dockerfile 内已留 TODO 注释 | ⚠️ **digest pin 未完成**：本机无 `docker`/`crane`/`skopeo`，且 `registry-1.docker.io`、`hub.docker.com`、USTC/DockerProxy 镜像源**实测均不可达（HTTP 000）**，无法取得可信 digest。需在有 registry 访问的环境执行 `docker buildx imagetools inspect <image>` 补齐 |
@@ -72,7 +72,7 @@
 | **O2** | 🟡 | ❌ **证伪（原判断有误）** | 用 **glob v13.0.6** 实测：`glob.sync('release-files/**/*')` → `["release-files/sub","release-files/b.bin","release-files/a.txt","release-files/sub/c.txt"]` —— **顶层文件确实被匹配**，原"部分实现下不匹配"的担心不成立 | ✅ **无需修复** | 无（属非缺陷）。重写时顺手改为更显式的 `release-files/*`，仅为可读性，非缺陷修复 | 无 |
 | **O3** | 🟡 | ✅ **部分确认** | 两个 Dockerfile 版本注入方式确实不一致（`.prod` 用 `git describe` → 实际得 `dev`；`.sbomlabel` 用 `ARG VERSION`） | ⚠️ **部分修复** | M2 修复后两者**均为 build-arg 注入，行为已统一**；**未合并为单一 Dockerfile**（属结构性重构，风险高于收益，不建议在发布修正版中夹带） | 🟡 仍存在两个 Dockerfile（可接受，已消除行为漂移） |
 | **O4** | 🟡 | ✅ **确认存在** | `docs/项目深度评估报告-2026-09-28.md` 含 `7.5.0` 字样（历史记录） | ✅ **已修复** | 文首新增「⚠️ 历史快照声明」，明确文中版本号/命令不随发布更新，当前版本以 `VERSION` 与发布说明为准 | 无 |
-| **O5** | 🟡 | ✅ **确认存在** | 实测 `printf "" \| xargs sha256sum` → 退出码 0、产出 **0 字节**文件；原步骤无 `set -euo pipefail` | ✅ **已修复** | 弃用 `xargs`（改用 `sha256sum ap-*`）+ `set -euo pipefail` + `test -s` 非空断言，与 B3 一并闭环 | 无 |
+| **O5** | 🟡 | ✅ **确认存在** | 实测 `printf "" \| xargs sha256sum` → 退出码 0、产出 **0 字节**文件；原步骤无 `set -euo pipefail` | ✅ **已修复** | 弃用 `xargs`（改用 `sha256sum synth-*`）+ `set -euo pipefail` + `test -s` 非空断言，与 B3 一并闭环 | 无 |
 
 ---
 
@@ -84,7 +84,7 @@
 | **M12** | 🟡 | `eval.yml:17` 引用未定义的 `inputs.threshold` | `actionlint` 报 `property "threshold" is not defined in object type {}`；经 `git show v7.5.0:.github/workflows/eval.yml` 比对，**确认是存量问题，非本次引入** | ✅ **已修复** | ① 新增 `workflow_dispatch.inputs.threshold`（`type: string`、`default: '0.8'`，仅手动触发，**不影响既有 push/PR 行为**）；② 阈值经 **env 变量**传入脚本（避免把触发输入插值进 shell 命令行），并在步骤内加数值预检；③ 实测预检逻辑：`0.8`/`0.95` 通过，`abc`/`0.8;rm -rf /`/空值 拒绝。`actionlint` 现**零输出、退出码 0** | 无 |
 | **M14**<br>（新发现） | 🟠 | **两处硬编码的过期工具链默认值**（正是 M9 所修漏洞版本） | 全仓检索 `GOTOOLCHAIN` / `go1.26.[0-8]` 发现：`bench/eval-ci/run_eval.sh:76` 为 `GOTOOLCHAIN="${GOTOOLCHAIN:-go1.26.4}"`；`bench/eval-ci/main.go:39` 为 `flag.String("toolchain", "go1.26.4", …)`。即 eval 链路会强制以 **go1.26.4**（含 M9 所列可达标准库漏洞）运行测试，与仓库其余部分的 1.26.9 基线矛盾 | ✅ **已修复** | 两处默认值均改为 **`go1.26.9`**（保留可被 `GOTOOLCHAIN` 环境变量覆盖的行为）；`gofmt` 后 `go build` / `go vet` 均通过 | 无 |
 | **M15**<br>（新发现） | 🟡 | 3 份**历史评估文档**含旧工具链描述（`docs/技术全量评估.md:34`、`docs/项目评估与路线图.md:28`、`docs/双SDK实施计划.md:39`） | 三份文档分别为 2026-07-18 / 07-26 / 07-31 的时点快照（描述 v2.0.0 / v3.1.0 状态），其中 `项目评估与路线图.md` 自称"当前的全景状态报告" | ⚠️ **部分修复** | 仅对**自称"当前"**的 `docs/项目评估与路线图.md` 加「⚠️ 历史快照声明」，明确工具链下限以 `go.mod` 为准（现为 1.26.9）。**另两份未改动** —— 它们已在文首标注评估日期与基线版本，修改内容会篡改历史记录 | 🟡 另两份文档的旧版本描述保留（属历史记录，非缺陷） |
-| **M13** | 🟠 | `agentprimordia/Dockerfile.prod` 与 `agentprimordia/.dockerignore` **全文件为 CRLF 行尾** | 统计：`Dockerfile.prod` **56/56 行**、`.dockerignore` **28/28 行**为 CRLF；同目录 `Dockerfile.sbomlabel` 为 0 行 CRLF。CRLF 在 Dockerfile 中可能导致行续接 `\` 前的 `\r` 破坏指令解析 | ✅ **已修复** | 两个文件规范化为 LF，现为 0 行 CRLF，与同目录同类文件一致 |
+| **M13** | 🟠 | `synth/Dockerfile.prod` 与 `synth/.dockerignore` **全文件为 CRLF 行尾** | 统计：`Dockerfile.prod` **56/56 行**、`.dockerignore` **28/28 行**为 CRLF；同目录 `Dockerfile.sbomlabel` 为 0 行 CRLF。CRLF 在 Dockerfile 中可能导致行续接 `\` 前的 `\r` 破坏指令解析 | ✅ **已修复** | 两个文件规范化为 LF，现为 0 行 CRLF，与同目录同类文件一致 |
 
 ---
 
@@ -93,10 +93,10 @@
 | # | 验证项 | 命令 / 手段 | 结果 |
 |---|--------|------------|------|
 | 1 | 全工作区构建 | `go build ./...`（root + pgvector + gateway + wasm） | ✅ 全部 exit 0 |
-| 2 | 代码格式 | `gofmt -l agentprimordia/pkg/agent.go` | ✅ 无输出（干净） |
+| 2 | 代码格式 | `gofmt -l synth/pkg/agent.go` | ✅ 无输出（干净） |
 | 3 | 依赖完整性 | `go mod verify` | ✅ `all modules verified` |
-| 4 | 公共 API 测试 | `go test ./agentprimordia/pkg/...` | ✅ `ok`（0.551s / 0.380s） |
-| 5 | **§2.3 沙箱安全断言** | `go test ./agentprimordia/wasm/... ./agentprimordia/internal/security/...` | ✅ `ok`（0.932s / 20.291s） |
+| 4 | 公共 API 测试 | `go test ./synth/pkg/...` | ✅ `ok`（0.551s / 0.380s） |
+| 5 | **§2.3 沙箱安全断言** | `go test ./synth/wasm/... ./synth/internal/security/...` | ✅ `ok`（0.932s / 20.291s） |
 | 6 | 版本一致性门 | `node scripts/version-sync-check.mjs` | ✅ exit 0（Go/TS/Helm/api-contract 四方 = 7.5.1） |
 | 7 | **依赖漏洞扫描** | `govulncheck ./...` | ✅ **`No vulnerabilities found.`**（修复前 11 条可达） |
 | 8 | 工作流静态分析 | `actionlint -no-color` | ✅ **零输出、退出码 0**（修复前有 1 条告警） |
@@ -120,7 +120,7 @@
 |---|--------|--------|------|---------|
 | R1 | **镜像基础镜像未 pin digest**（M6） | 🟠 | 本机无 Docker 工具且所有 registry 端点不可达（实测 HTTP 000） | 在可访问 registry 的环境执行：`docker buildx imagetools inspect golang:1.26.9-alpine` 与 `alpine:3.20`，将 digest 写入两个 Dockerfile（已留 TODO 注释） |
 | R2 | **所有 workflow 改动未经真实 tag 触发验证** | 🟠 | 本地无法运行 GitHub Actions | 推送 `v7.5.2` tag 后，按前置报告 §6.4 冒烟清单逐项验证（尤其第 1/2/4/5 项） |
-| R3 | M7 / M2 的 CI 行为未实测 | 🟡 | 同上 | 同上；重点确认 syft 产出 `sbom-node.spdx.json`、镜像内 `ap-admin --version` 显示版本号而非 `dev` |
+| R3 | M7 / M2 的 CI 行为未实测 | 🟡 | 同上 | 同上；重点确认 syft 产出 `sbom-node.spdx.json`、镜像内 `synth-admin --version` 显示版本号而非 `dev` |
 | R4 | B2 门禁降为 advisory，硬门禁未落 `ci.yml` | 🟡 | 本次仅修复"阻断发布"这一缺陷，未新增 CI 门 | 若需要质量硬门禁，在 `ci.yml` 增加跑分 job 并作为 tag 前置条件 |
 | R5 | M15：另 2 份历史文档（`docs/技术全量评估.md`、`docs/双SDK实施计划.md`）仍含旧工具链描述 | 🟡 | 属历史评估快照，改动会篡改记录 | 无需动作；如需，可加与 `项目评估与路线图.md` 同款的历史快照声明 |
 | R6 | **全局 Go 配置已变更**（M11） | 🟢 | 经你确认后修改 | 无需动作；如需回退：`go env -u GOSUMDB` |
@@ -137,17 +137,17 @@
 - `.github/workflows/ci.yml`、`nightly.yml`、`supply-chain.yml`、`tag-release.yml`、`vscode-release.yml` — action pin + `go-version: 1.26.9`（M5/M9）
 
 **Eval 链路（2 个）**
-- `agentprimordia/bench/eval-ci/run_eval.sh` — `GOTOOLCHAIN` 默认值 `go1.26.4` → `go1.26.9`（M14）
-- `agentprimordia/bench/eval-ci/main.go` — `--toolchain` 默认值 `go1.26.4` → `go1.26.9`（M14）
+- `synth/bench/eval-ci/run_eval.sh` — `GOTOOLCHAIN` 默认值 `go1.26.4` → `go1.26.9`（M14）
+- `synth/bench/eval-ci/main.go` — `--toolchain` 默认值 `go1.26.4` → `go1.26.9`（M14）
 
 **容器（4 个）**
-- `agentprimordia/Dockerfile.prod` — `ARG VERSION` 注入 + 精确补丁版基础镜像 + LF 规范化（M2/M6/M9/M13）
-- `agentprimordia/Dockerfile.sbomlabel` — 精确补丁版基础镜像（M6/M9）
-- `.dockerignore`、`agentprimordia/.dockerignore` — 敏感文件排除（M3/M13）
+- `synth/Dockerfile.prod` — `ARG VERSION` 注入 + 精确补丁版基础镜像 + LF 规范化（M2/M6/M9/M13）
+- `synth/Dockerfile.sbomlabel` — 精确补丁版基础镜像（M6/M9）
+- `.dockerignore`、`synth/.dockerignore` — 敏感文件排除（M3/M13）
 
 **依赖（6 个）**
 - `go.mod`、`go.sum`、`go.work`、`go.work.sum` — 工具链 1.26.9 + x/net v0.61.0（M8/M9）
-- `pgvector/go.mod`、`agentprimordia/operator/go.mod`、`gateway/go.mod`、`wasm/go.mod` — 工具链 1.26.9（M9）
+- `pgvector/go.mod`、`synth/operator/go.mod`、`gateway/go.mod`、`wasm/go.mod` — 工具链 1.26.9（M9）
 
 **文档（3 个）**
 - `docs/发布说明-v7.5.1.md` — 重写（M10）

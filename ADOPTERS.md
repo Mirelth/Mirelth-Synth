@@ -9,7 +9,7 @@
 ## How to add yourself
 
 Open a PR against this file (or comment on
-[discussions](https://github.com/Gleamseekers/AgentPrimordia/discussions)) with
+[discussions](https://github.com/Mirelth/Synth/discussions)) with
 one row. Self-report is the only bar — no logo, no permission, no minimum
 usage. Anonymous entries ("a fintech team in Singapore") are welcome; what helps
 most is the **use case**, not the name.
@@ -25,8 +25,8 @@ most is the **use case**, not the name.
   [`deliverables/gstack/版本路线-7.5.2到8.0-2026-10-10.md`](deliverables/gstack/版本路线-7.5.2到8.0-2026-10-10.md)
   §五). An empty list keeps that gate closed — which is the intended behavior,
   not a bug to route around.
-- **Priorities.** Reported pain in the [quickstart path](agentprimordia/docs/getting-started/five-minutes.md),
-  the [A2A demo](agentprimordia/ecosystem/examples/a2a-handoff/), or the API
+- **Priorities.** Reported pain in the [quickstart path](synth/docs/getting-started/five-minutes.md),
+  the [A2A demo](synth/ecosystem/examples/a2a-handoff/), or the API
   surface outranks internal roadmap items at the same severity.
 - **Nothing else.** No marketing use without asking you first.
 
@@ -34,7 +34,7 @@ most is the **use case**, not the name.
 
 | Channel | Target |
 |---|---|
-| Security reports (see [SECURITY.md](agentprimordia/SECURITY.md)) | Acknowledged within 72h |
+| Security reports (see [SECURITY.md](synth/SECURITY.md)) | Acknowledged within 72h |
 | Bug reports with a reproducer | Triaged within 7 days |
 | Feature requests | Acknowledged within 14 days |
 

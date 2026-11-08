@@ -1,6 +1,6 @@
 ﻿/**
  * 日本語言語パッケージ
- * Japanese locale strings for the AgentPrimordia SDK.
+ * Japanese locale strings for the Synth SDK.
  */
 
 export const ja = {

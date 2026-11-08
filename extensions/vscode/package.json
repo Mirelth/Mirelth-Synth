@@ -1,9 +1,9 @@
 {
-  "name": "agentprimordia-vscode",
-  "displayName": "AgentPrimordia Inspector",
+  "name": "synth-vscode",
+  "displayName": "Synth Inspector",
   "description": "Agent 调试与 ReAct 循环可视化（VS Code Inspector Webview）",
   "version": "5.0.0",
-  "publisher": "agentprimordia",
+  "publisher": "synth",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -19,39 +19,39 @@
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
-    "onCommand:agentprimordia.inspect",
-    "onCommand:agentprimordia.run",
-    "onCommand:agentprimordia.debug",
-    "workspaceContains:.ap.yaml"
+    "onCommand:synth.inspect",
+    "onCommand:synth.run",
+    "onCommand:synth.debug",
+    "workspaceContains:.synth.yaml"
   ],
   "contributes": {
     "commands": [
       {
-        "command": "agentprimordia.inspect",
-        "title": "AgentPrimordia: Open Inspector",
-        "category": "AgentPrimordia"
+        "command": "synth.inspect",
+        "title": "Synth: Open Inspector",
+        "category": "Synth"
       },
       {
-        "command": "agentprimordia.run",
-        "title": "AgentPrimordia: Run Agent",
-        "category": "AgentPrimordia"
+        "command": "synth.run",
+        "title": "Synth: Run Agent",
+        "category": "Synth"
       },
       {
-        "command": "agentprimordia.debug",
-        "title": "AgentPrimordia: Debug Agent",
-        "category": "AgentPrimordia"
+        "command": "synth.debug",
+        "title": "Synth: Debug Agent",
+        "category": "Synth"
       },
       {
-        "command": "agentprimordia.stop",
-        "title": "AgentPrimordia: Stop",
-        "category": "AgentPrimordia"
+        "command": "synth.stop",
+        "title": "Synth: Stop",
+        "category": "Synth"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "agentprimordia.debug",
-          "when": "config.agentprimordia.enableDebug"
+          "command": "synth.debug",
+          "when": "config.synth.enableDebug"
         }
       ]
     },
@@ -61,19 +61,19 @@
       }
     ],
     "configuration": {
-      "title": "AgentPrimordia",
+      "title": "Synth",
       "properties": {
-        "agentprimordia.enableDebug": {
+        "synth.enableDebug": {
           "type": "boolean",
           "default": true,
-          "description": "Enable AgentPrimordia debug provider"
+          "description": "Enable Synth debug provider"
         },
-        "agentprimordia.maxTurns": {
+        "synth.maxTurns": {
           "type": "number",
           "default": 10,
           "description": "Default max turns when launching an agent run"
         },
-        "agentprimordia.streamChunkSize": {
+        "synth.streamChunkSize": {
           "type": "number",
           "default": 16,
           "description": "Tokens per stream chunk in Inspector view"
@@ -85,9 +85,6 @@
     "build": "tsc -p .",
     "test": "vitest run",
     "lint": "eslint src --ext .ts"
-  },
-  "dependencies": {
-    "@agentprimordia/typescript": "file:../typescript"
   },
   "devDependencies": {
     "@types/vscode": "^1.85.0",

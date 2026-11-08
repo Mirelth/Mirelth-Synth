@@ -8,7 +8,7 @@ import { APIError } from './openai.js';
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
 const DEFAULT_TIMEOUT = 120_000;
 const API_VERSION = '2023-06-01';
-const USER_AGENT = 'AgentPrimordia-TS/1.0';
+const USER_AGENT = 'Synth-TS/1.0';
 
 interface AnthropicContentBlock {
   type: 'text' | 'tool_use' | 'tool_result';

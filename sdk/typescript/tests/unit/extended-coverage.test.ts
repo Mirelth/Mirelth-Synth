@@ -27,7 +27,7 @@ describe('CRD Helpers', () => {
       model: 'gpt-4o',
       systemPrompt: 'You are helpful',
     });
-    expect(dep.apiVersion).toBe('agentprimordia.io/v1');
+    expect(dep.apiVersion).toBe('synth.io/v1');
     expect(dep.kind).toBe('AgentDeployment');
     expect(dep.metadata.name).toBe('my-agent');
     expect(dep.spec.replicas).toBe(1);

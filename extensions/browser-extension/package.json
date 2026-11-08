@@ -1,7 +1,7 @@
 {
-  "name": "@agentprimordia/browser-extension",
+  "name": "@synth/browser-extension",
   "version": "5.0.0",
-  "description": "AgentPrimordia Agent DevTools Browser Extension (Chrome/Firefox)",
+  "description": "Synth Agent DevTools Browser Extension (Chrome/Firefox)",
   "type": "module",
   "private": true,
   "scripts": {
@@ -13,7 +13,7 @@
     "package": "npm run build && bestzip extension-v$npm_package_version.zip dist/ icons/ manifest.json"
   },
   "keywords": [
-    "agentprimordia",
+    "synth",
     "browser-extension",
     "devtools",
     "agent",
@@ -25,10 +25,10 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/agentprimordia/ap.git",
+    "url": "https://github.com/Mirelth/Synth.git",
     "directory": "sdk/browser-extension"
   },
-  "homepage": "https://github.com/agentprimordia/ap/tree/main/sdk/browser-extension",
+  "homepage": "https://github.com/Mirelth/Synth/tree/main/sdk/browser-extension",
   "devDependencies": {
     "@types/chrome": "^0.0.260.0",
     "bestzip": "^2.2.1",

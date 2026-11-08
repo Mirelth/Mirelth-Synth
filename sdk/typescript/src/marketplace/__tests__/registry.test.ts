@@ -8,7 +8,7 @@ import { validateTemplate } from '../validator.js';
 import type { AgentTemplate } from '../types.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const TEMPLATES_DIR = resolve(__dirname, '../../../../../agentprimordia/ecosystem/templates');
+const TEMPLATES_DIR = resolve(__dirname, '../../../../../synth/ecosystem/templates');
 
 /** Helper: load a template JSON file from ecosystem/templates/ */
 function loadTemplate(name: string): AgentTemplate {
@@ -40,7 +40,7 @@ describe('marketplace/types — cross-language JSON compatibility', () => {
     expect(tmpl.id).toBe('research-assistant');
     expect(tmpl.name).toBe('Research Assistant');
     expect(tmpl.version).toBe('1.0.0');
-    expect(tmpl.author).toBe('AgentPrimordia Community');
+    expect(tmpl.author).toBe('Synth Community');
     expect(tmpl.category).toBe('research');
     expect(tmpl.system_prompt).toContain('research assistant');
     expect(tmpl.default_provider).toBe('openai');

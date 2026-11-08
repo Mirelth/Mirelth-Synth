@@ -1,0 +1,40 @@
+# systemd 服务单元：自治 Agent 守护进程
+# 安装：sudo cp deploy/autonomous-agent.service /etc/systemd/system/
+# 启用：sudo systemctl enable --now autonomous-agent
+#
+# 配合 v3.3 崩溃恢复：进程异常退出后 systemd 自动重启，
+# Agent 启动时调用 ResumeIncomplete() 从最后检查点恢复。
+
+[Unit]
+Description=Synth Autonomous Agent
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=synth-agent
+Group=synth-agent
+WorkingDirectory=/opt/synth
+ExecStart=/opt/synth/synth autonomy run --daemon
+Restart=always
+RestartSec=5
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+# 环境变量
+Environment=SYNTH_AGENT_NAME=autonomous-monitor
+Environment=SYNTH_CHECKPOINT_PATH=/var/lib/synth/checkpoints
+Environment=SYNTH_LOG_LEVEL=info
+
+# 安全加固
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/synth
+
+# 资源限制
+MemoryMax=512M
+CPUQuota=100%
+
+[Install]
+WantedBy=multi-user.target

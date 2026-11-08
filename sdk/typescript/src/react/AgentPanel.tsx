@@ -20,7 +20,7 @@ function AgentView({ agent, error }: AgentViewProps): ReactNode {
     return <div aria-busy="true">Loading agent...</div>;
   }
   return (
-    <div className="ap-agent-panel">
+    <div className="synth-agent-panel">
       <header>
         <h3>{agent.id}</h3>
         <span className={"badge badge-" + agent.status}>{agent.status}</span>
@@ -45,7 +45,7 @@ export async function AgentPanel({ agentId, apiBase = "http://localhost:8080" }:
 
 export function StreamingOutput(): ReactNode {
   return (
-    <div className="ap-streaming-output" data-stream="sse" aria-live="polite">
+    <div className="synth-streaming-output" data-stream="sse" aria-live="polite">
       <span className="sr-only">Streaming agent response...</span>
     </div>
   );

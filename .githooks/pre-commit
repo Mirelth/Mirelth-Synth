@@ -1,11 +1,11 @@
 #!/bin/bash
-# Pre-commit checks for AgentPrimordia
+# Pre-commit checks for Synth
 # Phase 8.4 引入：强制流程改进
 #
 # 检查项：
 #  1. Deprecated 标注必须包含 "Removed in v" 时点
 #  2. pkg/ 任何 // Stability: 块必须含等级关键字
-#  3. agentprimordia 任何 internal/ 改动不应在 plan 文档之前
+#  3. synth 任何 internal/ 改动不应在 plan 文档之前
 #  4. CHANGELOG.md [Unreleased] 节有内容
 #  5. gofmt 通过
 #
@@ -22,8 +22,8 @@ echo "🔍 Pre-commit checks..."
 # ===== 检查 1: Deprecated 标注完整性 =====
 # grep 所有 // Deprecated: 标注, 验证每个下面有 // Removed in vX.Y.
 # 排除 protobuf 生成文件，其 Deprecated 标注由 protoc 生成且不应手动修改。
-deprecated_count=$(grep -rn "^// Deprecated:" --include="*.go" --exclude="*.pb.go" --exclude="*_grpc.pb.go" agentprimordia/ 2>/dev/null | wc -l)
-removed_in_count=$(grep -rn "Removed in v" --include="*.go" --exclude="*.pb.go" --exclude="*_grpc.pb.go" agentprimordia/ 2>/dev/null | wc -l)
+deprecated_count=$(grep -rn "^// Deprecated:" --include="*.go" --exclude="*.pb.go" --exclude="*_grpc.pb.go" synth/ 2>/dev/null | wc -l)
+removed_in_count=$(grep -rn "Removed in v" --include="*.go" --exclude="*.pb.go" --exclude="*_grpc.pb.go" synth/ 2>/dev/null | wc -l)
 if [ "$deprecated_count" -gt 0 ]; then
     if [ "$removed_in_count" -lt "$deprecated_count" ]; then
         echo "  ❌ Deprecated 标注不完整: $deprecated_count 个 // Deprecated: 但仅 $removed_in_count 个 // Removed in vX.Y."
@@ -38,7 +38,7 @@ else
 fi
 
 # ===== 检查 2: pkg/ Stability 标注 =====
-stability_count=$(grep -rn "^// Stability:" --include="*.go" agentprimordia/pkg/ 2>/dev/null | wc -l)
+stability_count=$(grep -rn "^// Stability:" --include="*.go" synth/pkg/ 2>/dev/null | wc -l)
 if [ "$stability_count" -lt 10 ]; then
     echo "  ⚠️  pkg/ Stability 标注 < 10 个 (当前 $stability_count), 建议每个文件顶部加"
     # 不 fail, 仅为提示
@@ -49,7 +49,7 @@ fi
 # ===== 检查 3: plan 先行 (Phase 8.4 强制) =====
 # 检查是否有 commit 修改了 internal/ 或 pkg/ 但没有 plan 文档
 # 简化版本: 仅警告
-internal_changes=$(git diff --cached --name-only 2>/dev/null | grep -E "^(agentprimordia/)?(internal|pkg)/" | wc -l)
+internal_changes=$(git diff --cached --name-only 2>/dev/null | grep -E "^(synth/)?(internal|pkg)/" | wc -l)
 plan_changes=$(git diff --cached --name-only 2>/dev/null | grep -E "docs/plans/.*\.md$" | wc -l)
 if [ "$internal_changes" -gt 0 ] && [ "$plan_changes" -eq 0 ]; then
     echo "  ⚠️  检测到 internal/ 或 pkg/ 改动, 但没有 docs/plans/*.md 更新"
@@ -66,11 +66,11 @@ if [ -f "docs/CHANGELOG.md" ]; then
 fi
 
 # ===== 检查 5: gofmt =====
-unformatted=$(gofmt -l agentprimordia/ 2>/dev/null | head -5)
+unformatted=$(gofmt -l synth/ 2>/dev/null | head -5)
 if [ -n "$unformatted" ]; then
     echo "  ❌ gofmt 未通过的文件:"
     echo "$unformatted" | sed 's/^/     /'
-    echo "     跑: gofmt -w agentprimordia/"
+    echo "     跑: gofmt -w synth/"
     fail=1
 else
     echo "  ✅ gofmt 通过"

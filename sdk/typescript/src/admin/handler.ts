@@ -288,7 +288,7 @@ export class AdminHandler {
 const ADMIN_HTML = `<!DOCTYPE html>
 <html>
 <head>
-  <title>AgentPrimordia Admin</title>
+  <title>Synth Admin</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
@@ -306,7 +306,7 @@ const ADMIN_HTML = `<!DOCTYPE html>
 </head>
 <body>
   <div class="container">
-    <h1>AgentPrimordia Admin Dashboard</h1>
+    <h1>Synth Admin Dashboard</h1>
     <div class="card">
       <h2>Health</h2>
       <div id="health">Loading...</div>

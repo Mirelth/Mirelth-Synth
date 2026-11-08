@@ -1,8 +1,8 @@
 /**
  * pipeline.test.ts — 蒸馏管道工件消费端测试（矩阵 #2 对等）。
  *
- * Go 权威夹具 agentprimordia/internal/agent/learning/pipeline/testdata/
- * dataset_fixture.json（ap-dataset-v1 数据集 + 影子报告）：
+ * Go 权威夹具 synth/internal/agent/learning/pipeline/testdata/
+ * dataset_fixture.json（synth-dataset-v1 数据集 + 影子报告）：
  *   - TS 解析同一 JSONL → 样例逐条一致（格式契约）；
  *   - TS 互证 sha256/字节数/行数/manifest_id → 与 Go VerifyDataset 同结论；
  *   - TS 复算影子判据 → 与 Go ShadowReport.Passed 同结论（不信任生产方）。
@@ -24,7 +24,7 @@ import {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FIXTURES_PATH = resolve(
   __dirname,
-  '../../../../../agentprimordia/internal/agent/learning/pipeline/testdata/dataset_fixture.json',
+  '../../../../../synth/internal/agent/learning/pipeline/testdata/dataset_fixture.json',
 );
 
 interface DatasetFixture {
@@ -35,7 +35,7 @@ interface DatasetFixture {
 
 const FX = JSON.parse(readFileSync(FIXTURES_PATH, 'utf-8')) as DatasetFixture;
 
-describe('ap-dataset-v1 工件消费端（Go 权威夹具对账）', () => {
+describe('synth-dataset-v1 工件消费端（Go 权威夹具对账）', () => {
   it('解析 Go 产出的 JSONL：样例数与域标签与清单一致', () => {
     const examples = parseDataset(FX.jsonl);
     expect(examples).toHaveLength(FX.manifest.count);

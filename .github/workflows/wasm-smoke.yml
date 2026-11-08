@@ -6,8 +6,8 @@ on:
     # 两者共同决定对外「自带 WASM 工件的安全供应链」叙事，任一变动都需
     # 重新验证 clean-room 可走通（demo 确定性、单次运行约 1~2 秒）。
     paths:
-      - 'agentprimordia/ecosystem/examples/wasm-tool-supply-chain/**'
-      - 'agentprimordia/wasm/**'
+      - 'synth/ecosystem/examples/wasm-tool-supply-chain/**'
+      - 'synth/wasm/**'
   workflow_dispatch:
 
 # 安全基线（对齐 quickstart-smoke.yml / a2a-smoke.yml）：
@@ -37,7 +37,7 @@ jobs:
           set -euo pipefail
           echo "工具链: $(go version)"
           # GOWORK=off：显式关闭 workspace 模式，走模块依赖图（同 quickstart-smoke 口径）
-          GOWORK=off go test ./agentprimordia/ecosystem/examples/wasm-tool-supply-chain/
+          GOWORK=off go test ./synth/ecosystem/examples/wasm-tool-supply-chain/
           echo "OK: wasm-tool-supply-chain 单测通过"
 
       - name: Run demo (outside repo)
@@ -46,9 +46,9 @@ jobs:
         # go install 代理），证明 demo 不依赖仓库内相对状态。
         working-directory: ${{ runner.temp }}
         env:
-          # 显式置空：不设 AP_LLM_API_KEY → 走零凭据脚本化 provider
+          # 显式置空：不设 SYNTH_LLM_API_KEY → 走零凭据脚本化 provider
           # （不发任何网络请求，CI 无需任何密钥）
-          AP_LLM_API_KEY: ''
+          SYNTH_LLM_API_KEY: ''
         run: |
           set -euo pipefail
           SMOKE_DIR="${RUNNER_TEMP}/wasm-smoke"
@@ -57,7 +57,7 @@ jobs:
           cd "${SMOKE_DIR}"
           # set +e 包裹：命令替换失败时先拿到退出码再决定（set -e 下赋值失败会直接退出）
           set +e
-          OUTPUT="$("${GITHUB_WORKSPACE}/agentprimordia/ecosystem/examples/wasm-tool-supply-chain/run.sh" 2>&1)"
+          OUTPUT="$("${GITHUB_WORKSPACE}/synth/ecosystem/examples/wasm-tool-supply-chain/run.sh" 2>&1)"
           RC=$?
           set -e
           echo "${OUTPUT}"

@@ -76,7 +76,7 @@ function git(workdir: string, ...args: string[]): string {
 }
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Coding Harness Example ===\n');
+  console.log('=== Synth TS SDK: Coding Harness Example ===\n');
 
   // 1. 准备临时工作区（真实场景替换为项目目录）
   const workdir = fs.mkdtempSync(path.join(os.tmpdir(), 'coding-agent-'));
@@ -138,8 +138,8 @@ function scriptLLM(workdir: string): ScriptedProvider {
   p.withResponse(pipelinePlan); // 根任务 Planning：分解为 5 个子任务
 
   const fileContent =
-    "console.log('Hello from AgentPrimordia TS coding harness!');\n" +
-    "export const hello = (): string => 'Hello from AgentPrimordia TS coding harness!';\n";
+    "console.log('Hello from Synth TS coding harness!');\n" +
+    "export const hello = (): string => 'Hello from Synth TS coding harness!';\n";
 
   // 子任务1：编写（filesystem.write）
   p.withToolResponse([{
@@ -154,7 +154,7 @@ function scriptLLM(workdir: string): ScriptedProvider {
     id: 'call_run', name: 'shell',
     arguments: JSON.stringify({ command: 'node hello.ts', cwd: workdir }),
   }])
-    .withToolResponse([], '运行成功：Hello from AgentPrimordia TS coding harness!')
+    .withToolResponse([], '运行成功：Hello from Synth TS coding harness!')
     .withResponse(lowCritique);
 
   // 子任务3：测试（shell 校验工作区）

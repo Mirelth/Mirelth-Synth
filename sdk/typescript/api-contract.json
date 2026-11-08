@@ -1433,21 +1433,21 @@
           "returns": [
             "bool"
           ],
-          "doc": "ShouldResume 检查环境变量 AP_RESUME 是否为 \"1\"。"
+          "doc": "ShouldResume 检查环境变量 SYNTH_RESUME 是否为 \"1\"。"
         },
         {
           "name": "ResumeAgentID",
           "returns": [
             "string"
           ],
-          "doc": "ResumeAgentID 返回需要通过 `ap loop resume` 恢复的 Agent 名称。"
+          "doc": "ResumeAgentID 返回需要通过 `synth loop resume` 恢复的 Agent 名称。"
         },
         {
           "name": "ResumePrompt",
           "returns": [
             "string"
           ],
-          "doc": "ResumePrompt 返回 `ap loop resume` 通过 --prompt 参数传入的提示消息。"
+          "doc": "ResumePrompt 返回 `synth loop resume` 通过 --prompt 参数传入的提示消息。"
         }
       ],
       "constants": [
@@ -1681,7 +1681,7 @@
         {
           "name": "Version",
           "value": "\"7.8.0\"",
-          "doc": "Version 是 AgentPrimordia 框架的当前版本号"
+          "doc": "Version 是 Synth 框架的当前版本号"
         }
       ],
       "variables": [
@@ -4371,7 +4371,7 @@
         },
         {
           "name": "ConfigFromEnv",
-          "doc": "ConfigFromEnv 从环境变量读取 LLM 配置（AP_LLM_API_KEY, AP_LLM_BASE_URL, AP_LLM_MODEL 等）"
+          "doc": "ConfigFromEnv 从环境变量读取 LLM 配置（SYNTH_LLM_API_KEY, SYNTH_LLM_BASE_URL, SYNTH_LLM_MODEL 等）"
         },
         {
           "name": "NewInMemoryCache",
@@ -5174,7 +5174,7 @@
         {
           "name": "AppOption",
           "kind": "alias",
-          "doc": "AppOption 是 Agent 行为配置的函数选项（pkg/ap 级别）。"
+          "doc": "AppOption 是 Agent 行为配置的函数选项（pkg/synth 级别）。"
         },
         {
           "name": "Option",

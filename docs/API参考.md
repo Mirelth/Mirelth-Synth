@@ -1,8 +1,8 @@
-# AgentPrimordia API 参考
+# Synth API 参考
 
-> 包路径：`agentprimordia/pkg` → 导入别名 `ap`
+> 包路径：`synth/pkg` → 导入别名 `synth`
 >
-> 版本：`ap.Version` = `"7.8.0"` (Go) / `@agentprimordia/sdk` `7.8.0` (TypeScript)
+> 版本：`synth.Version` = `"7.8.0"` (Go) / `@synth/sdk` `7.8.0` (TypeScript)
 >
 > **TypeScript SDK 与 Go 框架 100% 功能对等**，下方 API 参考 covers Go 公共 API。
 > TypeScript SDK 完整 API 参考见 [sdk/typescript/docs/api/index.md](../sdk/typescript/docs/api/index.md)。
@@ -28,10 +28,10 @@ type Agent interface {
 `ReActAgent` 是基于 ReAct（推理+行动）循环的 Agent 实现，是框架的核心引擎。
 
 ```go
-// 推荐入口：ap.NewAgent（v0.7.0 起，不暴露废弃字段）
-agent, err := ap.NewAgent("my-agent", "你是一个助手", provider,
-    ap.WithMaxTurns(50),
-    ap.WithToolkit(registry),
+// 推荐入口：synth.NewAgent（v0.7.0 起，不暴露废弃字段）
+agent, err := synth.NewAgent("my-agent", "你是一个助手", provider,
+    synth.WithMaxTurns(50),
+    synth.WithToolkit(registry),
 )
 if err != nil {
     log.Fatal(err)
@@ -39,7 +39,7 @@ if err != nil {
 
 // ReActAgent 类型仍可用，但请通过 NewAgent 创建实例
 
-resp, err := agent.Run(ctx, ap.UserMessage("你好"))
+resp, err := agent.Run(ctx, synth.UserMessage("你好"))
 ```
 
 ### ReActConfig
@@ -73,8 +73,8 @@ resp, err := agent.Run(ctx, ap.UserMessage("你好"))
 快捷函数：
 
 ```go
-msg := ap.UserMessage("用户输入")
-msg := ap.SystemMessage("系统指令")
+msg := synth.UserMessage("用户输入")
+msg := synth.SystemMessage("系统指令")
 ```
 
 ### AgentStatus / AgentStats
@@ -104,12 +104,12 @@ msg := ap.SystemMessage("系统指令")
 | `StreamEventError` | 错误 |
 
 ```go
-ch, err := agent.StreamRun(ctx, ap.UserMessage("你好"))
+ch, err := agent.StreamRun(ctx, synth.UserMessage("你好"))
 for event := range ch {
     switch event.Type {
-    case ap.StreamEventToken:
+    case synth.StreamEventToken:
         fmt.Print(event.Content)
-    case ap.StreamEventComplete:
+    case synth.StreamEventComplete:
         fmt.Println("\n完成")
     }
 }
@@ -120,7 +120,7 @@ for event := range ch {
 支持 `{{.Variable}}` 格式的系统提示词模板，可自动注入 Agent 名称、权限规则等变量。
 
 ```go
-tmpl := ap.NewPromptTemplate("你是 {{.AgentName}}，一个专业的助手")
+tmpl := synth.NewPromptTemplate("你是 {{.AgentName}}，一个专业的助手")
 tmpl = tmpl.WithVar("AgentName", "CodeBot")
 rendered, _ := tmpl.Render()
 ```
@@ -151,12 +151,12 @@ type MessageBus interface {
 `LocalMessageBus` 是进程内消息总线实现，支持注册、发送、广播和订阅。
 
 ```go
-bus := ap.NewLocalMessageBus()
+bus := synth.NewLocalMessageBus()
 bus.Register("agent-1", handler)
-resp, err := bus.Send(ctx, &ap.BusMessage{
+resp, err := bus.Send(ctx, &synth.BusMessage{
     From:    "coordinator",
     To:      "agent-1",
-    Type:    ap.BusMsgTaskRequest,
+    Type:    synth.BusMsgTaskRequest,
     Content: "请处理这个任务",
 })
 ```
@@ -181,7 +181,7 @@ resp, err := bus.Send(ctx, &ap.BusMessage{
 `Transport` 是跨进程 Agent 通信传输层接口，`HTTPTransport` 是基于 HTTP 的实现。
 
 ```go
-transport := ap.NewHTTPTransport()
+transport := synth.NewHTTPTransport()
 transport.Start(":8080")
 ```
 
@@ -194,13 +194,13 @@ transport.Start(":8080")
 `Pipeline` 是顺序编排器，前一个 Agent 的输出作为后一个的输入。支持条件跳过步骤。
 
 ```go
-pipeline := ap.NewPipeline(
-    ap.PipelineStep{Name: "分析", Agent: analyzer},
-    ap.PipelineStep{Name: "生成", Agent: generator},
-    ap.PipelineStep{
+pipeline := synth.NewPipeline(
+    synth.PipelineStep{Name: "分析", Agent: analyzer},
+    synth.PipelineStep{Name: "生成", Agent: generator},
+    synth.PipelineStep{
         Name:      "审核",
         Agent:     reviewer,
-        Condition: func(ctx context.Context, prev *ap.StepResult) bool {
+        Condition: func(ctx context.Context, prev *synth.StepResult) bool {
             return prev != nil && !prev.Skipped
         },
     },
@@ -214,8 +214,8 @@ fmt.Println(result.Final)
 `Handoff` 是动态交接编排器，支持 Agent 间根据路由函数自动交接。
 
 ```go
-handoff := ap.NewHandoff(ap.HandoffConfig{
-    Agents: []ap.Agent{coder, reviewer, tester},
+handoff := synth.NewHandoff(synth.HandoffConfig{
+    Agents: []synth.Agent{coder, reviewer, tester},
     Router: func(ctx context.Context, input string) int {
         if strings.Contains(input, "代码") { return 0 }
         if strings.Contains(input, "审核") { return 1 }
@@ -232,7 +232,7 @@ result, err := handoff.Run(ctx, "请写代码实现排序")
 `ParallelRun` 并行执行多个 Agent 并汇总结果。
 
 ```go
-result, err := ap.ParallelRun(ctx, []ap.Agent{agent1, agent2, agent3}, "输入")
+result, err := synth.ParallelRun(ctx, []synth.Agent{agent1, agent2, agent3}, "输入")
 for _, r := range result.Results {
     fmt.Printf("Agent %s: %s\n", r.AgentName, r.Output)
 }
@@ -243,7 +243,7 @@ for _, r := range result.Results {
 有向无环图工作流引擎，支持条件边、并行节点、重试和错误处理。
 
 ```go
-dag, err := ap.NewDAGBuilder("data-analysis").
+dag, err := synth.NewDAGBuilder("data-analysis").
     Node("collect", collectAgent).
     Node("analyze", analyzeAgent).
     Node("report", reportAgent).
@@ -273,8 +273,8 @@ result, err := dag.Run(ctx, "分析销售数据")
 | `Supervisor` | 主管模式，一个 Supervisor Agent 负责分配任务给 Worker Agent |
 
 ```go
-chat := ap.NewGroupChat(ap.GroupChatConfig{
-    Agents:    []ap.Agent{agent1, agent2, agent3},
+chat := synth.NewGroupChat(synth.GroupChatConfig{
+    Agents:    []synth.Agent{agent1, agent2, agent3},
     MaxRounds: 10,
     // SelectSpeaker 可选，默认为轮询（RoundRobin）
 })
@@ -296,13 +296,13 @@ result, err := chat.Run(ctx, "讨论 Go 1.26 的新特性")
 | `RAGModeOnDemand` | 仅当 Agent 主动调用 knowledge_search 工具时查询 |
 
 ```go
-ragStore := ap.NewRAGStore(memStore, embedder)
-ragProvider := ap.NewRAGProviderAdapter(ragStore)
+ragStore := synth.NewRAGStore(memStore, embedder)
+ragProvider := synth.NewRAGProviderAdapter(ragStore)
 
-agent, err := ap.NewAgent("rag-agent", "你是一个 RAG 助手", provider,
-    ap.WithRAG(ap.RAGConfig{
+agent, err := synth.NewAgent("rag-agent", "你是一个 RAG 助手", provider,
+    synth.WithRAG(synth.RAGConfig{
         Provider: ragProvider,
-        Mode:     ap.RAGModeAuto,
+        Mode:     synth.RAGModeAuto,
         TopK:     5,
         MinScore: 0.3,
     }),
@@ -320,11 +320,11 @@ RAG 检索返回的文档片段，包含 ID、内容、相关度分数和来源�
 ### Tool / ToolRegistry / ToolExecutor
 
 ```go
-registry := ap.NewToolRegistry()
+registry := synth.NewToolRegistry()
 registry.Register(myTool)
 
-executor := ap.NewToolExecutor(registry)
-result, err := executor.Execute(ctx, &ap.ToolFunctionCall{
+executor := synth.NewToolExecutor(registry)
+result, err := executor.Execute(ctx, &synth.ToolFunctionCall{
     ID:   "call_1",
     Name: "my_tool",
     Args: `{"key": "value"}`,
@@ -334,10 +334,10 @@ result, err := executor.Execute(ctx, &ap.ToolFunctionCall{
 ### ToolPermission / ScopePolicy / FileScopePolicy
 
 ```go
-policy := ap.NewFileScopePolicy()
+policy := synth.NewFileScopePolicy()
 policy.SetScope("agent-1", []string{"/src/", "/docs/"})
 
-executor := ap.NewToolExecutor(registry).WithScopePolicy(policy, "agent-1")
+executor := synth.NewToolExecutor(registry).WithScopePolicy(policy, "agent-1")
 ```
 
 ### 内置工具
@@ -352,7 +352,7 @@ executor := ap.NewToolExecutor(registry).WithScopePolicy(policy, "agent-1")
 ### ToolkitConfig / DefaultToolkit / MinimalToolkit
 
 ```go
-registry, err := ap.DefaultToolkit(ap.ToolkitConfig{
+registry, err := synth.DefaultToolkit(synth.ToolkitConfig{
     RootDir:      "/workspace",
     EnableFS:     true,
     EnableShell:  true,
@@ -363,7 +363,7 @@ registry, err := ap.DefaultToolkit(ap.ToolkitConfig{
     FileLock:     fileLockMgr,
 })
 
-registry, err := ap.MinimalToolkit("/workspace")
+registry, err := synth.MinimalToolkit("/workspace")
 ```
 
 ---
@@ -402,15 +402,15 @@ type Memory interface {
 基于 SQLite + FTS5 的记忆存储实现，支持全文搜索和自动清理。
 
 ```go
-store, err := ap.NewSQLiteStore("./data/memory.db")
-store, err := ap.WithInMemory()  // 测试用内存模式
+store, err := synth.NewSQLiteStore("./data/memory.db")
+store, err := synth.WithInMemory()  // 测试用内存模式
 ```
 
 ### VectorStore / EmbeddingProvider
 
 ```go
-vecStore := ap.NewVectorStore(1536)
-embedder := ap.NewEmbeddingAdapter(llmProvider, 1536)
+vecStore := synth.NewVectorStore(1536)
+embedder := synth.NewEmbeddingAdapter(llmProvider, 1536)
 ```
 
 ### RAGStore
@@ -418,19 +418,19 @@ embedder := ap.NewEmbeddingAdapter(llmProvider, 1536)
 封装 Memory + VectorStore + EmbeddingProvider，提供混合 RAG 检索能力（FTS5 + 向量），支持 RRF 融合。
 
 ```go
-ragStore := ap.NewRAGStore(store, embedder)
+ragStore := synth.NewRAGStore(store, embedder)
 results, err := ragStore.HybridSearch(ctx, "查询内容", 5)
 
 // RRF 融合模式（运行时切换）
-ragStore = ap.NewRAGStoreWithFusionConfig(store, embedder, ap.RAGFusionConfig{
-    FusionMode:    ap.FusionRRF,  // Reciprocal Rank Fusion
+ragStore = synth.NewRAGStoreWithFusionConfig(store, embedder, synth.RAGFusionConfig{
+    FusionMode:    synth.FusionRRF,  // Reciprocal Rank Fusion
     RRFK:          60,
     OverFetchSize: 5,
 })
 
 // 运行时切换回 Linear 模式
-ragStore.SetFusionConfig(ap.RAGFusionConfig{
-    FusionMode:   ap.FusionLinear,
+ragStore.SetFusionConfig(synth.RAGFusionConfig{
+    FusionMode:   synth.FusionLinear,
     FTSWeight:    0.4,
     VectorWeight: 0.6,
 })
@@ -470,9 +470,9 @@ ragStore.SetFusionConfig(ap.RAGFusionConfig{
 | `DocumentPipeline` | 文档处理管道（加载 → 切分） |
 
 ```go
-pipeline := ap.NewDocumentPipeline(
-    ap.NewTextFileLoader(),
-    ap.NewRecursiveSplitter(1000, 200),
+pipeline := synth.NewDocumentPipeline(
+    synth.NewTextFileLoader(),
+    synth.NewRecursiveSplitter(1000, 200),
 )
 chunks, err := pipeline.Process(ctx, "/path/to/docs")
 ```
@@ -519,7 +519,7 @@ type Embedder interface {
 ### Config
 
 ```go
-cfg := ap.Config{
+cfg := synth.Config{
     APIKey:      "sk-xxx",
     Model:       "gpt-4o",
     Temperature: 0.7,
@@ -530,7 +530,7 @@ cfg := ap.Config{
 ### AzureConfig
 
 ```go
-azureCfg := ap.AzureConfig{
+azureCfg := synth.AzureConfig{
     ResourceName:   "my-resource",
     DeploymentName: "gpt-4o-deployment",
     APIVersion:     "2024-02-15-preview",
@@ -543,7 +543,7 @@ azureCfg := ap.AzureConfig{
 弹性提供者支持重试、熔断和降级。
 
 ```go
-resilient := ap.NewResilientProvider(primary, ap.DefaultResilientConfig())
+resilient := synth.NewResilientProvider(primary, synth.DefaultResilientConfig())
 resilient.AddFallback(fallback1)
 resilient.AddFallback(fallback2)
 ```
@@ -576,10 +576,10 @@ resilient.AddFallback(fallback2)
 `Pool` 是多 Agent 并发调度器，支持任务分发、重试、取消和会话管理。
 
 ```go
-pool := ap.NewPool(ap.PoolConfig{
+pool := synth.NewPool(synth.PoolConfig{
     MaxConcurrency: 10,
     Timeout:        5 * time.Minute,
-    RetryPolicy: ap.RetryPolicy{
+    RetryPolicy: synth.RetryPolicy{
         MaxRetries:      3,
         Backoff:         time.Second,
         RetryableErrors: []string{"rate_limit"},
@@ -589,7 +589,7 @@ pool.SetModel(provider)
 pool.SetToolkit(registry)
 defer pool.Close()
 
-results, err := pool.Dispatch(ctx, []ap.TaskConfig{
+results, err := pool.Dispatch(ctx, []synth.TaskConfig{
     {ID: "t1", Title: "任务1", Prompt: "执行任务1"},
     {ID: "t2", Title: "任务2", Prompt: "执行任务2"},
 })
@@ -600,10 +600,10 @@ results, err := pool.Dispatch(ctx, []ap.TaskConfig{
 自定义 Agent 创建逻辑：
 
 ```go
-pool.SetAgentFactory(func(cfg ap.AgentFactoryConfig) ap.Agent {
-    agent, _ := ap.NewAgent(cfg.Name, cfg.SystemPrompt, provider,
-        ap.WithMaxTurns(cfg.MaxTurns),
-        ap.WithMemory(memAdapter),
+pool.SetAgentFactory(func(cfg synth.AgentFactoryConfig) synth.Agent {
+    agent, _ := synth.NewAgent(cfg.Name, cfg.SystemPrompt, provider,
+        synth.WithMaxTurns(cfg.MaxTurns),
+        synth.WithMemory(memAdapter),
     )
     return agent
 })
@@ -653,12 +653,12 @@ pool.SetAgentFactory(func(cfg ap.AgentFactoryConfig) ap.Agent {
 | `HookAfterParallelAgent` | 并行 Agent 后 |
 
 ```go
-hooks := ap.NewHookManager()
-hooks.Register(ap.HookBeforeTool, func(ctx context.Context, hctx *ap.HookContext) error {
+hooks := synth.NewHookManager()
+hooks.Register(synth.HookBeforeTool, func(ctx context.Context, hctx *synth.HookContext) error {
     log.Printf("即将执行工具: %s", hctx.ToolCall.Name)
     return nil
 })
-hooks.RegisterWithPriority(ap.HookOnError, myErrorHandler, 10)
+hooks.RegisterWithPriority(synth.HookOnError, myErrorHandler, 10)
 ```
 
 ---
@@ -679,21 +679,21 @@ hooks.RegisterWithPriority(ap.HookOnError, myErrorHandler, 10)
 完整组装示例：
 
 ```go
-store, _ := ap.NewSQLiteStore("./data/memory.db")
-embedder := ap.NewEmbeddingAdapter(llmProvider, 1536)
-ragStore := ap.NewRAGStore(store, embedder)
+store, _ := synth.NewSQLiteStore("./data/memory.db")
+embedder := synth.NewEmbeddingAdapter(llmProvider, 1536)
+ragStore := synth.NewRAGStore(store, embedder)
 
-agent, err := ap.NewAgent("full-agent", "你是一个助手", llmProvider,
-    ap.WithMaxTurns(50),
-    ap.WithToolkit(registry),
-    ap.WithMemory(store),
-    ap.WithRAG(ap.RAGConfig{
-        Provider: ap.NewRAGProviderAdapter(ragStore),
-        Mode:     ap.RAGModeAuto,
+agent, err := synth.NewAgent("full-agent", "你是一个助手", llmProvider,
+    synth.WithMaxTurns(50),
+    synth.WithToolkit(registry),
+    synth.WithMemory(store),
+    synth.WithRAG(synth.RAGConfig{
+        Provider: synth.NewRAGProviderAdapter(ragStore),
+        Mode:     synth.RAGModeAuto,
         TopK:     5,
     }),
-    ap.WithEvents(ap.NewEventBusAdapter(ap.NewBus())),
-    ap.WithMetrics(ap.NewMetrics()),
+    synth.WithEvents(synth.NewEventBusAdapter(synth.NewBus())),
+    synth.WithMetrics(synth.NewMetrics()),
 )
 ```
 
@@ -704,11 +704,11 @@ agent, err := ap.NewAgent("full-agent", "你是一个助手", llmProvider,
 ### Bus / Event / EventType
 
 ```go
-bus := ap.NewBus()
-bus.Subscribe(ap.EventAgentStart, func(evt ap.Event) {
+bus := synth.NewBus()
+bus.Subscribe(synth.EventAgentStart, func(evt synth.Event) {
     log.Printf("Agent 启动: %s", evt.Source)
 })
-bus.PublishAsync(ap.Event{Type: ap.EventAgentStart, Source: "my-agent"})
+bus.PublishAsync(synth.Event{Type: synth.EventAgentStart, Source: "my-agent"})
 ```
 
 事件类型：`EventAgentStart` / `EventAgentStop` / `EventAgentPanic` / `EventAgentError` / `EventAgentResume` / `EventTurnStart` / `EventTurnEnd` / `EventToolCall` / `EventToolResult` / `EventLLMCall` / `EventLLMResponse` / `EventPoolDispatch` / `EventPoolComplete`
@@ -720,9 +720,9 @@ bus.PublishAsync(ap.Event{Type: ap.EventAgentStart, Source: "my-agent"})
 ### ACL / ACLRule / AccessLevel
 
 ```go
-acl := ap.NewACL()
-acl.AddRule(ap.ACLRule{Agent: "agent-1", Resource: "/src/", Level: ap.AccessRead | ap.AccessWrite})
-acl.AddRule(ap.ACLRule{Agent: "agent-2", Resource: "/src/", Level: ap.AccessRead})
+acl := synth.NewACL()
+acl.AddRule(synth.ACLRule{Agent: "agent-1", Resource: "/src/", Level: synth.AccessRead | synth.AccessWrite})
+acl.AddRule(synth.ACLRule{Agent: "agent-2", Resource: "/src/", Level: synth.AccessRead})
 ```
 
 访问级别：`AccessNone` / `AccessRead` / `AccessWrite` / `AccessExecute` / `AccessAll`
@@ -730,7 +730,7 @@ acl.AddRule(ap.ACLRule{Agent: "agent-2", Resource: "/src/", Level: ap.AccessRead
 ### Sandbox
 
 ```go
-sandbox := ap.NewSandbox()
+sandbox := synth.NewSandbox()
 sandbox.AllowCommand("ls")
 sandbox.AllowCommand("cat")
 sandbox.AllowPath("/workspace")
@@ -743,7 +743,7 @@ sandbox.AllowPath("/workspace")
 ### FileLockManager
 
 ```go
-fl := ap.NewFileLockManager()
+fl := synth.NewFileLockManager()
 lock, _ := fl.Acquire(ctx, "/workspace/file.go")
 defer fl.Release("/workspace/file.go")
 ```
@@ -757,7 +757,7 @@ scopes := map[string][]string{
     "agent-1": {"/src/"},
     "agent-2": {"/src/"},
 }
-err := ap.ValidateScopes(scopes) // 返回 ErrScopeOverlap
+err := synth.ValidateScopes(scopes) // 返回 ErrScopeOverlap
 ```
 
 ---
@@ -767,12 +767,12 @@ err := ap.ValidateScopes(scopes) // 返回 ErrScopeOverlap
 ### AgentMetricsCollector / Histogram
 
 ```go
-m := ap.NewMetrics()
+m := synth.NewMetrics()
 m.RecordLLMCall(duration, nil)
 m.RecordToolCall(duration, nil)
 m.RecordTurn(duration)
 
-hist := ap.NewHistogram([]float64{0.1, 0.5, 1.0, 5.0})
+hist := synth.NewHistogram([]float64{0.1, 0.5, 1.0, 5.0})
 hist.Observe(0.3)
 snapshot := hist.Snapshot()
 ```
@@ -794,9 +794,9 @@ snapshot := hist.Snapshot()
 ### CheckpointStore / SQLiteCheckpointStore
 
 ```go
-cpStore, _ := ap.NewSQLiteCheckpointStore("./data/checkpoints.db")
+cpStore, _ := synth.NewSQLiteCheckpointStore("./data/checkpoints.db")
 // 或内存模式
-cpStore := ap.InMemoryCheckpointStore()
+cpStore := synth.InMemoryCheckpointStore()
 ```
 
 ### AgentState
@@ -870,13 +870,13 @@ Agent 的持久化状态，包含消息历史、轮次和状态信息。
 ### 安装
 
 ```bash
-npm install @agentprimordia/sdk
+npm install @synth/sdk
 npm install better-sqlite3  # 可选：SQLite 持久化
 ```
 
 ### 核心 API 对照表
 
-| Go (`ap.`) | TypeScript (`@agentprimordia/sdk`) | 说明 |
+| Go (`synth.`) | TypeScript (`@synth/sdk`) | 说明 |
 |---|---|---|
 | `NewAgent()` | `new ReActAgent()` / `newAgent()` | 创建 Agent |
 | `NewOpenAIProvider()` | `new OpenAIProvider()` | OpenAI |
@@ -902,7 +902,7 @@ import {
   Inspector, InspectorServer, DebugServer, // 调试器 HTTP 服务
   SQLiteCheckpointStore,                 // SQLite 检查点持久化
   HealthServer,                          // /healthz /readyz /livez
-} from '@agentprimordia/sdk';
+} from '@synth/sdk';
 ```
 
 详见 [TypeScript SDK API 参考](../sdk/typescript/docs/api/index.md)。
@@ -911,8 +911,8 @@ import {
 
 | API | 版本 | 说明 | 文档 |
 |-----|------|------|------|
-| `ap.ProviderFromEnv()` | v4.1 | env 驱动真实 LLM（AP_LLM_*） | guides/第三方集成.md |
-| `ap.NewOpenAIASR/NewOpenAITTS` | v4.1 | 真实语音适配器（本地免 key） | guides/实时通信.md |
+| `synth.ProviderFromEnv()` | v4.1 | env 驱动真实 LLM（SYNTH_LLM_*） | guides/第三方集成.md |
+| `synth.NewOpenAIASR/NewOpenAITTS` | v4.1 | 真实语音适配器（本地免 key） | guides/实时通信.md |
 | `realtime.Runtime.ProcessTurnStream` | v4.3 | 流式语音链路 | guides/实时通信.md |
 | `skills.SignSkillManifest/InstallSkillFromManifest` | v4.4 | 技能市场发布/订阅（验签） | guides/发布指南.md |
 | `memory.NewPhysicalTenantStore` | v4.6 | 物理分库强隔离 | 安全态势.md |

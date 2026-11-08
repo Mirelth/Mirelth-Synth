@@ -37,4 +37,4 @@ inkscape icon.svg --export-type=png --export-width=128 --export-height=128 --exp
 ## Design
 
 The icon is a rounded square with a purple gradient background (`#6C5CE7 → #a29bfe`)
-and the letters "AP" in white — matching the AgentPrimordia brand identity.
+and the letters "Synth" in white — matching the Synth brand identity.

@@ -146,7 +146,7 @@ export class MemKVStore implements KVStore {
   }
 }
 
-const DISCOVERY_KEY_PREFIX = 'agentprimordia/discovery/';
+const DISCOVERY_KEY_PREFIX = 'synth/discovery/';
 
 /** 分布式发现配置 */
 export interface DistributedDiscoveryConfig {

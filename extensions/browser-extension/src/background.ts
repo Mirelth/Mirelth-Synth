@@ -12,7 +12,7 @@ import { defaultExtensionState, copy, type ExtensionMessage, type ExtensionState
 import { StudioApiClient, ApiError } from './shared/api.js';
 
 /** 存储 key */
-const STORAGE_KEY = 'ap_extension_state';
+const STORAGE_KEY = 'synth_extension_state';
 /** 默认轮询间隔（毫秒） */
 const POLL_INTERVAL_MS = 10_000;
 

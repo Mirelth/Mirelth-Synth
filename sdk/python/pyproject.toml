@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.backends._legacy:_Backend"
 
 [project]
-name = "agentprimordia"
+name = "synth"
 version = "2.0.0"
-description = "AgentPrimordia AI Agent Framework - Python Remote HTTP Client (lightweight REST API client, not a full SDK)"
+description = "Synth AI Agent Framework - Python Remote HTTP Client (lightweight REST API client, not a full SDK)"
 requires-python = ">=3.9"
 dependencies = []
 
@@ -13,4 +13,4 @@ dependencies = []
 dev = ["pytest", "mypy", "ruff"]
 
 [tool.setuptools.packages.find]
-include = ["agentprimordia*"]
+include = ["synth*"]

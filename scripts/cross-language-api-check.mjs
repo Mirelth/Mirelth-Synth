@@ -175,7 +175,7 @@ console.log('[1/5] 运行 Go API 提取器...');
 const tmpContract = resolve(tmpdir(), 'go-api-contract-check.json');
 try {
   execFileSync('go', ['run', './scripts/api-extract/', '-output', tmpContract],
-    { cwd: resolve(REPO_ROOT, 'agentprimordia'), stdio: 'pipe', timeout: 120000 }
+    { cwd: resolve(REPO_ROOT, 'synth'), stdio: 'pipe', timeout: 120000 }
   );
   console.log('  OK: Go API 提取完成\n');
 } catch (e) {

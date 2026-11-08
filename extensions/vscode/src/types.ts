@@ -101,7 +101,7 @@ export type InspectorMessage =
 export interface AgentDebugConfig {
   /** 配置名称 */
   name: string;
-  /** Agent 名称（从 .ap.yaml 推断） */
+  /** Agent 名称（从 .synth.yaml 推断） */
   agentName: string;
   /** 系统 prompt */
   systemPrompt: string;
@@ -115,7 +115,7 @@ export interface AgentDebugConfig {
   cwd: string;
 }
 
-/** .ap.yaml 顶层结构（最小子集） */
+/** .synth.yaml 顶层结构（最小子集） */
 export interface ApYamlConfig {
   /** Agent 名称 */
   name?: string;

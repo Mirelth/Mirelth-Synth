@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ============================================================
-# AgentPrimordia Platform - one-command dev platform (macOS / Linux)
+# Synth Platform - one-command dev platform (macOS / Linux)
 #
 # v5.0-1 一体化一键部署（开发形态）：拉起全部能力入口
 #   - Studio 后端（:8090，真实引擎注入模式）
@@ -14,15 +14,15 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-AGENT_DIR="$ROOT/agentprimordia"
-PORT="${AP_PLATFORM_PORT:-8090}"
+AGENT_DIR="$ROOT/synth"
+PORT="${SYNTH_PLATFORM_PORT:-8090}"
 
 if ! command -v go >/dev/null 2>&1; then
   echo "error: missing command: go (install Go 1.26+ first)" >&2
   exit 1
 fi
 
-echo "==> AgentPrimordia Platform launcher (dev 形态)"
+echo "==> Synth Platform launcher (dev 形态)"
 echo "    Studio backend: :$PORT"
 
 # 1. 验证全能力示例可编译（四跃迁 + 双 SDK 契约）

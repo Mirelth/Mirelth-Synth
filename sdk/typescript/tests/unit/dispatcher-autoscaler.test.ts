@@ -343,7 +343,7 @@ describe('FileLock', () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ap-lock-'));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'synth-lock-'));
   });
 
   afterEach(() => {

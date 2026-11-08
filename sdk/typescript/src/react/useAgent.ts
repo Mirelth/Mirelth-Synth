@@ -1,5 +1,5 @@
 /**
- * useAgent �� �ͻ��� Hook���� AgentPrimordia REST API ����
+ * useAgent �� �ͻ��� Hook���� Synth REST API ����
  *
  * ʹ�÷�ʽ��
  *   const { messages, loading, send, abort, clear } = useAgent('agent-id');

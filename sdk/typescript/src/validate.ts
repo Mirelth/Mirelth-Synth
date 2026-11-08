@@ -1,4 +1,4 @@
-// Input validation utilities for the AgentPrimordia TypeScript SDK.
+// Input validation utilities for the Synth TypeScript SDK.
 // Provides reusable validation functions for common input patterns.
 
 export class ValidationError extends Error {

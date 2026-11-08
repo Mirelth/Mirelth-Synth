@@ -46,7 +46,7 @@ export class IndexedDBVectorStore {
   private dbPromise: Promise<IDBDatabase> | null = null;
 
   constructor(options: IndexedDBVectorStoreOptions = {}) {
-    this.dbName = options.dbName ?? 'agentprimordia';
+    this.dbName = options.dbName ?? 'synth';
     this.storeName = options.storeName ?? 'vectors';
     this.bruteForceLimit = options.bruteForceLimit ?? 10000;
     if (!isIndexedDBAvailable()) {

@@ -4,7 +4,7 @@
  * 职责：
  * 1. 注册命令：inspect / run / debug / stop
  * 2. 注册调试配置提供者
- * 3. 把 .ap.yaml 解析 + Inspector 状态机接入 VS Code Webview
+ * 3. 把 .synth.yaml 解析 + Inspector 状态机接入 VS Code Webview
  *
  * 设计要点：
  * - 业务逻辑（inspector.ts / debugger.ts / format.ts）与 vscode API
@@ -55,20 +55,20 @@ export function activate(context: { subscriptions: unknown[] }): void {
   }
 
   // 注册命令：inspect
-  const inspectCmd = vscode.commands.registerCommand('agentprimordia.inspect', () => {
+  const inspectCmd = vscode.commands.registerCommand('synth.inspect', () => {
     showInspectorPanel(context);
   });
   context.subscriptions.push(inspectCmd);
 
   // 注册命令：run
-  const runCmd = vscode.commands.registerCommand('agentprimordia.run', async () => {
+  const runCmd = vscode.commands.registerCommand('synth.run', async () => {
     const prompt = await vscode.window.showInputBox({
-      prompt: 'AgentPrimordia: 输入 prompt',
+      prompt: 'Synth: 输入 prompt',
       placeHolder: '请输入',
     });
     if (!prompt) return;
     const maxTurns = vscode.workspace
-      .getConfiguration('agentprimordia')
+      .getConfiguration('synth')
       .get('maxTurns', 10) as number;
     const result = applyCommand(STATE.state, {
       type: 'start',
@@ -81,7 +81,7 @@ export function activate(context: { subscriptions: unknown[] }): void {
   context.subscriptions.push(runCmd);
 
   // 注册命令：debug
-  const debugCmd = vscode.commands.registerCommand('agentprimordia.debug', async () => {
+  const debugCmd = vscode.commands.registerCommand('synth.debug', async () => {
     const cfg = await resolveDebugConfig();
     if (!cfg) return;
     vscode.debug.startDebugging(undefined, buildLaunchJson(cfg));
@@ -89,7 +89,7 @@ export function activate(context: { subscriptions: unknown[] }): void {
   context.subscriptions.push(debugCmd);
 
   // 注册命令：stop
-  const stopCmd = vscode.commands.registerCommand('agentprimordia.stop', () => {
+  const stopCmd = vscode.commands.registerCommand('synth.stop', () => {
     const result = applyCommand(STATE.state, { type: 'stop' });
     STATE.state = result.state;
     log('Inspector 已停止');
@@ -99,7 +99,7 @@ export function activate(context: { subscriptions: unknown[] }): void {
   // 注册调试配置提供者
   const provider = new DebugConfigProvider();
   context.subscriptions.push(
-    vscode.debug.registerDebugConfigurationProvider('agentprimordia', provider),
+    vscode.debug.registerDebugConfigurationProvider('synth', provider),
   );
 }
 
@@ -112,7 +112,7 @@ export function deactivate(): void {
 function showInspectorPanel(context: { subscriptions: unknown[] }): void {
   if (!vscode) return;
   const panel = vscode.window.createWebviewPanel(
-    'agentprimordia.inspector',
+    'synth.inspector',
     'Agent Inspector',
     vscode.ViewColumn.Beside,
     { enableScripts: true, retainContextWhenHidden: true },
@@ -142,19 +142,19 @@ function showInspectorPanel(context: { subscriptions: unknown[] }): void {
   context.subscriptions.push(panel);
 }
 
-/** 解析当前 workspace 的 .ap.yaml → AgentDebugConfig */
+/** 解析当前 workspace 的 .synth.yaml → AgentDebugConfig */
 async function resolveDebugConfig(): Promise<AgentDebugConfig | null> {
   if (!vscode) return null;
   const folders = vscode.workspace.workspaceFolders ?? [];
   if (folders.length === 0) {
-    vscode.window.showErrorMessage('AgentPrimordia: 请先打开一个工作目录');
+    vscode.window.showErrorMessage('Synth: 请先打开一个工作目录');
     return null;
   }
 
   const root = folders[0].uri.fsPath;
 
-  // 在 root 下查找 .ap.yaml / ap.yaml / agent.yaml
-  const candidates = ['.ap.yaml', 'ap.yaml', 'agent.yaml'];
+  // 在 root 下查找 .synth.yaml / synth.yaml / agent.yaml
+  const candidates = ['.synth.yaml', 'synth.yaml', 'agent.yaml'];
   let found: string | null = null;
   for (const name of candidates) {
     const uri = vscode.Uri.file(`${root}/${name}`);
@@ -169,7 +169,7 @@ async function resolveDebugConfig(): Promise<AgentDebugConfig | null> {
 
   if (!found) {
     const pick = await vscode.window.showQuickPick(candidates, {
-      placeHolder: '未找到 .ap.yaml，是否生成模板？',
+      placeHolder: '未找到 .synth.yaml，是否生成模板？',
     });
     if (pick) {
       const uri = vscode.Uri.file(`${root}/${pick}`);
@@ -182,14 +182,14 @@ async function resolveDebugConfig(): Promise<AgentDebugConfig | null> {
   const text = Buffer.from(data).toString('utf8');
   const raw = parseYamlLite(text);
   if (!raw) {
-    vscode.window.showErrorMessage(`AgentPrimordia: 解析 ${found} 失败`);
+    vscode.window.showErrorMessage(`Synth: 解析 ${found} 失败`);
     return null;
   }
   const cfg = toDebugConfig(normalizeApConfig(raw), root);
   const errs = validateDebugConfig(cfg);
   if (errs.length > 0) {
     vscode.window.showErrorMessage(
-      `AgentPrimordia: 配置无效: ${errs.map((e) => e.message).join('; ')}`,
+      `Synth: 配置无效: ${errs.map((e) => e.message).join('; ')}`,
     );
     return null;
   }
@@ -199,7 +199,7 @@ async function resolveDebugConfig(): Promise<AgentDebugConfig | null> {
 /** 调试配置提供者 */
 class DebugConfigProvider {
   provideDebugConfigurations(): Record<string, unknown>[] {
-    return [buildLaunchJson(toDebugConfig({ name: 'agentprimordia-agent' }, '${workspaceFolder}'))];
+    return [buildLaunchJson(toDebugConfig({ name: 'synth-agent' }, '${workspaceFolder}'))];
   }
 
   resolveDebugConfiguration?(folder: unknown, config: Record<string, unknown>): Record<string, unknown> | null {
@@ -210,7 +210,7 @@ class DebugConfigProvider {
         : (config['cwd'] as string) ?? process.cwd();
     const cfg = toDebugConfig(
       {
-        name: (config['agentName'] as string) ?? 'agentprimordia-agent',
+        name: (config['agentName'] as string) ?? 'synth-agent',
         systemPrompt: (config['systemPrompt'] as string) ?? '',
         initialPrompt: (config['initialPrompt'] as string) ?? '',
         maxTurns: (config['maxTurns'] as number) ?? 10,
@@ -221,7 +221,7 @@ class DebugConfigProvider {
     const errs = validateDebugConfig(cfg);
     if (errs.length > 0) {
       vscode.window.showErrorMessage(
-        `AgentPrimordia: 调试配置无效: ${errs.map((e) => e.message).join('; ')}`,
+        `Synth: 调试配置无效: ${errs.map((e) => e.message).join('; ')}`,
       );
       return null;
     }
@@ -233,7 +233,7 @@ class DebugConfigProvider {
 function log(text: string): void {
   if (!vscode) return;
   if (!STATE.output) {
-    STATE.output = vscode.window.createOutputChannel('AgentPrimordia');
+    STATE.output = vscode.window.createOutputChannel('Synth');
   }
   const out = STATE.output;
   if (out) {

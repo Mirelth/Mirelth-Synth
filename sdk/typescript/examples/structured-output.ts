@@ -17,7 +17,7 @@ const WeatherReport = z.object({
 type WeatherReport = z.infer<typeof WeatherReport>;
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Structured Output (Zod) ===\n');
+  console.log('=== Synth TS SDK: Structured Output (Zod) ===\n');
 
   const structured = new StructuredOutput(WeatherReport);
 

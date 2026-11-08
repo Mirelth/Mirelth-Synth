@@ -16,7 +16,7 @@ import {
 let dir: string;
 
 beforeAll(async () => {
-  dir = await mkdtemp(join(tmpdir(), 'ap-docloader-'));
+  dir = await mkdtemp(join(tmpdir(), 'synth-docloader-'));
   await writeFile(join(dir, 'a.txt'), 'hello world', 'utf-8');
   await writeFile(join(dir, 'b.md'), '# title\n\nbody', 'utf-8');
   await writeFile(join(dir, 'c.json'), JSON.stringify({ k: 1, v: [1, 2] }), 'utf-8');

@@ -1,4 +1,4 @@
-module github.com/Gleamseekers/AgentPrimordia/wasm
+module github.com/Mirelth/Synth/wasm
 
 go 1.26.10
 

@@ -440,7 +440,7 @@
   "id": "gt-014",
   "lang": "multi",
   "name": "base32-encode",
-  "prompt": "encode:ap!",
+  "prompt": "encode:synth!",
   "toolset": [
    "filesystem",
    "shell",

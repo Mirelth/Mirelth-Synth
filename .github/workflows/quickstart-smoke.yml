@@ -5,9 +5,9 @@ on:
     # 仅当前门相关变更触发：CLI 脚手架源码、前门 README、快速开始文档。
     # 三者共同决定外部用户的「第一印象」路径，任一变动都需重新验证 clean-room 可走通。
     paths:
-      - 'agentprimordia/cmd/ap/**'
-      - 'agentprimordia/README.md'
-      - 'agentprimordia/docs/getting-started/**'
+      - 'synth/cmd/synth/**'
+      - 'synth/README.md'
+      - 'synth/docs/getting-started/**'
   workflow_dispatch:
 
 # 安全基线（对齐 release.yml / ci.yml）：
@@ -31,18 +31,18 @@ jobs:
           # govulncheck 报出的 11 个可达标准库漏洞，见 release.yml 同款断言）。
           go-version: '1.26.10'
 
-      - name: Build ap binary (local build)
-        working-directory: agentprimordia
+      - name: Build synth binary (local build)
+        working-directory: synth
         run: |
           set -euo pipefail
           echo "工具链: $(go version)"
           # PR 级用本地构建的二进制，不依赖 go install 代理——验证的是本 PR 的脚手架代码
-          go build -o ap ./cmd/ap
-          test -s ap
-          echo "OK: ap 二进制构建完成"
+          go build -o synth ./cmd/synth
+          test -s synth
+          echo "OK: synth 二进制构建完成"
 
       - name: Clean-room init (outside repo)
-        # 关键口径：项目生成到仓库外临时目录（$RUNNER_TEMP/smoke），使 ap init 的
+        # 关键口径：项目生成到仓库外临时目录（$RUNNER_TEMP/smoke），使 synth init 的
         # 框架源码向上探测必然落空 → 走 standalone 分支（无本地 replace，经 GOPROXY
         # 解析发布版），复现外部用户的真实消费路径。
         run: |
@@ -51,7 +51,7 @@ jobs:
           rm -rf "${SMOKE_DIR}"
           mkdir -p "${SMOKE_DIR}"
           cd "${SMOKE_DIR}"
-          "${GITHUB_WORKSPACE}/agentprimordia/ap" init smoke-agent --template quickstart
+          "${GITHUB_WORKSPACE}/synth/synth" init smoke-agent --template quickstart
           test -f smoke-agent/go.mod
           test -f smoke-agent/main.go
           echo "--- 生成的 go.mod（init 后）---"
@@ -71,13 +71,13 @@ jobs:
           cat go.mod
           # 回归锁（v7.6 修复点）：standalone 用户不得再锁死旧占位版本 v7.0.0。
           # 修复前 init 写死 v7.0.0，用户 tidy 后拿到旧版而非当前发布版。
-          if grep -qF "github.com/Gleamseekers/AgentPrimordia/v7 v7.0.0" go.mod; then
+          if grep -qF "github.com/Mirelth/Synth/v7 v7.0.0" go.mod; then
             echo "::error::standalone go.mod 仍锁死旧占位版本 v7.0.0（应解析为当前发布版）"
             exit 1
           fi
           # 修复目标断言：解析到的框架版本必须等于代理当前发布版（@latest）
-          LATEST=$(go list -m -f '{{.Version}}' github.com/Gleamseekers/AgentPrimordia/v7@latest)
-          SELECTED=$(go list -m -f '{{.Version}}' github.com/Gleamseekers/AgentPrimordia/v7)
+          LATEST=$(go list -m -f '{{.Version}}' github.com/Mirelth/Synth/v7@latest)
+          SELECTED=$(go list -m -f '{{.Version}}' github.com/Mirelth/Synth/v7)
           echo "代理当前发布版: ${LATEST} / 项目解析到: ${SELECTED}"
           if [ "${SELECTED}" != "${LATEST}" ]; then
             echo "::error::standalone 解析到的框架版本 ${SELECTED} 非当前发布版 ${LATEST}"
@@ -101,17 +101,17 @@ jobs:
         env:
           # 同 tidy/build：关闭 workspace
           GOWORK: 'off'
-          # 显式置空：不设 AP_LLM_API_KEY → quickstart 走 Demo 模式
+          # 显式置空：不设 SYNTH_LLM_API_KEY → quickstart 走 Demo 模式
           # （关键词匹配响应，无外部 LLM 调用，CI 无需任何密钥）
-          AP_LLM_API_KEY: ''
+          SYNTH_LLM_API_KEY: ''
         run: |
           set -euo pipefail
           OUTPUT="$(go run . 2>&1)"
           echo "${OUTPUT}"
-          # 断言关键字来自 cmd/ap/scaffold/quickstart/main.go 的真实输出
+          # 断言关键字来自 cmd/synth/scaffold/quickstart/main.go 的真实输出
           # （grep -F 固定串匹配，避免正则元字符歧义）
-          echo "${OUTPUT}" | grep -qF "AgentPrimordia 快速入门"
-          echo "${OUTPUT}" | grep -qF "未设置 AP_LLM_API_KEY，使用 Demo 模式"
+          echo "${OUTPUT}" | grep -qF "Synth 快速入门"
+          echo "${OUTPUT}" | grep -qF "未设置 SYNTH_LLM_API_KEY，使用 Demo 模式"
           echo "${OUTPUT}" | grep -qF "恭喜！你已成功运行第一个Agent"
           echo "OK: Demo 模式运行输出符合预期"
 
@@ -127,13 +127,13 @@ jobs:
         with:
           go-version: '1.26.10'
 
-      - name: Build ap binary (local build)
-        working-directory: agentprimordia
+      - name: Build synth binary (local build)
+        working-directory: synth
         run: |
           set -euo pipefail
-          go build -o ap ./cmd/ap
-          test -s ap
-          echo "OK: ap 二进制构建完成"
+          go build -o synth ./cmd/synth
+          test -s synth
+          echo "OK: synth 二进制构建完成"
 
       - name: Sweep every template outside repo
         # 制度缺口修补（2026-10-12）：此前本门只测 quickstart 模板，plugin 模板
@@ -144,16 +144,16 @@ jobs:
           GOWORK: 'off'
         run: |
           set -euo pipefail
-          AP="${GITHUB_WORKSPACE}/agentprimordia/ap"
+          Synth="${GITHUB_WORKSPACE}/synth/synth"
           SWEEP="${RUNNER_TEMP}/tpl-sweep"
           rm -rf "${SWEEP}"; mkdir -p "${SWEEP}"
-          # 模板清单与 cmd/ap/scaffold/ 目录保持一致；新增模板不同步更新此处即漏测
+          # 模板清单与 cmd/synth/scaffold/ 目录保持一致；新增模板不同步更新此处即漏测
           TEMPLATES="agent-with-cache agent-with-metrics agent-with-rag basic multi-agent plugin provider quickstart with-tools"
           FAILED=0
           for t in ${TEMPLATES}; do
             d="${SWEEP}/${t}"; mkdir -p "${d}"
-            if ! (cd "${d}" && "${AP}" init proj --template "${t}" >/dev/null 2>&1); then
-              echo "::error::模板 ${t}: ap init 失败"; FAILED=1; continue
+            if ! (cd "${d}" && "${Synth}" init proj --template "${t}" >/dev/null 2>&1); then
+              echo "::error::模板 ${t}: synth init 失败"; FAILED=1; continue
             fi
             if ! (cd "${d}/proj" && go mod tidy >/dev/null 2>&1 && go build ./... >/dev/null 2>&1 && go vet ./... >/dev/null 2>&1); then
               echo "::error::模板 ${t}: 仓库外 tidy/build/vet 失败（用户项目不可消费）"; FAILED=1; continue
@@ -161,7 +161,7 @@ jobs:
             echo "OK: 模板 ${t} 仓库外可消费（init→tidy→build→vet）"
           done
           # 反向守护：模板数必须与 scaffold 目录一致，防新增模板漏登记
-          SCAFFOLDED=$(ls -1 "${GITHUB_WORKSPACE}/agentprimordia/cmd/ap/scaffold" | wc -l)
+          SCAFFOLDED=$(ls -1 "${GITHUB_WORKSPACE}/synth/cmd/synth/scaffold" | wc -l)
           DECLARED=$(echo "${TEMPLATES}" | wc -w)
           if [ "${SCAFFOLDED}" != "${DECLARED}" ]; then
             echo "::error::模板清单(${DECLARED}) 与 scaffold 目录(${SCAFFOLDED}) 不一致——新增模板必须同步本 job 的 TEMPLATES 列表"

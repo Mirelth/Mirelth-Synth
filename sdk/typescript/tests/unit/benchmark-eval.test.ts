@@ -28,7 +28,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // 读取 Go 权威 JSON 用于双线一致性校验
 function goBenchmarkCases(): EvalCase[] {
-  const jsonPath = join(__dirname, '..', '..', '..', '..', 'agentprimordia', 'internal', 'eval', 'benchmark_cases.json');
+  const jsonPath = join(__dirname, '..', '..', '..', '..', 'synth', 'internal', 'eval', 'benchmark_cases.json');
   return JSON.parse(readFileSync(jsonPath, 'utf8')) as EvalCase[];
 }
 

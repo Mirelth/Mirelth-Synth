@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 """gen-embedding-corpus.py — S0-3 真实 corpus 生成器（确定性）。
 
-从仓库真实技术文档（agentprimordia/docs/，必要时补 docs/）按 Markdown 标题切分
+从仓库真实技术文档（synth/docs/，必要时补 docs/）按 Markdown 标题切分
 chunk，并以「标题术语匹配」确定性推出查询的 gold chunk 列表，生成
 docs/evals/embedding-corpus-v1.json。禁止手写猜测：gold 全部由规则计算，
 同输入必得同输出（重跑逐字节一致，可用 sha256 对账）。
 
 输出 schema（顶层为 JSON 数组——题面台账 eval-manifest.py 按数组逐项登记 holdout）：
-  {"id":"ec-ch-0001","type":"chunk","source":"agentprimordia/docs/x.md",
+  {"id":"ec-ch-0001","type":"chunk","source":"synth/docs/x.md",
    "title":"文档标题 > 章节标题","text":"…","holdout":false}
   {"id":"ec-q-0001","type":"query","term":"…","text":"…",
    "gold":["ec-ch-…"],"holdout":false}
@@ -41,15 +41,15 @@ OUT_PATH = os.path.join(ROOT, "docs", "evals", "embedding-corpus-v1.json")
 
 # 语料源（按序取用；足够达到 chunk 目标数即停止，保证确定性）
 SOURCES = [
-    "agentprimordia/docs/AP-开发手册.md",
-    "agentprimordia/docs/AP-CLI开发手册.md",
-    "agentprimordia/docs/版本规范.md",
-    "agentprimordia/docs/项目状态.md",
-    "agentprimordia/docs/供应链安全.md",
-    "agentprimordia/docs/安全态势.md",
-    "agentprimordia/docs/密钥审计.md",
-    "agentprimordia/docs/index.md",
-    "agentprimordia/docs/AP-开发手册-EN.md",
+    "synth/docs/Synth-开发手册.md",
+    "synth/docs/Synth-CLI开发手册.md",
+    "synth/docs/版本规范.md",
+    "synth/docs/项目状态.md",
+    "synth/docs/供应链安全.md",
+    "synth/docs/安全态势.md",
+    "synth/docs/密钥审计.md",
+    "synth/docs/index.md",
+    "synth/docs/Synth-开发手册-EN.md",
     # 根 docs/（补充真实技术文档，按序取用）
     "docs/快速开始.md",
     "docs/部署指南.md",
@@ -259,9 +259,9 @@ def dump(items):
 
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--verify", action="store_true", help="重跑对账（确定性自检）")
-    args = ap.parse_args()
+    synth = argparse.ArgumentParser()
+    synth.add_argument("--verify", action="store_true", help="重跑对账（确定性自检）")
+    args = synth.parse_args()
 
     chunks, queries, items = build_items()
     payload = dump(items)

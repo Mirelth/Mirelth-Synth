@@ -98,7 +98,7 @@ export function BaseNode({
 }: BaseNodeProps): ReactElement {
   return (
     <div
-      className={`ap-node${selected ? ' ap-node-selected' : ''}`}
+      className={`synth-node${selected ? ' synth-node-selected' : ''}`}
       style={{
         position: 'absolute',
         left: node.x,
@@ -308,7 +308,7 @@ export function AgentDesigner(): ReactElement {
         >
           <defs>
             <marker
-              id="ap-arrow"
+              id="synth-arrow"
               markerWidth="10"
               markerHeight="10"
               refX="8"

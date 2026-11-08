@@ -14,8 +14,8 @@ import imageio
 import numpy as np
 
 # === 配置 ===
-PPTX_PATH = r"e:\ap\AgentPrimordia\docs\AgentPrimordia-Promo.pptx"
-OUTPUT_PATH = r"e:\ap\AgentPrimordia\docs\AgentPrimordia-Promo.mp4"
+PPTX_PATH = r"e:\synth\Synth\docs\Synth-Promo.pptx"
+OUTPUT_PATH = r"e:\synth\Synth\docs\Synth-Promo.mp4"
 WIDTH = 1920   # 输出视频宽度
 HEIGHT = 1080  # 输出视频高度
 FPS = 30       # 帧率

@@ -215,7 +215,7 @@ describe('ToolCallResponseSchema', () => {
     const parsed = ToolCallResponseSchema.parse({
       content: 'thinking...',
       toolCalls: [
-        { id: 'tc1', name: 'search', arguments: '{"q": "ap"}' },
+        { id: 'tc1', name: 'search', arguments: '{"q": "synth"}' },
       ],
       usage: { promptTokens: 20, completionTokens: 10, totalTokens: 30 },
     });

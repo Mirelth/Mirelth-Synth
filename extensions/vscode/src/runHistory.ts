@@ -1,5 +1,5 @@
 /**
- * AgentPrimordia Run History — 侧边栏树形视图。
+ * Synth Run History — 侧边栏树形视图。
  *
  * 职责：
  * 1. 按日期分组展示最近 Agent 运行记录
@@ -114,7 +114,7 @@ export class RunHistoryProvider {
     item.tooltip = runSummary(run);
     item.contextValue = 'run';
     item.command = {
-      command: 'agentprimordia.runDetails',
+      command: 'synth.runDetails',
       title: '查看运行详情',
       arguments: [run.id],
     };

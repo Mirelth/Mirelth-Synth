@@ -1,4 +1,4 @@
-# AgentPrimordia v7.5.1 上线前检查报告
+# Synth v7.5.1 上线前检查报告
 
 **日期**：2026-10-10
 **场景**：上线前检查（代码审查 + 安全审计 + QA 测试 三合一）
@@ -46,7 +46,7 @@
 
 - **核心判断**：本次改动**不触碰 Go 业务逻辑**（`pkg/agent.go` 仅改版本号常量），因此回归风险面很小，实测也印证了这一点。真正的风险全在**发布链路的端到端贯通性**，而这一层恰恰**无法在本地验证**——必须在真实 tag 推送后才能确认。
 - **关键建议**：不要依赖"CI 全绿"作为发布依据，本次必须走**发布后冒烟清单**（§6.4），因为历史 bug 正是"CI 绿但产物为空"。
-- **实测结果**：`go build ./...` ✅ exit 0；`gofmt -l` ✅ 无输出；`go mod verify` ✅ all modules verified；`go test ./agentprimordia/pkg/...` ✅ ok；`go test ./agentprimordia/wasm/... ./agentprimordia/internal/security/...` ✅ ok（17.5s，覆盖 §2.3 沙箱边界断言）；`node scripts/version-sync-check.mjs` ✅ exit 0（Go/TS/Helm/api-contract 四方一致）。
+- **实测结果**：`go build ./...` ✅ exit 0；`gofmt -l` ✅ 无输出；`go mod verify` ✅ all modules verified；`go test ./synth/pkg/...` ✅ ok；`go test ./synth/wasm/... ./synth/internal/security/...` ✅ ok（17.5s，覆盖 §2.3 沙箱边界断言）；`node scripts/version-sync-check.mjs` ✅ exit 0（Go/TS/Helm/api-contract 四方一致）。
 
 ---
 
@@ -56,8 +56,8 @@
 
 | # | 严重度 | 类别 | 位置 | 问题描述 | 建议 | 来源 |
 |---|--------|------|------|---------|------|------|
-| **B1** | 🔴 | 发布完整性 / 供应链 | `.github/workflows/release.yml:109-113`（sign-binaries 算校验和）<br>`.github/workflows/release.yml:188-196`（release 扁平化） | **校验和文件内的路径与最终发布资产文件名不匹配，用户侧校验必然失败。** `sign-binaries` 在 `binaries/` 内执行 `find . -type f -name 'ap-*' \| sort \| xargs sha256sum`，产出条目形如 `./ap-linux-amd64/ap-linux-amd64`；而 release 作业用 `find artifacts -type f -exec cp {} release-files/ \;` 把产物**扁平化**为 `ap-linux-amd64`。两者不一致 → `sha256sum -c checksums-sha256.txt` 报 `No such file or directory`。<br>**已本地实证复现**（见 §3 证据）。<br>后果：该校验和文件还被 `cosign sign-blob` 签名，等于用签名保护了一份无法使用的清单——本次改动的核心目标"让用户拿到可校验的二进制"**未达成** | 调换顺序为 **先扁平化 → 再算校验和 → 再签名**：在 release 作业生成 `release-files/` 后，`cd release-files && sha256sum ap-* > checksums-sha256.txt`，再对该文件签名，最后一起作为 release 资产上传。或将 `sign-binaries` 改为直接对扁平化后的文件集计算（用 `sha256sum` 的 `--` 显式列名，避免路径前缀） | 代码审查 + QA |
-| **B2** | 🔴 | 发布可用性 | `.github/workflows/release.yml:143-156`（跑分门禁）<br>`.github/workflows/release.yml:177-180`（`release: needs: [sign-binaries, llm-benchmark]`）<br>`agentprimordia/bench/llm-bench/main.go:166-167` | **LLM 基准门禁失败会连带跳过整个 Release 作业，产出"镜像已推、Release 无"的半成品发布态。** 实测 `main.go:166-167`：`pass_rate < gate` 时 `os.Exit(1)`（gate = `max(0.8, baseline)`）。`release` 作业 `needs` 包含 `llm-benchmark`，该 job 失败则 release 被跳过；而 `docker` 作业只 `needs: [build-binaries]`，**镜像照常推送到 ghcr.io**。叠加真实 LLM 调用（`--retries 1`）的网络/限流波动，偶发失败即阻断发布。<br>⚠️ **条件触发**：仅当仓库已配置 `OPENAI_API_KEY` 时才会跑到门禁；若未配置则脚本 `exit 0` 提前返回（见 `release.yml:149-152`）。**该 secret 状态需维护者确认** | 二选一：① 把跑分改为非阻断（`continue-on-error: true`，报告仍进 Release notes）；② 从 `release.needs` 中移除 `llm-benchmark`，让跑分独立成 job。<br>同时把 `docker` 作业的 `needs` 改为 `[build-binaries, sign-binaries]`，避免镜像先于签名落地 | 代码审查 + QA |
+| **B1** | 🔴 | 发布完整性 / 供应链 | `.github/workflows/release.yml:109-113`（sign-binaries 算校验和）<br>`.github/workflows/release.yml:188-196`（release 扁平化） | **校验和文件内的路径与最终发布资产文件名不匹配，用户侧校验必然失败。** `sign-binaries` 在 `binaries/` 内执行 `find . -type f -name 'synth-*' \| sort \| xargs sha256sum`，产出条目形如 `./synth-linux-amd64/synth-linux-amd64`；而 release 作业用 `find artifacts -type f -exec cp {} release-files/ \;` 把产物**扁平化**为 `synth-linux-amd64`。两者不一致 → `sha256sum -c checksums-sha256.txt` 报 `No such file or directory`。<br>**已本地实证复现**（见 §3 证据）。<br>后果：该校验和文件还被 `cosign sign-blob` 签名，等于用签名保护了一份无法使用的清单——本次改动的核心目标"让用户拿到可校验的二进制"**未达成** | 调换顺序为 **先扁平化 → 再算校验和 → 再签名**：在 release 作业生成 `release-files/` 后，`cd release-files && sha256sum synth-* > checksums-sha256.txt`，再对该文件签名，最后一起作为 release 资产上传。或将 `sign-binaries` 改为直接对扁平化后的文件集计算（用 `sha256sum` 的 `--` 显式列名，避免路径前缀） | 代码审查 + QA |
+| **B2** | 🔴 | 发布可用性 | `.github/workflows/release.yml:143-156`（跑分门禁）<br>`.github/workflows/release.yml:177-180`（`release: needs: [sign-binaries, llm-benchmark]`）<br>`synth/bench/llm-bench/main.go:166-167` | **LLM 基准门禁失败会连带跳过整个 Release 作业，产出"镜像已推、Release 无"的半成品发布态。** 实测 `main.go:166-167`：`pass_rate < gate` 时 `os.Exit(1)`（gate = `max(0.8, baseline)`）。`release` 作业 `needs` 包含 `llm-benchmark`，该 job 失败则 release 被跳过；而 `docker` 作业只 `needs: [build-binaries]`，**镜像照常推送到 ghcr.io**。叠加真实 LLM 调用（`--retries 1`）的网络/限流波动，偶发失败即阻断发布。<br>⚠️ **条件触发**：仅当仓库已配置 `OPENAI_API_KEY` 时才会跑到门禁；若未配置则脚本 `exit 0` 提前返回（见 `release.yml:149-152`）。**该 secret 状态需维护者确认** | 二选一：① 把跑分改为非阻断（`continue-on-error: true`，报告仍进 Release notes）；② 从 `release.needs` 中移除 `llm-benchmark`，让跑分独立成 job。<br>同时把 `docker` 作业的 `needs` 改为 `[build-binaries, sign-binaries]`，避免镜像先于签名落地 | 代码审查 + QA |
 
 ---
 
@@ -66,15 +66,15 @@
 | # | 严重度 | 类别 | 位置 | 问题描述 | 建议 | 来源 |
 |---|--------|------|------|---------|------|------|
 | M1 | 🟠 | 供应链安全 | `release.yml:250-261` | **镜像 keyless 签名失败被降级为 `::warning::`，不阻断流水线** —— 未签名镜像可被推送到 ghcr.io 并被下游拉取。叠加 B1 使二进制侧签名实际失效，本次发布存在"双签名同时失效"的可能 | 改为硬门：`cosign sign` 失败即 `exit 1`；若确需容错，至少在 Release notes 与 job summary 中显式标注"镜像未签名"，并让镜像 tag 加 `-unsigned` 后缀避免被误信 | 安全审计 |
-| M2 | 🟠 | 构建正确性 | `agentprimordia/Dockerfile.prod:24`<br>`.dockerignore:5` | **生产镜像内 `ap-admin` 的版本号恒为 `"dev"`。** Dockerfile 用 `-X main.Version=$(git describe --tags --always --dirty 2>/dev/null \|\| echo dev)`，但 `.dockerignore` 排除了 `.git` → 容器内 `git describe` 必然失败 → 回退 `dev`。即 v7.5.1 tag 构建的镜像自报 `dev` | 改用 build-arg 注入（与 `Dockerfile.sbomlabel` 的 `ARG VERSION` 一致）：Dockerfile 加 `ARG VERSION=dev` + `-X main.Version=${VERSION}`；`release.yml` 的 docker 作业加 `build-args: VERSION=${{ github.ref_name }}` | 代码审查 |
-| M3 | 🟠 | 敏感信息 | `.dockerignore`（全文件） | **未排除任何密钥类文件**：实测 `.env`、`.env.local`、`*.pem`、`*.key`、`id_rsa`、`*.p12` 均不在 `.dockerignore` 中，而 Dockerfile 使用 `COPY . .`。仓库根实际存在 `.env.local`（含 `AP_LLM_API_KEY` / `OPENAI_API_KEY`，虽已被 `.gitignore` 覆盖、从未入库，CI 中不存在）。任何本地或自建 runner 执行 `docker build` 都会把该文件打进 build context（并可经 `COPY . .` 落入镜像层） | 在 `.dockerignore` 增加：`.env`、`.env.*`、`*.pem`、`*.key`、`*.p12`、`id_rsa*`、`*.crt`、`.aws/`、`.ssh/` | 安全审计 |
+| M2 | 🟠 | 构建正确性 | `synth/Dockerfile.prod:24`<br>`.dockerignore:5` | **生产镜像内 `synth-admin` 的版本号恒为 `"dev"`。** Dockerfile 用 `-X main.Version=$(git describe --tags --always --dirty 2>/dev/null \|\| echo dev)`，但 `.dockerignore` 排除了 `.git` → 容器内 `git describe` 必然失败 → 回退 `dev`。即 v7.5.1 tag 构建的镜像自报 `dev` | 改用 build-arg 注入（与 `Dockerfile.sbomlabel` 的 `ARG VERSION` 一致）：Dockerfile 加 `ARG VERSION=dev` + `-X main.Version=${VERSION}`；`release.yml` 的 docker 作业加 `build-args: VERSION=${{ github.ref_name }}` | 代码审查 |
+| M3 | 🟠 | 敏感信息 | `.dockerignore`（全文件） | **未排除任何密钥类文件**：实测 `.env`、`.env.local`、`*.pem`、`*.key`、`id_rsa`、`*.p12` 均不在 `.dockerignore` 中，而 Dockerfile 使用 `COPY . .`。仓库根实际存在 `.env.local`（含 `SYNTH_LLM_API_KEY` / `OPENAI_API_KEY`，虽已被 `.gitignore` 覆盖、从未入库，CI 中不存在）。任何本地或自建 runner 执行 `docker build` 都会把该文件打进 build context（并可经 `COPY . .` 落入镜像层） | 在 `.dockerignore` 增加：`.env`、`.env.*`、`*.pem`、`*.key`、`*.p12`、`id_rsa*`、`*.crt`、`.aws/`、`.ssh/` | 安全审计 |
 | M4 | 🟠 | 权限最小化 | `release.yml:8-10` | 工作流级 `permissions: contents: write + packages: write` 被**所有 job 继承**，包括 `build-binaries`、`generate-sbom`、`llm-benchmark`、`npm-publish`（`release` job 也未单独声明）。这几个 job 都不需要写 contents/packages | 删除工作流级 `permissions`，改为每个 job 精确声明（`build-binaries`/`generate-sbom`/`llm-benchmark` → `contents: read`；`release` → `contents: write`；`docker` → `contents: read + packages: write + id-token: write`；`npm-publish` → `contents: read`） | 安全审计 |
 | M5 | 🟠 | 供应链安全 | `release.yml:73,116,199,216,219,227,237,248`；`supply-chain.yml:25,61,64,72,89,114,123`；`ci.yml:239`；`nightly.yml:56` | **第三方 action 全部使用浮动 tag，未 pin 到 commit SHA**，其中 `aquasecurity/trivy-action@master` 直接跟踪 **master 分支**——上游一旦被投毒即可在发布链路中执行任意代码，且无需改本仓库 | 全部 pin 到 40 位 SHA 并附版本注释（如 `aquasecurity/trivy-action@<sha> # v0.28.0`）；`@master` 必须改掉。可引入 Dependabot / Renovate 自动更新 pin | 安全审计 |
 | M6 | 🟠 | 供应链安全 | `Dockerfile.prod:12,28`；`Dockerfile.sbomlabel:9,37` | 基础镜像 `golang:1.26-alpine`、`alpine:3.20` **未 pin digest**，浮动 tag 可被上游替换，破坏镜像可复现性（与本次"提升供应链可信度"的目标相悖） | 改为 `FROM golang:1.26-alpine@sha256:<digest>`、`FROM alpine:3.20@sha256:<digest>`；用 `docker buildx imagetools inspect` 取 digest | 安全审计 |
 | M7 | 🟠 | 产物完整性 | `release.yml:85-89` | **TS/npm 依赖实际未进入 SBOM。** "Generate Node SBOM with syft" 步骤只执行了 `npm ci`，**没有任何 syft 命令**；注释写"syft will scan the directory for both Go and Node dependencies"，与实现不符。而 `release` 作业会把 `sbom-*.spdx.json` 作为发布资产上传，用户会误以为 SBOM 覆盖了 TS 依赖 | 补上真实扫描：`syft dir:. -o spdx-json=sbom-node.spdx.json`（或 `syft sdk/typescript`）；或修正步骤名与注释，明确 SBOM 仅覆盖 Go 依赖 | 安全审计 + QA |
 | M8 | 🟠 | 依赖漏洞 | `go.mod`（`golang.org/x/net` 间接依赖） | **本次 diff 把 `golang.org/x/net` 从 `v0.56.0` 升到 `v0.58.0`，但 `v0.58.0` 仍含 5 条已知公告**（GO-2026-6617 / 6612 / 6611 / 6610 / 6603），修复版本为 `v0.60.0`。即升级动作方向对、但**升得不够**，白升一次 | 升到 `golang.org/x/net v0.60.0`（`go get golang.org/x/net@v0.60.0 && go mod tidy`），复跑 `govulncheck ./...` 确认这几条消失 | 安全审计 |
 | M9 | 🟠 | 依赖漏洞 | `go.mod:3`（`go 1.26.6`） | `govulncheck` 实测：**11 条标准库漏洞被判为"实际可达"**，全部修复于 `go1.26.9`，其中与本项目强相关的有：`net/http` Range 头无上限解析（DoS，影响 Admin HTTP 与 A2A 服务）、`html/template` ×2（`internal/studio/studio.go:330` 的 `StudioHandler.ServeHTTP` 确实调用 `template.Execute`）、`net/textproto`、`crypto/tls`、`os`（Windows junction 逃逸）。<br>注：CI 用浮动 `go-version: '1.26'`、镜像用 `golang:1.26-alpine`，**可能已实际拉到 ≥1.26.9**，故发布产物未必受影响；但 `go.mod` 的 `go 1.26.6` 是工具链下限，本地/其他 builder 卡在 1.26.6 时产物即含漏洞 | 把 `go.mod` 的 `go` 指令升到 `1.26.9`（强制下限）；CI 的 `go-version` 改为精确 `1.26.9`；本地开发环境同步升级。**该项非本次 diff 引入，但属本次审计必须带出的存量风险** | 安全审计 |
-| M10 | 🟠 | 文档正确性 | `docs/发布说明-v7.5.1.md:1,52,53` | **v7.5.1 的发布说明实际是 v7.5.0 说明的改名**（git 显示 `R099` 重命名）：标题仍写"AgentPrimordia v7.5.0"，"版本统一"表仍写 v7.5.0，"api-contract.json 7.5.0 再生成"，且**通篇未提及本次发布链路修复**（而这正是 v7.5.1 的唯一内容）。用户读到的发布说明与版本不符 | 重写该文件为 v7.5.1 内容：标题改 v7.5.1、版本表更新、新增"发布链路修复"章节（二进制资产补全 / 上传路径 / cosign digest / npm 无 token 优雅跳过），并说明 v7.5.0 作废原因 | 代码审查 |
+| M10 | 🟠 | 文档正确性 | `docs/发布说明-v7.5.1.md:1,52,53` | **v7.5.1 的发布说明实际是 v7.5.0 说明的改名**（git 显示 `R099` 重命名）：标题仍写"Synth v7.5.0"，"版本统一"表仍写 v7.5.0，"api-contract.json 7.5.0 再生成"，且**通篇未提及本次发布链路修复**（而这正是 v7.5.1 的唯一内容）。用户读到的发布说明与版本不符 | 重写该文件为 v7.5.1 内容：标题改 v7.5.1、版本表更新、新增"发布链路修复"章节（二进制资产补全 / 上传路径 / cosign digest / npm 无 token 优雅跳过），并说明 v7.5.0 作废原因 | 代码审查 |
 
 ---
 
@@ -96,17 +96,17 @@
 
 ```bash
 # 模拟 sign-binaries 阶段的 find + sha256sum
-$ find . -type f -name 'ap-*' | sort | xargs sha256sum > ../checksums-sha256.txt
-a23de36...50  ./ap-linux-amd64/ap-linux-amd64      # ← 带目录前缀
+$ find . -type f -name 'synth-*' | sort | xargs sha256sum > ../checksums-sha256.txt
+a23de36...50  ./synth-linux-amd64/synth-linux-amd64      # ← 带目录前缀
 
 # 模拟 release 阶段的扁平化拷贝
 $ find binaries -type f -exec cp {} release-files/ \;
 $ ls release-files/
-ap-linux-amd64   sbom-go.spdx.json                  # ← 无目录前缀
+synth-linux-amd64   sbom-go.spdx.json                  # ← 无目录前缀
 
 # 用户侧校验
 $ cd release-files && sha256sum -c ../checksums-sha256.txt
-sha256sum: ./ap-linux-amd64/ap-linux-amd64: No such file or directory
+sha256sum: ./synth-linux-amd64/synth-linux-amd64: No such file or directory
 ```
 
 **结论**：6 个平台二进制全部校验失败。该校验和文件同时被 `cosign sign-blob` 签名，签名保护的是不可用清单。
@@ -114,8 +114,8 @@ sha256sum: ./ap-linux-amd64/ap-linux-amd64: No such file or directory
 ### 证据 2：跑分门禁的阻断行为（B2）
 
 ```
-agentprimordia/bench/llm-bench/main.go:166:  fmt.Printf("❌ 门禁未达标：pass_rate=%.4f < gate=%.4f（分数只升不降）\n", ...)
-agentprimordia/bench/llm-bench/main.go:167:  os.Exit(1)
+synth/bench/llm-bench/main.go:166:  fmt.Printf("❌ 门禁未达标：pass_rate=%.4f < gate=%.4f（分数只升不降）\n", ...)
+synth/bench/llm-bench/main.go:167:  os.Exit(1)
 ```
 
 配合 `release.yml:180` 的 `needs: [sign-binaries, llm-benchmark]` → 该 job 失败即跳过 Release 创建。
@@ -125,10 +125,10 @@ agentprimordia/bench/llm-bench/main.go:167:  os.Exit(1)
 | 命令 | 结果 |
 |------|------|
 | `go build ./...` | ✅ exit 0 |
-| `gofmt -l agentprimordia/pkg/agent.go` | ✅ 无输出 |
+| `gofmt -l synth/pkg/agent.go` | ✅ 无输出 |
 | `go mod verify` | ✅ all modules verified |
-| `go test ./agentprimordia/pkg/...` | ✅ ok（0.508s / 0.386s） |
-| `go test ./agentprimordia/wasm/... ./agentprimordia/internal/security/...` | ✅ ok（0.954s / 17.554s）—— 覆盖 §2.3 沙箱边界断言 |
+| `go test ./synth/pkg/...` | ✅ ok（0.508s / 0.386s） |
+| `go test ./synth/wasm/... ./synth/internal/security/...` | ✅ ok（0.954s / 17.554s）—— 覆盖 §2.3 沙箱边界断言 |
 | `node scripts/version-sync-check.mjs` | ✅ exit 0（Go 7.5.1 / TS 7.5.1 / Helm 7.5.1 / api-contract 存在，四方一致） |
 | `govulncheck ./...` | ⚠️ 11 条标准库漏洞（修复于 go1.26.9）+ 2 条 `golang.org/x/net v0.58.0`（修复于 v0.60.0） |
 
@@ -157,7 +157,7 @@ agentprimordia/bench/llm-bench/main.go:167:  os.Exit(1)
 | SBOM 生成与 label 挂载 | `release.yml:62-95` / `supply-chain.yml` | ⚠️ TS 依赖未真正扫描（M7） |
 | npm 包发布（无 token 时优雅跳过） | `release.yml:263-297` | ✅ 本次新增 `skip` 判定，逻辑正确 |
 | Helm chart 版本一致性 | `version-sync-check.mjs` | ✅ 实测通过 |
-| `pkg/agent.go` 公共 API 行为 | `go test ./agentprimordia/pkg/...` | ✅ 通过（本次仅改版本常量，无行为变更） |
+| `pkg/agent.go` 公共 API 行为 | `go test ./synth/pkg/...` | ✅ 通过（本次仅改版本常量，无行为变更） |
 | §2.3 沙箱安全断言（A1–A8 所在包） | `go test ./wasm/... ./internal/security/...` | ✅ 通过 |
 
 ### 边界值 / 异常与失败场景（逐项判定"会失败 or 静默通过"）
@@ -182,8 +182,8 @@ agentprimordia/bench/llm-bench/main.go:167:  os.Exit(1)
 **必须重跑（发布前）**
 
 1. `go build ./...` + `go vet ./...`（5 个模块，含 go.work 全模块）
-2. **§2.3 确定性安全断言**：`go test ./agentprimordia/wasm/... ./agentprimordia/internal/security/...`（本次已跑 ✅，100%/0 容忍，不得抽样）
-3. 公共 API 层：`go test ./agentprimordia/pkg/...`
+2. **§2.3 确定性安全断言**：`go test ./synth/wasm/... ./synth/internal/security/...`（本次已跑 ✅，100%/0 容忍，不得抽样）
+3. 公共 API 层：`go test ./synth/pkg/...`
 4. 版本一致性门：`node scripts/version-sync-check.mjs`（本次已跑 ✅）
 5. 依赖完整性：`go mod verify`
 6. TS SDK：`cd sdk/typescript && npm ci && npm run build && npm test`（本次**未跑**，`package.json` 版本已变，建议补跑）
@@ -191,7 +191,7 @@ agentprimordia/bench/llm-bench/main.go:167:  os.Exit(1)
 
 **建议补充（针对本次缺陷）**
 
-8. 新增一个 CI 步骤，对 `release-files/` 做断言：`ls -1 release-files/ap-* | wc -l` 必须等于 6，且 `checksums-sha256.txt` 非空
+8. 新增一个 CI 步骤，对 `release-files/` 做断言：`ls -1 release-files/synth-* | wc -l` 必须等于 6，且 `checksums-sha256.txt` 非空
 9. 新增"发布后校验"步骤：`cd release-files && sha256sum -c checksums-sha256.txt`（这条命令若能进 CI，B1 这类缺陷以后不可能再漏）
 
 ---
@@ -231,15 +231,15 @@ agentprimordia/bench/llm-bench/main.go:167:  os.Exit(1)
 |---|---------|---------|-----------|
 | 1 | 打开 GitHub Release 页面，统计资产数 | ≥ 13 个（6 二进制 + 6 校验和/签名 + SBOM） | 判定为"资产缺失"→ 执行回滚 |
 | 2 | 逐个下载 6 个平台二进制，确认非 0 字节 | 全部可下载、大小合理（>1MB） | 同上 |
-| 3 | `./ap-darwin-arm64 --help` / `ap version` | 正常输出，版本显示 **7.5.1** | 版本显示 dev/7.5.0 → 记录缺陷 |
+| 3 | `./synth-darwin-arm64 --help` / `synth version` | 正常输出，版本显示 **7.5.1** | 版本显示 dev/7.5.0 → 记录缺陷 |
 | 4 | **`sha256sum -c checksums-sha256.txt`** | ✅ 全部 OK | 🔴 B1 未修好 → 立即回滚 |
 | 5 | `cosign verify-blob --certificate checksums-sha256.txt.pem --signature checksums-sha256.txt.sig checksums-sha256.txt` | 签名校验通过 | 签名缺失 → 回滚 |
 | 6 | `docker pull ghcr.io/<repo>:7.5.1` | 拉取成功 | 检查 docker job 日志 |
 | 7 | `cosign verify ghcr.io/<repo>:7.5.1 --certificate-identity-regexp ...` | 验证通过 | 未签名 → 补签或回滚（M1） |
-| 8 | 镜像内 `ap-admin --version` | 显示 7.5.1（当前预期为 `dev`，即 M2） | 记录缺陷，非阻断 |
-| 9 | `npm view @agentprimordia/sdk version` | 7.5.1（若 token 已配） | 若跳过，确认 job summary 有告警 |
+| 8 | 镜像内 `synth-admin --version` | 显示 7.5.1（当前预期为 `dev`，即 M2） | 记录缺陷，非阻断 |
+| 9 | `npm view @synth/sdk version` | 7.5.1（若 token 已配） | 若跳过，确认 job summary 有告警 |
 | 10 | `helm template` 渲染 chart | 版本 7.5.1、镜像 tag 正确 | 记录缺陷 |
-| 11 | `go install github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/cmd/ap@v7.5.1` | 安装成功、`ap version` = 7.5.1 | 检查 GOPROXY 索引 |
+| 11 | `go install github.com/Mirelth/Synth/v7/synth/cmd/synth@v7.5.1` | 安装成功、`synth version` = 7.5.1 | 检查 GOPROXY 索引 |
 
 ### 6.5 回滚预案
 
@@ -252,7 +252,7 @@ agentprimordia/bench/llm-bench/main.go:167:  os.Exit(1)
 | 1 | **删除 Release** | GitHub → Releases → 删除 `v7.5.1`（保留 tag 便于排查）或 `gh release delete v7.5.1 --yes` |
 | 2 | **标记 tag 作废** | 在 tag 上追加说明；如需彻底阻断 `go install`，`git push --delete origin v7.5.1`（注意：GOPROXY 已缓存版本无法撤回，只能发新 patch） |
 | 3 | **处理镜像 tag** | 镜像 tag 不可删除时，重新推送一个指向**上一可用 digest** 的 `:7.5.1` 覆盖，或在 README/Release notes 显式标注"该 tag 镜像不可信，请用 7.5.2" |
-| 4 | **处理 npm 版本** | npm **不支持删除已发布版本**（72h 内可 `npm unpublish`，超期只能 `npm deprecate`）。执行 `npm deprecate @agentprimordia/sdk@7.5.1 "该版本发布链路存在缺陷，请升级至 7.5.2"` |
+| 4 | **处理 npm 版本** | npm **不支持删除已发布版本**（72h 内可 `npm unpublish`，超期只能 `npm deprecate`）。执行 `npm deprecate @synth/sdk@7.5.1 "该版本发布链路存在缺陷，请升级至 7.5.2"` |
 | 5 | **发新版本** | 修复 B1/B2 → 升 `7.5.2` → 重跑 version-sync-check → 重打 tag |
 | 6 | **回溯 v7.5.0** | 确认 `v7.5.0` 的 Release 与 npm 版本已标记作废（`npm deprecate`），避免用户在两版之间反复踩坑 |
 

@@ -27,7 +27,7 @@ const echoProvider: Provider = {
 };
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Basic Example ===\n');
+  console.log('=== Synth TS SDK: Basic Example ===\n');
 
   const agent = new ReActAgent({
     name: 'MyFirstAgent',
@@ -36,7 +36,7 @@ async function main() {
     maxTurns: 3,
   });
 
-  const response = await agent.run('Hello, AgentPrimordia!');
+  const response = await agent.run('Hello, Synth!');
   console.log(`Response: ${response.content}`);
   console.log(`Turns used: ${response.metrics?.totalTurns ?? 1}`);
   console.log('\n--- Done ---');

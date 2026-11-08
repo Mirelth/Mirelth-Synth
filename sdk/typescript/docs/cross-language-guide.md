@@ -2,7 +2,7 @@
 
 ## Go ↔ TypeScript 行为一致性
 
-AgentPrimordia 的 Go SDK 是核心引擎（800+ 导出），TypeScript SDK 是轻量客户端（200+ 导出）。
+Synth 的 Go SDK 是核心引擎（800+ 导出），TypeScript SDK 是轻量客户端（200+ 导出）。
 两端通过以下机制保持行为一致性：
 
 ### 1. 跨语言测试规范

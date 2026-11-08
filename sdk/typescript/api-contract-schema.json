@@ -1,15 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://agentprimordia.dev/schemas/api-contract-schema.json",
-  "title": "AgentPrimordia Go API Contract",
-  "description": "Defines the output format of the Go public API extractor for AgentPrimordia. Each module corresponds to a Go source file under pkg/, containing exported types, functions, constants, and variables with optional stability annotations.",
+  "$id": "https://synth.dev/schemas/api-contract-schema.json",
+  "title": "Synth Go API Contract",
+  "description": "Defines the output format of the Go public API extractor for Synth. Each module corresponds to a Go source file under pkg/, containing exported types, functions, constants, and variables with optional stability annotations.",
   "type": "object",
   "required": ["version", "generated_at", "modules"],
   "additionalProperties": false,
   "properties": {
     "version": {
       "type": "string",
-      "description": "The version string of the AgentPrimordia framework (e.g. '3.1.0'), matching the source code."
+      "description": "The version string of the Synth framework (e.g. '3.1.0'), matching the source code."
     },
     "generated_at": {
       "type": "string",
@@ -40,7 +40,7 @@
         "file": {
           "type": "string",
           "minLength": 1,
-          "description": "Relative path to the Go source file (e.g. 'agentprimordia/pkg/agent.go')."
+          "description": "Relative path to the Go source file (e.g. 'synth/pkg/agent.go')."
         },
         "stability": {
           "$ref": "#/$defs/Stability",
@@ -78,7 +78,7 @@
     },
     "Stability": {
       "type": "string",
-      "description": "API stability level following the AgentPrimordia four-tier stability policy.",
+      "description": "API stability level following the Synth four-tier stability policy.",
       "enum": ["Stable", "Experimental", "Deprecated", "Internal"]
     },
     "TypeKind": {

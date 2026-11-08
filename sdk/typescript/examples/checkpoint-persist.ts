@@ -7,7 +7,7 @@ import { SQLiteCheckpointStore } from '../src/persist/sqlite-checkpoint.js';
 import type { AgentState } from '../src/persist/sqlite-checkpoint.js';
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Checkpoint Persistence ===\n');
+  console.log('=== Synth TS SDK: Checkpoint Persistence ===\n');
 
   // 创建检查点存储（内存模式，无需真实 SQLite）
   const store = new SQLiteCheckpointStore({ path: ':memory:' });
@@ -17,7 +17,7 @@ async function main() {
     agentId: 'agent-checkpoint-demo',
     turnCount: 5,
     messages: [
-      { role: 'user', content: 'What is AgentPrimordia?' },
+      { role: 'user', content: 'What is Synth?' },
       { role: 'assistant', content: 'It is a production-grade AI agent framework.' },
     ],
     metadata: { model: 'gpt-4', session: 'demo-session' },

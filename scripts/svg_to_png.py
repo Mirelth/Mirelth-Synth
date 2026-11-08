@@ -3,9 +3,9 @@ import subprocess
 import os
 import sys
 
-SVG_PATH = r'e:\ap\AgentPrimordia\agentprimordia\docs\ap-architecture.svg'
-PNG_PATH = r'e:\ap\AgentPrimordia\docs\images\ppt\architecture_hd.png'
-HTML_PATH = r'e:\ap\AgentPrimordia\docs\images\ppt\_svg_convert.html'
+SVG_PATH = r'e:\synth\Synth\synth\docs\synth-architecture.svg'
+PNG_PATH = r'e:\synth\Synth\docs\images\ppt\architecture_hd.png'
+HTML_PATH = r'e:\synth\Synth\docs\images\ppt\_svg_convert.html'
 
 def try_cairosvg():
     """尝试用 cairosvg 转换"""

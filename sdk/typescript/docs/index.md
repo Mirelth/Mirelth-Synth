@@ -1,14 +1,14 @@
-# AgentPrimordia SDK Documentation
+# Synth SDK Documentation
 
-欢迎使用 **AgentPrimordia** 全栈 AI Agent 框架的 SDK 文档中心。
+欢迎使用 **Synth** 全栈 AI Agent 框架的 SDK 文档中心。
 
 ## 导航
 
 - [快速开始](./getting-started/quickstart.md) — 5 分钟上手
 - [安装指南](./getting-started/installation.md) — 各语言安装说明
-- [TypeScript SDK](https://github.com/agentprimordia/ap/tree/main/sdk/typescript) — npm `@agentprimordia/sdk`
-- [Python SDK](https://github.com/agentprimordia/ap/tree/main/sdk/python) — pip `agentprimordia`
-- [Go 核心框架](https://github.com/agentprimordia/ap) — `github.com/agentprimordia/ap`
+- [TypeScript SDK](https://github.com/Mirelth/Synth/tree/main/sdk/typescript) — npm `@synth/sdk`
+- [Python SDK](https://github.com/Mirelth/Synth/tree/main/sdk/python) — pip `synth`
+- [Go 核心框架](https://github.com/Mirelth/Synth) — `github.com/Mirelth/Synth`
 
 ## 多语言 API 参考
 

@@ -7,7 +7,7 @@ import type { Provider } from './provider.js';
 
 const DEFAULT_BASE_URL = 'http://localhost:11434';
 const DEFAULT_TIMEOUT = 300_000; // Local models can be slower
-const USER_AGENT = 'AgentPrimordia-TS/1.0';
+const USER_AGENT = 'Synth-TS/1.0';
 
 interface OllamaMessage {
   role: string;

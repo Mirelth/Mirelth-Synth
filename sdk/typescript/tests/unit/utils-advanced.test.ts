@@ -17,7 +17,7 @@ describe('ConfigWatcher', () => {
   let configPath: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ap-cfg-'));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'synth-cfg-'));
     configPath = path.join(tmpDir, 'config.json');
     fs.writeFileSync(configPath, JSON.stringify({ key: 'value1' }));
   });

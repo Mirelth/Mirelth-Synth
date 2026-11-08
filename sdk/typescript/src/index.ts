@@ -1,5 +1,5 @@
 /**
- * @agentprimordia/sdk — AgentPrimordia TypeScript SDK
+ * @synth/sdk — Synth TypeScript SDK
  *
  * Build cross-platform AI Agent applications with ReAct loop,
  * multi-provider LLM support, episodic memory, and tool system.

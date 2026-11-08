@@ -1,6 +1,6 @@
 # Changelog
 
-本文件记录 AgentPrimordia 框架的所有重要变更。格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/)。
+本文件记录 Synth 框架的所有重要变更。格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/)。
 
 ## [Unreleased]
 
@@ -21,8 +21,8 @@
 
 ### Added — v7.6「第一印象」
 
-- **英文前门**：根 README.md 与 agentprimordia/README.md 英文化为默认落地页（中文全量移 README.zh-CN.md，双向导航）；docs/getting-started 三篇英译（five-minutes / installation / first-agent）；删必然失败的 `go get agentprimordia` 与写死 v7.3.0 的腐烂徽章（改动态 release 徽章）；「5 分钟体验」改为任意目录 `ap init` + Demo 模式（免 API key）；头条能力表 v3.3–v3.6 旧闻 → v7.x 实况；新增中英双语「What we deliberately do not claim」诚实节（世界模型 opt-in / EnhancedPlanner 反向显著 / agent 自写工具研究阻塞）
-- **clean-room CI 门**：quickstart-smoke.yml（PR 级本地构建 ap → 仓库外 init→tidy→build→Demo 运行，含 standalone 版本回归锁）+ all-templates-smoke job（9 模板全普查 + 模板清单反向守护）——quickstart 从此永远不再「未经干净环境验证」
+- **英文前门**：根 README.md 与 synth/README.md 英文化为默认落地页（中文全量移 README.zh-CN.md，双向导航）；docs/getting-started 三篇英译（five-minutes / installation / first-agent）；删必然失败的 `go get synth` 与写死 v7.3.0 的腐烂徽章（改动态 release 徽章）；「5 分钟体验」改为任意目录 `synth init` + Demo 模式（免 API key）；头条能力表 v3.3–v3.6 旧闻 → v7.x 实况；新增中英双语「What we deliberately do not claim」诚实节（世界模型 opt-in / EnhancedPlanner 反向显著 / agent 自写工具研究阻塞）
+- **clean-room CI 门**：quickstart-smoke.yml（PR 级本地构建 synth → 仓库外 init→tidy→build→Demo 运行，含 standalone 版本回归锁）+ all-templates-smoke job（9 模板全普查 + 模板清单反向守护）——quickstart 从此永远不再「未经干净环境验证」
 - **API 冻结机制**：pkg/api_surface_test.go + api_surface.golden（纯标准库 AST 收集，1367 个导出符号全量在案）；新增导出即红、更新黄金 = 维护者批准的契约变更；失败输出按新增/删除/变更三类列符号
 - **EnhancedPlanner 护栏（D6）**：provider 装饰器接入不改 ReAct 循环一行代码；默认值即护栏值（规划 turns ≤ 总 turns 20% floor、递归深度 ≤ 2、totalTurns 漏配按 25 turns 兜底）；24 个新测试；实现期 -race 实测发现并修复 AcquirePlanTurn TOCTOU 超发
 
@@ -35,7 +35,7 @@
 ### Added — v7.8「8.0 彩排」
 
 - **deprecation 全标记**：387 个导出符号（16 个 pkg 文件）加 `// Deprecated: ... [v8.0-cut]`；pkg/v8_cut_scope_test.go + v8_cut_scope.txt 双边包含断言（清单⊆已标记 且 已标记⊆清单，三个方向篡改实测有效）
-- **ap migrate 工具**：import 路径 /v7→/v8 机械重写（go/parser 定位 + go.mod module/require/replace 同步）；--check 只报告不落盘（CI 门语义）；幂等；14 单测；三下游形态实测 ecosystem 38 文件 59 处 + operator 15 文件 16 处
+- **synth migrate 工具**：import 路径 /v7→/v8 机械重写（go/parser 定位 + go.mod module/require/replace 同步）；--check 只报告不落盘（CI 门语义）；幂等；14 单测；三下游形态实测 ecosystem 38 文件 59 处 + operator 15 文件 16 处
 - **英文文档最低集收尾**：docs/concepts/security-model.md（INV-0 三禁映射 A1–A8 + 验签门控，go 片段 go run 实证）+ framework-positioning.md（是什么/不是什么/竞品窄差异/何时不该用）
 - **Dependabot**（.github/dependabot.yml，github-actions weekly 分组更新）+ **ADOPTERS.md**（诚实空表 + 自报方式 + triage SLA）
 - **8.0 范围决定稿草案**（deliverables/gstack/8.0-范围决定稿-2026-10-12.md，待维护者逐项签署）：五组签署总表 + 七项 dry-run 实测前置条件 + 每项回退条件
@@ -53,9 +53,9 @@
 ### Fixed — 供应链加固与前门/模板缺陷（全部实证复现后修复）
 
 - **release 工作流最小权限化 + action 全量 SHA pin + 工具链安全下限断言**（六个工作流；go1.26.9 修复 govulncheck 报出的 11 个可达标准库漏洞；x/net v0.58.0→v0.61.0 等）
-- **standalone 脚手架版本修复**：ap init/ap start 在仓库外不再锁死旧占位 v7.0.0（该 tag 早于 /v7 模块路径迁移，用户 tidy 直接失败）——ldflags 版本优先 + droprequire 后 go get @latest 兜底，GOWORK=off 隔离
-- **plugin 模板生成不可消费项目**：模板 import 框架 internal/tools（用户项目依法不能 import 依赖模块 internal/，仓库外永远编译不过）——改走公共面 ap.ToolResult/ap.NewToolResult；新增全模板 internal 引用断言测试
-- **ap version 显示 dev**：go install 构建经 build info 回填真实版本（仅接受干净语义化版本，伪版本拒绝）
+- **standalone 脚手架版本修复**：synth init/synth start 在仓库外不再锁死旧占位 v7.0.0（该 tag 早于 /v7 模块路径迁移，用户 tidy 直接失败）——ldflags 版本优先 + droprequire 后 go get @latest 兜底，GOWORK=off 隔离
+- **plugin 模板生成不可消费项目**：模板 import 框架 internal/tools（用户项目依法不能 import 依赖模块 internal/，仓库外永远编译不过）——改走公共面 synth.ToolResult/synth.NewToolResult；新增全模板 internal 引用断言测试
+- **synth version 显示 dev**：go install 构建经 build info 回填真实版本（仅接受干净语义化版本，伪版本拒绝）
 - **A2A 示例 nil 解构 panic ×2**；文档站首页坏命令（go install 旧 org 路径）+ 404 clone URL + 4 个编译不过的文档片段；gofmt 全树格式化（约 80 个文件从未格式化，CI 无 fmt 门）；三个散落 profiling 工件移出版本控制
 
 ### Documentation — 治理与诚实性
@@ -74,12 +74,12 @@
 
 ### Added — v7.4 接线批次（7 项实验性能力转正）
 
-- **OTel 端到端接线**：`ap.TelemetryFromEnv()` 生产构造点（读 OTEL_EXPORTER_OTLP_ENDPOINT 等环境变量），quickstart 生成项目启动时注入 Agent；端到端测试真实导出到 /v1/traces 与 /v1/metrics；死兼容层 internal/otel 删除
+- **OTel 端到端接线**：`synth.TelemetryFromEnv()` 生产构造点（读 OTEL_EXPORTER_OTLP_ENDPOINT 等环境变量），quickstart 生成项目启动时注入 Agent；端到端测试真实导出到 /v1/traces 与 /v1/metrics；死兼容层 internal/otel 删除
 - **Studio 接真实引擎**：默认装配 chaos/cluster/learning/marketplace/autonomy/skills/realtime 七个真实服务（-demo 可回退）；chaos 注入有安全边界（NoopFault 稳态跑通，不做宿主机级故障注入）
-- **模板注册表持久化 + 远程协议**：TemplateStore/JSONFileStore + FetchCatalog（cosign 验签）；生产构造点 ap marketplace catalog add/list/remove
+- **模板注册表持久化 + 远程协议**：TemplateStore/JSONFileStore + FetchCatalog（cosign 验签）；生产构造点 synth marketplace catalog add/list/remove
 - **工具学习器自动装配**：WithToolLearner + 记忆存储具备 List(SessionID) 时自动构造 MemoryToolLearner；端到端测试证明工具执行后经验真实落库
 - **全链路关联存储**：WithCorrelationStore + 有界 retention（默认 1000）；可观测能力开启时自动构造
-- **技能库持久化 + 入循环**：PersistStore/JSONFileStore；injectSkillGuidance system 上下文注入（幂等）；ap skill list/add/remove/verify 真实实现
+- **技能库持久化 + 入循环**：PersistStore/JSONFileStore；injectSkillGuidance system 上下文注入（幂等）；synth skill list/add/remove/verify 真实实现
 - **自治 CLI 真实化**：AutonomyRuntime + 工具驱动 StepExecutor + JSON CheckpointStore；run/list/status/resume 真实执行并持久化（安全边界：默认仅注册无副作用 echo 工具）
 
 ### Fixed — 深度评估修复战役（2026-09-28，全部实证复现后修复）
@@ -100,15 +100,15 @@
 ### Fixed — 发布链路与 CI 门修复（v7.5.0 tag 后实测）
 
 - **CI lint 归零**：errcheck（session/distributed_integration 恢复测试的未检查错误返回）、unused（tool_forge 辅助函数）、ineffassign（jsonutil 并发测试）共 8 处（golangci-lint 实跑 0 问题）
-- **死链门**：`.gitignore` 的 `AGENTS.md` 规则把被根 AGENTS.md/README/文档索引引用的 `agentprimordia/internal/AGENTS.md` 排除出仓库（本地存在但 CI 检出缺失 → 4 条死链）——negation 放行并纳入跟踪
+- **死链门**：`.gitignore` 的 `AGENTS.md` 规则把被根 AGENTS.md/README/文档索引引用的 `synth/internal/AGENTS.md` 排除出仓库（本地存在但 CI 检出缺失 → 4 条死链）——negation 放行并纳入跟踪
 - **双线豁免矩阵门**：常驻运行时豁免行补「豁免/平台限制」关键字（检查器要求豁免行必须含理由/升格字样）
 - **govulncheck**：grpc v1.82.1 → v1.83.1，修复 GO-2026-6443（Host 头缺失致服务 panic）与 GO-2026-6348（HTTP/2 DATA 帧分片致 OOM）两个实测命中的漏洞
-- **User Validation 脚本**：适配新模块路径（AP_ROOT 指向仓库根、go.mod/replace 断言改 `/v7` 路径），24/24 通过
-- **Release 工作流三处**：TS SDK `npm ci` 前置——package-lock.json 同步 7.5.0（原 6.0.1 致 ci 必失败）；Docker 构建补 `file: agentprimordia/Dockerfile.prod` 且 Dockerfile 构建路径适配仓库根布局（prod 的 ap-admin、sbomlabel 的 ap）；cosign keyless 签名补 `id-token: write` 权限（对照 supply-chain.yml）
+- **User Validation 脚本**：适配新模块路径（SYNTH_ROOT 指向仓库根、go.mod/replace 断言改 `/v7` 路径），24/24 通过
+- **Release 工作流三处**：TS SDK `npm ci` 前置——package-lock.json 同步 7.5.0（原 6.0.1 致 ci 必失败）；Docker 构建补 `file: synth/Dockerfile.prod` 且 Dockerfile 构建路径适配仓库根布局（prod 的 synth-admin、sbomlabel 的 synth）；cosign keyless 签名补 `id-token: write` 权限（对照 supply-chain.yml）
 
 ### Changed — 模块路径迁移（首次可发布模块路径）
 
-- **五个工作区模块路径迁移至 `github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia` 命名空间**：主模块 + pgvector/operator/gateway/wasm-sandbox（1390 个 Go 文件 import + 5 go.mod + 49 文档 import 块）。旧路径首段无点号导致模块从未可被 GOPROXY 解析（go install 一直不可用），故无下游兼容影响；迁移后 `go install github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/cmd/ap@latest` 随 tag 发布自动可用（d6455bba）
+- **五个工作区模块路径迁移至 `github.com/Mirelth/Synth/v7/synth` 命名空间**：主模块 + pgvector/operator/gateway/wasm-sandbox（1390 个 Go 文件 import + 5 go.mod + 49 文档 import 块）。旧路径首段无点号导致模块从未可被 GOPROXY 解析（go install 一直不可用），故无下游兼容影响；迁移后 `go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest` 随 tag 发布自动可用（d6455bba）
 - 脚手架探测/发射逻辑、README 安装说明、版本规范.md、AGENTS.md 依赖边界表述同步切换；A1 边界断言模块清单更新
 
 ### Fixed — 诚实遗留项清零（评估报告 §8.5）
@@ -120,14 +120,14 @@
 ### Added — v6.1 具模（World Model）
 
 - **v6.1 世界模型内核切片一——状态图（opt-in，默认行为零变化）**：`internal/agent/worldmodel/`（graph/tracker/backdiff/rehearsal/options，纯标准库）——StateGraph 有向图内核（五类节点/四类边，确定性 ID 去重，预演态/观测态靠边分型）、WorldModelTracker 最小事件流增量维护、TrimNotification 把上下文裁剪消息转为事实节点、ComparePaths 回溯差异（乱序安全纯函数）、Rehearse 无 LLM 预演门；测试 21 函数 74 用例 -race 绿，覆盖率 96.8%（067134ef）
-- **v6.1 世界模型内核切片二——runLoop 接线（六挂钩全通，观察模式）**：agent 侧 `worldmodel_hook.go` 接线层 + 注入链（`WithWorldModel` 进 `CognitionConfig`/NewAgent 选项/CapabilityAgent 链式/pkg `ap.WithWorldModel`+`ap.WorldModelTracker` Experimental 导出）——①接口发现入 capabilityCache；②assistantMsg 后本轮 ToolCalls→PlanRevised（步骤 ID 用新导出 `worldmodel.NodeID` 派生，与执行后调用节点收敛同一 ID 空间）+ 思考文本→HypothesisFormed + planner 粗粒度计划落图与组建期预演；③processToolResult 工具观察落图（tool_call→observation 因果链，失败观察同样落图）；④trimContext 被裁消息→observation 事实节点（提案 E6 截断债务结构化偿还）；⑤工具执行前 Rehearse 预演门（观察模式：缺陷写失败库 + 审计 `worldmodel.rehearsal_failed`，不拦截）；⑥行动后 ComparePaths(计划路径, 新增 `tracker.PlanTrajectory()`) 回溯校验（偏离写失败库 + 审计 `worldmodel.backdiff_diverged`）。tracker 未注入时全部挂钩短路，默认 ReAct 行为零变更（铁律 7）；api-contract 基线刷新（e32e6618）
+- **v6.1 世界模型内核切片二——runLoop 接线（六挂钩全通，观察模式）**：agent 侧 `worldmodel_hook.go` 接线层 + 注入链（`WithWorldModel` 进 `CognitionConfig`/NewAgent 选项/CapabilityAgent 链式/pkg `synth.WithWorldModel`+`synth.WorldModelTracker` Experimental 导出）——①接口发现入 capabilityCache；②assistantMsg 后本轮 ToolCalls→PlanRevised（步骤 ID 用新导出 `worldmodel.NodeID` 派生，与执行后调用节点收敛同一 ID 空间）+ 思考文本→HypothesisFormed + planner 粗粒度计划落图与组建期预演；③processToolResult 工具观察落图（tool_call→observation 因果链，失败观察同样落图）；④trimContext 被裁消息→observation 事实节点（提案 E6 截断债务结构化偿还）；⑤工具执行前 Rehearse 预演门（观察模式：缺陷写失败库 + 审计 `worldmodel.rehearsal_failed`，不拦截）；⑥行动后 ComparePaths(计划路径, 新增 `tracker.PlanTrajectory()`) 回溯校验（偏离写失败库 + 审计 `worldmodel.backdiff_diverged`）。tracker 未注入时全部挂钩短路，默认 ReAct 行为零变更（铁律 7）；api-contract 基线刷新（e32e6618）
 
 - **v6.1 世界模型内核切片三——state-checkpoint 协议（续知而非重放，提案 E7–E10）**：`worldmodel/snapshot.go` Snapshot/Restore 快照层（节点按 ID 升序确定性序列化；Restore 结构校验——重复节点 ID/悬挂边/悬挂轨迹引用显式报错且不改动现有状态，覆盖式替换图/计划/轨迹）；`persist.AgentState.WorldState`（json.RawMessage 透传，persist 层不感知世界模型结构）；`SQLiteCheckpointStore` 补 `world_state` 列（沿用 plan 列幂等迁移，旧库/旧检查点双向兼容；etcd/redis 后端整体 JSON 序列化自动透传）；agent 接线——saveCheckpoint 嵌入快照（tracker 未注入时 no-op）、resumeFromState/ReplayFailure 恢复路径一次性载入世界状态（历史消息不再重放给 tracker）。端到端续知测试：崩溃前工具观察经失败记录恢复到全新 agent 的空 tracker，工具未重放而事实在场；快照损坏时告警并退化为 v6.0 重放语义，恢复不阻塞主流程（ce24fc24）
 
-- **v6.1 收尾——状态断言一致性门 + 治理文本落地 + 双线对等（矩阵 #1）**：①CI 状态断言一致性门 `internal/agent/worldmodel_consistency_test.go`——回放器纯函数从消息序列推导世界事实（含 E7 有损形态的孤儿观察通道），与状态图逐条对账（方向性包含：回放事实 ⊆ 图事实），负向对照证明门有检出能力；②提案 §三治理文本四处落地——AGENTS.md §4.1 worldmodel 行 + §5 一致性门条款、版本规范.md 实验性清单 worldmodel + 破坏性变更流程第 6 条（默认策略翻转预登记表）、安全态势.md「世界模型与护栏边界」、internal/AGENTS.md 包表 worldmodel 行；③TS 侧移植 `src/agent/worldmodel/`（graph/backdiff/rehearsal/tracker，FNV-1a64 用 BigInt 逐位模拟 uint64）——Go 权威夹具 `testdata/worldmodel_fixtures.json`（AP_WRITE_WORLD_FIXTURE=1 再生 + 黄金门防漂移）跨语言对账：NodeID 位级、ComparePaths 四形态、Rehearse 中文文案逐字、Snapshot JSON 双线直接互换；双线豁免矩阵 #1 更新为对等落地
-- **v6.2 内化——蒸馏管道四段工程地板（轨迹→资产→权重→部署，命题 2/3 确定性达标；命题 1 依赖 A2 微调端点维持降级豁免）**：新增 `internal/agent/learning/pipeline/`（七文件，纯标准库）——①Collector 轨迹采集（sha256 内容去重幂等，审计入链）；②Curate 课程筛选（只收成功轨迹/轮次窗口/单域过滤/域内去重，确定性权重打分）；③Export ap-dataset-v1 格式契约（JSONL 确定性序列化 + manifest sha256 互证 VerifyDataset/ParseDataset，assistant 调用与 tool 结果按 call-N 成对可关联）；④FineTuneBackend 训练连接器（Go-only：OpenAI 兼容端点 files+fine_tuning.jobs HTTP 客户端，stdlib net/http；ScriptedBackend 确定性替身供闭环测试）；⑤ShadowEvaluator 影子评测（同题配对，Wilson 95% 下界 + McNemar 精确检验自含实现——分层约束优先于 DRY，不 import internal/eval；命题 1 判据双门 Ratio ≥0.85 且 RatioLower ≥0.80）；⑥DistillationRouter 三段路由（shadow→canary→full，确定性灰度桶，连续失败回滚门 full→canary→shadow→禁用，回滚入审计；默认不参与任何既有路由决策——铁律 7）；⑦Pipeline.RunRound 闭环编排（每段产物入 AuditChain 链式哈希审计）。命题 3 测试：3 轮闭环零人工（管道 API 无批准回调点）、审计链逐节点可复算 Verify、阶段序列完整；命题 2 测试：同输入字节级一致导出、篡改检测、跨实例冷加载逐条一致。TS 工件消费者 `src/learning/pipeline.ts`（解析/互证/判据复算，不信任生产方字段）+ Go 权威夹具 dataset_fixture.json（黄金门防契约漂移）跨语言对账
+- **v6.1 收尾——状态断言一致性门 + 治理文本落地 + 双线对等（矩阵 #1）**：①CI 状态断言一致性门 `internal/agent/worldmodel_consistency_test.go`——回放器纯函数从消息序列推导世界事实（含 E7 有损形态的孤儿观察通道），与状态图逐条对账（方向性包含：回放事实 ⊆ 图事实），负向对照证明门有检出能力；②提案 §三治理文本四处落地——AGENTS.md §4.1 worldmodel 行 + §5 一致性门条款、版本规范.md 实验性清单 worldmodel + 破坏性变更流程第 6 条（默认策略翻转预登记表）、安全态势.md「世界模型与护栏边界」、internal/AGENTS.md 包表 worldmodel 行；③TS 侧移植 `src/agent/worldmodel/`（graph/backdiff/rehearsal/tracker，FNV-1a64 用 BigInt 逐位模拟 uint64）——Go 权威夹具 `testdata/worldmodel_fixtures.json`（SYNTH_WRITE_WORLD_FIXTURE=1 再生 + 黄金门防漂移）跨语言对账：NodeID 位级、ComparePaths 四形态、Rehearse 中文文案逐字、Snapshot JSON 双线直接互换；双线豁免矩阵 #1 更新为对等落地
+- **v6.2 内化——蒸馏管道四段工程地板（轨迹→资产→权重→部署，命题 2/3 确定性达标；命题 1 依赖 A2 微调端点维持降级豁免）**：新增 `internal/agent/learning/pipeline/`（七文件，纯标准库）——①Collector 轨迹采集（sha256 内容去重幂等，审计入链）；②Curate 课程筛选（只收成功轨迹/轮次窗口/单域过滤/域内去重，确定性权重打分）；③Export synth-dataset-v1 格式契约（JSONL 确定性序列化 + manifest sha256 互证 VerifyDataset/ParseDataset，assistant 调用与 tool 结果按 call-N 成对可关联）；④FineTuneBackend 训练连接器（Go-only：OpenAI 兼容端点 files+fine_tuning.jobs HTTP 客户端，stdlib net/http；ScriptedBackend 确定性替身供闭环测试）；⑤ShadowEvaluator 影子评测（同题配对，Wilson 95% 下界 + McNemar 精确检验自含实现——分层约束优先于 DRY，不 import internal/eval；命题 1 判据双门 Ratio ≥0.85 且 RatioLower ≥0.80）；⑥DistillationRouter 三段路由（shadow→canary→full，确定性灰度桶，连续失败回滚门 full→canary→shadow→禁用，回滚入审计；默认不参与任何既有路由决策——铁律 7）；⑦Pipeline.RunRound 闭环编排（每段产物入 AuditChain 链式哈希审计）。命题 3 测试：3 轮闭环零人工（管道 API 无批准回调点）、审计链逐节点可复算 Verify、阶段序列完整；命题 2 测试：同输入字节级一致导出、篡改检测、跨实例冷加载逐条一致。TS 工件消费者 `src/learning/pipeline.ts`（解析/互证/判据复算，不信任生产方字段）+ Go 权威夹具 dataset_fixture.json（黄金门防契约漂移）跨语言对账
 - **v6.3 开源——工具生命周期工程地板 + 强验证器族（code 通道悬置待提案批准，治理裁决先于功能代码）**：新增 `internal/tools/lifecycle/`（五文件，纯标准库）——①六段生命周期状态机（gap_detected→generated→rehearsed→adversarial_tested→signed_registered→retired，禁止跳段/回退，逐段证据类别强制匹配防混门，generated 段工件守卫，链式哈希审计链 Verify 全链校验；**状态机是框架与门禁不实现自主生成**——工件唯一入口 AttachArtifact，受控释放通道以 docs/提案-code层沙箱受控释放.md 维护者批准为前置）；②缺口审计报表 GapAuditor（missing_tool/repeated_failure 双信号确定性聚合，错误文案口径对齐执行器，样本去重 ≤3，报表→候选确定性登记）；③签名信任链 TrustChain（验签算法注入——tools 不反向 import 横向 marketplace，组装根绑定 cosign 同款验签；钉扎公钥集合+轮换窗口；工件 sha256 锚定防签名对象错位；真实 ECDSA P-256 签名测试覆盖轮换）；④复用追踪与劣化退役（命题 2 口径 FleetReuseReport：分母=注册工具数+Wilson 下界；冷工具/劣化工具确定性退役策略 SweepRetirements 入审计）；⑤强验证器族：CodeExecVerifier（沙箱彩排复用，执行器接口注入不直依 wasm 模块）、EnsembleJudgeVerifier（多数表决，平票保守不过）、CalibrateFAR 假接受率标定 harness（R3：FAR=0 也强制披露 Wilson 上界，漏检全量披露）。TS 协议对等 `src/tools/lifecycle.ts`：WebCrypto 验签（DER→raw 转换 + 0x04 完整非压缩公钥导入，与 Go 守卫同结论）+ 生命周期/缺口/复用报表契约类型 + 注册客户端契约（本地验签门+确定性内存实现）；Go 权威夹具 trust_fixture.json 跨语言对账
-- **v6.4 长活——常驻运行时工程地板（事件驱动生命形态；14 天实测待 B2 宿主降级豁免）**：新增 `internal/agent/live/`（三文件，纯标准库，不 import agent 包——live 不反向依赖父包）——①自唤醒协议 Waker（定时/文件监视（mtime 轮询跨平台）/webhook/手动四源聚合，唤醒风暴防御，时钟抽象注入）；②预算护栏确定性不变式（MaxTokens 账面硬顶到顶钳制超额 0 + MaxTasks 任务数上限；闲时代谢只受 token 闸约束）；③Guardian 守护执行（panic 恢复=崩溃自愈，自愈/失败计数如实披露，运行时存活）；④IdleScheduler 闲时自调度（优先级 + 冷却间隔的循环代谢语义，失败作业不进冷却每步重试入审计）；⑤Runtime 主循环（逐步驱动确定性——长活 harness 无需真实时间模拟任意时长；链式哈希审计链 Verify）。测试：崩溃注入 ×3 全自愈、预算到顶拒绝超额 0、idle 优先级/冷却/失败重试、文件监视 t.TempDir 真实变更唤醒、**伪时钟 14 天常驻模拟**（14 任务/2 崩溃自愈/14 次闲时学习/600 token 账目/审计链完整）。CLI `ap live` 薄壳（--once 自检无 LLM 依赖，Runner 经 SDK 注入——与 ap autonomy 同装配纪律）
+- **v6.4 长活——常驻运行时工程地板（事件驱动生命形态；14 天实测待 B2 宿主降级豁免）**：新增 `internal/agent/live/`（三文件，纯标准库，不 import agent 包——live 不反向依赖父包）——①自唤醒协议 Waker（定时/文件监视（mtime 轮询跨平台）/webhook/手动四源聚合，唤醒风暴防御，时钟抽象注入）；②预算护栏确定性不变式（MaxTokens 账面硬顶到顶钳制超额 0 + MaxTasks 任务数上限；闲时代谢只受 token 闸约束）；③Guardian 守护执行（panic 恢复=崩溃自愈，自愈/失败计数如实披露，运行时存活）；④IdleScheduler 闲时自调度（优先级 + 冷却间隔的循环代谢语义，失败作业不进冷却每步重试入审计）；⑤Runtime 主循环（逐步驱动确定性——长活 harness 无需真实时间模拟任意时长；链式哈希审计链 Verify）。测试：崩溃注入 ×3 全自愈、预算到顶拒绝超额 0、idle 优先级/冷却/失败重试、文件监视 t.TempDir 真实变更唤醒、**伪时钟 14 天常驻模拟**（14 任务/2 崩溃自愈/14 次闲时学习/600 token 账目/审计链完整）。CLI `synth live` 薄壳（--once 自检无 LLM 依赖，Runner 经 SDK 注入——与 synth autonomy 同装配纪律）
 - **v6.5 结社——联邦层工程地板（跨节点黑板 + 联邦资产 + 社会信任层；命题 1 数字待 B3 集群降级豁免）**：新增 `internal/multi_agent/federation/`（三文件，纯标准库）——①跨节点黑板 FederatedBlackboard（CAS 防脏认领：认领转移带期望版本、版本不符即拒绝不产生脏状态；分区容错租约：过期本地判定自动回收、重认领不依赖跨节点心跳；Transfer/Release/续租全 CAS；SimulatePartitionRecovery 三节点分区恢复演练）；②联邦资产三形态信封（skill-card/tool-package/model-adapter，内容哈希完整性锚定 + cosign 同款签名 + 钉扎钥 + 溯源链）；③社会信任层 TrustLayer 四道确定性门（完整性→钉扎→验签→溯源回环+重签刷分指纹），伪造/篡改 0 漏、声誉隔离区、误拦口径全量披露、InterceptStats 报告面。**修复设计缺陷**：完整性哈希最初含 origin 致重签指纹永不命中——改为内容哈希（不含 origin），测试驱出。TS 资产消费者 `src/federation/protocol.ts`（四道门与 Go ReceiveAsset 同结论，WebCrypto 验签复用 tools/lifecycle + 首发指纹消费端持有）
 - **v7.0 大成——契约重锁预登记（延迟路径，提案 §2.3）**：`ecosystem/docs/migration/v7-deprecations.md` 预登记稿——①世界模型翻默认延迟登记（留出集数字未回填，v7.0 保持 opt-in，翻转前置三步：A1 secrets→数字回填→维护者单独批准）；②五范式构件状态盘点（工程地板全 ✅ / 验收数字依赖外部项逐项列明）；③v7.0 发版前置清单（stability 双门转正评审 / deprecation 残留门 / SBOM/cosign 复验 / 真实分布复测 ≥9.3）。版本规范.md 翻转登记表状态同步为「延迟」。GA 发版为发布动作，待 §九运营依赖就位后由发布 PR 执行
 - **v6.4 长活 TS 对等收口（矩阵 #4 五行全闭环）**：`src/agent/live.ts`（Node 长循环形态）——Waker 多源唤醒（定时基线/通道容量 16 风暴防御）、Budget 确定性不变式（账面钳制超额 0 + token 闸约束闲时代谢）、LiveRuntime 逐步驱动（handleWake/idleStep 可单步调用，Guardian 异常捕获=崩溃自愈，idle 冷却代谢失败不进冷却每步重试，链式哈希审计链 verify）；伪时钟 14 天常驻模拟测试与 Go 同语义（14 任务/2 自愈/600 token 账目）。**全仓 Go 测试门（go test ./...）通过零回归**，V7 弧线新增五包全部纳入
@@ -135,7 +135,7 @@
 - **v6.4 soak 累计在线口径（2026-09-03 裁定增补 + 状态持久化落地）**：`last` 实证维护者机器每日关机/重启，「连续 72h」不可达——口径修订为**累计在线 ≥72h**（裁定增补登记于 V7路线图.md §五）：`internal/agent/live/soak.go` 新增 SoakState 跨重启状态（在线段列表 + 注入/自愈/失败/遥测累计，注入与遥测后原子落盘 soak-state.json，损坏/缺失即保守重置不虚报），SoakReport 新增 segments/reboots 全量披露；判定改为累计时长达标，重启次数入 notes 披露。TDD 14 测试全绿（新增跨重启续计/无持久化语义不变两用例）；驱动器接 `-state` 标志与信号中断显式 Save。历史 5 段在线证据（24.67h、30 注入 30 自愈 0 失败）归档 soak-report.interrupted-*.json，不计入新累计窗口
 - **v6.4 命题 1 压缩口径裁定 + soak harness 落地（2026-09-01 维护者裁定：14 天太长，压缩为 72h+加速注入）**：`internal/agent/live/soak.go`（ChaosRunner 注入包装 Runner——Arm 后下次 Run panic 经 Guardian 恢复计入自愈；Soak 步进式 harness——遥测/注入/代谢唤醒按节奏追补推进，与 Runtime 同逐步驱动哲学；WilsonLowerBound 单侧下界；判定常量注入 ≥75/点估计 ≥99%/Wilson 下界 ≥95%/审计链复算）+ `bench/soak-v64` 真实时钟驱动器（echo 合成代谢如实披露、小时级报告覆盖写=崩溃安全证据链、信号中断落盘 Interrupted 部分证据、判定不过 exit 1）。裁定记录与数学依据（全自愈 n=75 → 下界 95.13%）见 V7路线图.md §五裁定记录；B2 依赖行、双线豁免矩阵 #4、进度跟踪表同步。72h 真机实跑 2026-09-01 启动，结果落盘 bench/results/v64-soak/
 - **治理门开启 + A1 就位（2026-08-31）**：维护者书面批准两份 S0-4 提案（世界模型默认策略切换 / code 层沙箱受控释放——评审记录已回填至各提案文末，勾选清单同步），v6.1/v6.3 开工门正式闭合；A1 LLM secrets 就位（OpenAI 兼容网关，本地 .env.local 不入库），认证连通性已验证（Bearer）；code 提案生效要件第二项（红队样本集回归 + A1–A8 边界断言全绿）为 v6.3 功能代码前置，下一步执行；确切模型 ID 待维护者确认后启动评价线双臂实验
-- **v6.3 红队样本集回归全过（code 提案生效要件第二项闭合，治理文本生效）**：宿主边界断言 A1–A8 全部以确定性测试固化——A1 wazero 依赖边界封闭（三模块 go list 导入图全量枚举，白名单外包出现即红，`internal/security/host_boundary_test.go`）；A2 零动态加载（全仓 plugin.Open 源码枚举 + CGO_ENABLED=0 构建产物 go tool nm 符号扫描）；A3 零宿主派生执行（code_execution 默认禁用运行时断言 + 配置面 Setenv 写入点静态枚举——agent 写配置→重启执行的对抗形态被静态排除）；A4 沙箱资源上限零值兜底（根 wasm 模块表驱动穷举公共构造入口，新增 Runtime.Config() 审计面）；A5 CPU 死循环真实终止；A6 签名前置（RegisterTool 强制 ed25519 验签，缺签/篡改任一字节即拒——表驱动穷举首/中/尾位）；A7 导入段白名单（Sandbox.Load 强制枚举 ImportedFunctions 逐条比对 AllowedImports，未启用 WASI 即拒绝 wasi 导入）；A8 宿主工作树哈希不变 harness（Go 代码目录+配置目录 sha256 执行前后全量对比）。**红队回归抓出并修复两处真实违例**：agentprimordia/wasm Sandbox 未开 WithCloseOnContextDone（超时无法中断死循环——A5 挂死实测）与 Execute 未强制 MaxExecutionTime（调用方透传 ctx 绕过 CPU 配额）。治理文本（提案 §八四处：AGENTS.md §2.3 安全边界条款/wazero 扩注/确定性安全不变式规范/生成工具通道边界注记）随批准落地生效。v6.3 功能代码（自主生成闭环）开工前置全部闭合
+- **v6.3 红队样本集回归全过（code 提案生效要件第二项闭合，治理文本生效）**：宿主边界断言 A1–A8 全部以确定性测试固化——A1 wazero 依赖边界封闭（三模块 go list 导入图全量枚举，白名单外包出现即红，`internal/security/host_boundary_test.go`）；A2 零动态加载（全仓 plugin.Open 源码枚举 + CGO_ENABLED=0 构建产物 go tool nm 符号扫描）；A3 零宿主派生执行（code_execution 默认禁用运行时断言 + 配置面 Setenv 写入点静态枚举——agent 写配置→重启执行的对抗形态被静态排除）；A4 沙箱资源上限零值兜底（根 wasm 模块表驱动穷举公共构造入口，新增 Runtime.Config() 审计面）；A5 CPU 死循环真实终止；A6 签名前置（RegisterTool 强制 ed25519 验签，缺签/篡改任一字节即拒——表驱动穷举首/中/尾位）；A7 导入段白名单（Sandbox.Load 强制枚举 ImportedFunctions 逐条比对 AllowedImports，未启用 WASI 即拒绝 wasi 导入）；A8 宿主工作树哈希不变 harness（Go 代码目录+配置目录 sha256 执行前后全量对比）。**红队回归抓出并修复两处真实违例**：synth/wasm Sandbox 未开 WithCloseOnContextDone（超时无法中断死循环——A5 挂死实测）与 Execute 未强制 MaxExecutionTime（调用方透传 ctx 绕过 CPU 配额）。治理文本（提案 §八四处：AGENTS.md §2.3 安全边界条款/wazero 扩注/确定性安全不变式规范/生成工具通道边界注记）随批准落地生效。v6.3 功能代码（自主生成闭环）开工前置全部闭合
 - **700 条红队样本集全集回归双 0 达成（v6.3 生效要件全部闭合）**：六家族路由 harness（`internal/security/redteam_regression_test.go`，留出子集与全集同口径）——prompt-injection×180 → guardrail 注入检测（**实测发现基线命中率仅 19.4%**：中文模板+9 种混淆通道全漏；强化 PromptInjectionRule——中文注入模板确定性规则 + normalizeForCheck 反混淆归一化（零宽剥离/全角→半角/围栏剥离/空白折叠），强化后 180/180 全命中 0 漏检）；reputation-gaming×140 → ReputationGuard 五规则（burst 滑动窗口速率/sybil 互评簇并查集+互评率/circular 互荐环/inflation 无审计链自报/bot-pattern 模板化→flag 三元判定，sybil-deep 2-hop 链经 union 传递成簇）；skill-card-poison×100 → SkillCardGate（过期/完整性/验签/宿主权限申报白名单/申报-载荷一致性五门）；bad-tool-package×100 → ToolPackageGate（未签名/导入越界/安装宿主写入/符号链接逃逸/声明一致性，与 A6/A7/A8 同口径）；adapter-tamper×80 → ModelAdapterGate（基座指纹/维度/溯源/tokenizer 远程代码钩子/许可证五门）；benign-control×100 全放行（误拦 0）。回归结论：**漏检 0 / 误拦 0（R3 双 0），holdout 子集占比 ≥30% 单独回归通过**。v6.3 功能代码（自主生成闭环）开工前置全部闭合
 - **v6.3 功能代码——自主生成闭环（缺口→生成→彩排→对抗→签名注册→复用退役，端到端真沙箱真签名）**：`internal/tools/lifecycle/autoloop.go` AutoLoop——每候选经 Manager 六段状态机推进（任一段失败停段留审计，不跳段不静默）：①Generator 生成 WASM 工件（受控组合生成语义：产出物是**数据**不是宿主代码——INV-0 由 A1–A8 强制；生成质量属命题 1 研究面）；②沙箱彩排 CodeExecVerifier 规格用例全过（≥3 用例下限）；③对抗测试 CalibrateFAR（漏检 0 上限；接受判定按工具语义由供给方定义）；④签名注册 TrustChain 验签 + A6 强制验签 RegisterTool 双门（签名口径 cosign 同款：Ed25519 over SHA-256(工件)）；⑤复用追踪 FleetReport + 冷工具 SweepRetirements 退役。端到端测试：缺口登记 → 生成真实 WASM echo 工具 → 真沙箱三用例彩排 → 对抗标定 → ed25519 签名 + 信任链钉扎 + A6 注册 → 复用报表 → 冷退役，审计链全程可复算；FAR 越限负路径（对抗全接受 → 停在 adversarial 段不注册）。**Ed25519Signer 签名口径对齐 cosign**（SHA-256 摘要签名）并同步测试验签闭包
 - **A1 真实轨激活——首份真实分布数字 + v6.1 命题 1 实验开跑（2026-09-01）**：新端点（opencode.ai/zen，deepseek-v4-flash，维护者提供）接入评测运行器——①external 留出子集 **0.824（Wilson95 下界 0.665，n=34）**；②judge 标定 **κ=0.8211 ≥0.6 门达标**（双标 68，一致率 0.912，Wilson 下界 0.821）——S0-2 残余项「κ 实测值」闭合；③v6.1 命题 1 实验运行器 `bench/eval-v61`（严格按预注册计划书：双臂 A=纯消息路径 / B=WithWorldModel；24 题长程冻结题面；rounds 1–4 全集 + round 5 seed=20260831+5 排列前 12 = **108 配对 = 216 次运行**；沙箱终态确定性断言 internal/eval.EvaluateAll 判定不依赖 LLM；跨会话中断经 HookAfterTurn 里程碑触发 graceful stop → sqlite 检查点恢复，B 臂世界状态随检查点续知；results.jsonl 幂等续跑）——双臂冒烟全绿（含中断恢复 restarts=1 实证：B 臂恢复后完成全部里程碑）；**216 次正式运行已启动**（B4 预算通道，维护者授权），完成后按计划书出 McNemar 配对分析 + 留出子集单列（R4 全披露），数字回填版本规范翻转登记表
@@ -155,7 +155,7 @@
 
 ### Fixed
 
-- **ap 脚手架生成的项目无法编译**（v6.0 复测巡检发现）：pgvector 依赖链断裂——根模块的 `replace agentprimordia/pgvector => ../pgvector` 不具传递性，`ap init` / `ap plugin create` 生成的独立子项目经 pkg → internal/memory → pgvector 引用链解析失败，`go mod tidy` 直接报错（workspace 模式掩盖了该问题，独立构建必现）。修复：脚手架统一走 `buildGoMod`——向上探测框架模块后 emit 相对路径 replace 并连带 pgvector 的 require+replace；standalone 场景不再 emit 失效 replace 并打印指引。同时修正模板过时版本声明（`go 1.23` → `go 1.26`、`agentprimordia v1.0.0` → SIV 合法占位版本，详见 版本规范.md「模块消费与语义化导入版本限制」）。E2E 验证：init → go mod tidy → go build 全链路通过（GOWORK=off 独立构建）；新增 gomod_template_test.go 锁定行为
+- **synth 脚手架生成的项目无法编译**（v6.0 复测巡检发现）：pgvector 依赖链断裂——根模块的 `replace synth/pgvector => ../pgvector` 不具传递性，`synth init` / `synth plugin create` 生成的独立子项目经 pkg → internal/memory → pgvector 引用链解析失败，`go mod tidy` 直接报错（workspace 模式掩盖了该问题，独立构建必现）。修复：脚手架统一走 `buildGoMod`——向上探测框架模块后 emit 相对路径 replace 并连带 pgvector 的 require+replace；standalone 场景不再 emit 失效 replace 并打印指引。同时修正模板过时版本声明（`go 1.23` → `go 1.26`、`synth v1.0.0` → SIV 合法占位版本，详见 版本规范.md「模块消费与语义化导入版本限制」）。E2E 验证：init → go mod tidy → go build 全链路通过（GOWORK=off 独立构建）；新增 gomod_template_test.go 锁定行为
 - **多轮对话记忆失效**：回读会话历史注入 LLM 请求（`internal/agent`）
 - **评估器 requires 片段 OR 语义**：片段内 `|` 支持（Go + TS 双线）
 - **契约基线非确定性**：`make api-extract` 未传 `-no-timestamp`，生成的基线含时间戳导致 `TestAPIContractNoDrift` 恒漂移——目标补确定性参数
@@ -220,7 +220,7 @@
 
 ### Added — 深度评估报告（2026-08-09）
 
-- 新增 `agentprimordia/docs/项目评估-2026-08-09.md`（v4.0.0 全维度深度评估：ROADMAP 35 项声称逐一复核、33 项与代码相符；加权总评 7.2/10；修复建议 Top-10 按影响 × 成本排序）
+- 新增 `synth/docs/项目评估-2026-08-09.md`（v4.0.0 全维度深度评估：ROADMAP 35 项声称逐一复核、33 项与代码相符；加权总评 7.2/10；修复建议 Top-10 按影响 × 成本排序）
 
 ### Fixed — 2026-08-09 评估整改（Top-10 落地）
 
@@ -228,7 +228,7 @@
 - **SQLiteStore 关闭安全**：`Close()` 后读方法（Stats/Search/SearchAdvanced/GetImportant/GetTimeline/GetMemoriesBySession）nil 解引用风险修复（`internal/memory/sqlite.go` / `sqlite_search.go`）
 - **错误体系统一**：`pkg.CodeError` 补 `Code() string` 接通 `GetErrorCode`（消除 errors.As 死路）；guardrail 输出端拦截改用 `pkg.ErrOutputBlocked` sentinel；pool 取消 sentinel 接线
 - **孤儿包处置**：删除 `internal/mcp` `prompt` `protocol` `registry` 与 `internal/agent/react/` 骨架；audit 模型三合一；`multi_agent` 经 pkg Experimental 导出
-- **CI 与发布产物**：`nightly.yml` docker-build job 指向 `agentprimordia/`（修复每夜必失败）；Helm/Terraform 版本对齐；白名单文档与实况对齐
+- **CI 与发布产物**：`nightly.yml` docker-build job 指向 `synth/`（修复每夜必失败）；Helm/Terraform 版本对齐；白名单文档与实况对齐
 - **Rust/Python SDK 最小测试套件**（暴露并修复 Rust `chat` 不检查 HTTP 状态）+ CI 接入
 - **跨语言补 4 套件**（`autonomy_goal` / `skills_lifecycle` / `a2a_interop` / `realtime_session`），修复 TS 静默跳过，Go/TS 57 用例双线全量
 - **文档死链与矛盾清理**（mkdocs/STATUS 历史标注/examples 目录同步/CONTRIBUTING 许可证/index A2A 对齐/徽章与路径修正）
@@ -285,8 +285,8 @@
 
 ### Fixed — 辅助 SDK 工程化修复（Rust 编译失败 + Python 注释乱码 + CI 盲区）
 
-- **Rust SDK 编译失败**：`sdk/rust/src/client.rs` 中 `return Err(resp.into())` 需要 `AgentPrimordiaError: From<reqwest::Response>`，但 `error.rs` 仅实现 `From<reqwest::Error>`，`cargo build` 报 E0277 编译错误且无任何 CI 覆盖 → 新增 `From<reqwest::Response>` 实现（401/429/其他状态码映射），`cargo build --locked` + `cargo clippy -- -D warnings` 全部通过
-- **Python SDK 中文注释乱码**：`sdk/python/agentprimordia/client.py` 10 处 docstring/注释因编码损坏固化为 U+FFFD 替换字符（git blob 中 74 处）→ 全部重写为正确中文；`__init__.py` 首行同步修复
+- **Rust SDK 编译失败**：`sdk/rust/src/client.rs` 中 `return Err(resp.into())` 需要 `SynthError: From<reqwest::Response>`，但 `error.rs` 仅实现 `From<reqwest::Error>`，`cargo build` 报 E0277 编译错误且无任何 CI 覆盖 → 新增 `From<reqwest::Response>` 实现（401/429/其他状态码映射），`cargo build --locked` + `cargo clippy -- -D warnings` 全部通过
+- **Python SDK 中文注释乱码**：`sdk/python/synth/client.py` 10 处 docstring/注释因编码损坏固化为 U+FFFD 替换字符（git blob 中 74 处）→ 全部重写为正确中文；`__init__.py` 首行同步修复
 - **CI 盲区**：`sdk/python` / `sdk/rust` 不在任何 workflow 中，缺陷无法被门禁捕获 → ci.yml 新增 `changes` 过滤（py/rust）、`python-sdk` job（compileall + import 检查 + U+FFFD 乱码扫描）、`rust-sdk` job（`cargo build --locked` + `cargo clippy -- -D warnings`），随变更范围选择性触发
 - **`.gitignore` 补充**：新增 `target/` / `**/target/` 规则，防止 Rust 构建产物误入库
 
@@ -294,10 +294,10 @@
 
 四个版本的核心能力已全部实现并通过验证门（`go vet`/`go build ./...`/各包测试/`tsc --noEmit`/跨语言契约脚本全绿）：
 
-- **v3.3 长期自治** (`internal/agent/autonomy/`)：目标状态机（created→planned→executing→validated→done/failed）、`GoalPlan` 依赖 DAG + 并行执行、`GoalExecutor` 重试/重规划、`Scheduler` 定时+事件调度、`Monitor` 停滞检测、跨会话记忆、`ResumeManager` 崩溃恢复、`IdempotencyGuard` 幂等保护、`AutonomyRuntime` 端到端装配；能力接口 `WithAutonomy` + `pkg/autonomy.go` + CLI `ap autonomy`；验收 demo `ecosystem/examples/autonomous-task/`
-- **v3.4 技能进化** (`internal/agent/skills/`)：`Skill` 多步骤抽象 + SemVer、`Validator`（循环依赖/安全扫描）、`Codec`、`Composition`、习得流水线 `Acquisition` + 验证门 `Verification`、`Deduplicator` 去重、`Trigger` 触发策略、`Store`/`Matcher`（置信度三档）/`UsageTracker`；技能×工具/学习/市场/自治/RAG 五集成；`WithSkills` + `pkg/skills.go` + CLI `ap skill`；文档 `docs/guides/技能格式.md`；验收 demo `ecosystem/examples/skill-evolution/`
-- **v3.5 协议互操作** (`internal/agent/a2a/interop_*`)：对齐开放 Agent2Agent 协议——`OpenAgentCard`/`OpenMessage`/`OpenTask`/标准错误码/IO 模式、`interop_sse` 流式事件、`OpenInteropServer`/`OpenInteropClient`、`GenerateInteropReport` 符合性报告、互操作×认证/发现/追踪/限流/技能五集成；JSON-RPC 重新定位为开放协议标准传输（不再标记移除）；`pkg/a2a_interop.go` + CLI `ap a2a interop-check` + golden/集成/基准测试；文档 `docs/guides/A2A互通.md`；验收 demo `ecosystem/examples/a2a-interop/`
-- **v3.6 多模态实时** (`internal/agent/realtime/`)：会话状态机（idle→listening→thinking→speaking）、`RealtimeHub` 双向流编排、`ASRAdapter`/`TTSAdapter` 可插拔、`AudioStream` 静音检测、`VisionStream`、`Fusion` 多路感知融合、`BargeInHandler` 打断、`EventBus`、`CleanupManager` 超时回收、`Runtime` 装配 + ReAct 桥接；实时×多模态/边缘/自治/守卫/A2A 五集成；`WithRealtime` + `pkg/realtime.go` + CLI `ap realtime voice`；TS 边缘链路 `sdk/typescript/src/realtime/edge.ts`；文档 `docs/guides/实时通信.md`；验收 demo `ecosystem/examples/realtime-voice/`
+- **v3.3 长期自治** (`internal/agent/autonomy/`)：目标状态机（created→planned→executing→validated→done/failed）、`GoalPlan` 依赖 DAG + 并行执行、`GoalExecutor` 重试/重规划、`Scheduler` 定时+事件调度、`Monitor` 停滞检测、跨会话记忆、`ResumeManager` 崩溃恢复、`IdempotencyGuard` 幂等保护、`AutonomyRuntime` 端到端装配；能力接口 `WithAutonomy` + `pkg/autonomy.go` + CLI `synth autonomy`；验收 demo `ecosystem/examples/autonomous-task/`
+- **v3.4 技能进化** (`internal/agent/skills/`)：`Skill` 多步骤抽象 + SemVer、`Validator`（循环依赖/安全扫描）、`Codec`、`Composition`、习得流水线 `Acquisition` + 验证门 `Verification`、`Deduplicator` 去重、`Trigger` 触发策略、`Store`/`Matcher`（置信度三档）/`UsageTracker`；技能×工具/学习/市场/自治/RAG 五集成；`WithSkills` + `pkg/skills.go` + CLI `synth skill`；文档 `docs/guides/技能格式.md`；验收 demo `ecosystem/examples/skill-evolution/`
+- **v3.5 协议互操作** (`internal/agent/a2a/interop_*`)：对齐开放 Agent2Agent 协议——`OpenAgentCard`/`OpenMessage`/`OpenTask`/标准错误码/IO 模式、`interop_sse` 流式事件、`OpenInteropServer`/`OpenInteropClient`、`GenerateInteropReport` 符合性报告、互操作×认证/发现/追踪/限流/技能五集成；JSON-RPC 重新定位为开放协议标准传输（不再标记移除）；`pkg/a2a_interop.go` + CLI `synth a2a interop-check` + golden/集成/基准测试；文档 `docs/guides/A2A互通.md`；验收 demo `ecosystem/examples/a2a-interop/`
+- **v3.6 多模态实时** (`internal/agent/realtime/`)：会话状态机（idle→listening→thinking→speaking）、`RealtimeHub` 双向流编排、`ASRAdapter`/`TTSAdapter` 可插拔、`AudioStream` 静音检测、`VisionStream`、`Fusion` 多路感知融合、`BargeInHandler` 打断、`EventBus`、`CleanupManager` 超时回收、`Runtime` 装配 + ReAct 桥接；实时×多模态/边缘/自治/守卫/A2A 五集成；`WithRealtime` + `pkg/realtime.go` + CLI `synth realtime voice`；TS 边缘链路 `sdk/typescript/src/realtime/edge.ts`；文档 `docs/guides/实时通信.md`；验收 demo `ecosystem/examples/realtime-voice/`
 - **跨语言与开发者体验**：`cross-language-spec.json` 新增 `autonomy_goal`/`skills_lifecycle`/`a2a_interop`/`realtime_session` 四套件（v3.6.0）；TS SDK 对等实现 `src/{autonomy,skills,realtime,a2a/interop}` + 22 项单元测试；Studio 面板 `AutonomyMonitor`/`SkillLibrary`/`A2AInterop`/`RealtimeConsole`（前后端接通）；部署 `deploy/docker-compose.autonomy.yml` + `autonomous-agent.service`
 - **核查修复**：回头核查发现并修复"能编译但未接通"断点——三 `*Capable` 接口接入 `CapabilityAgent` 使引擎可发现、`IdempotencyGuard.Reset` 精确化、Studio 面板挂载路由+后端、TS 根导出、跨语言脚本由系统 grep 改 node 原生搜索（修复 Windows 假阴性）
 
@@ -318,12 +318,12 @@
 
 推送远端后 CI 首次真实运行，暴露多项**预存缺陷**（此前 CI 长期红着）：
 
-- **Go 路径问题**（根 `go build ./...` 在 workspace 下失败 `directory prefix . does not contain modules`）：test job 的 Build/Test/coverage、security 的 govulncheck/go-licenses、operator-envtest、build-cli、cross-compile、api-diff、release.yml 全部补 `working-directory: agentprimordia`
+- **Go 路径问题**（根 `go build ./...` 在 workspace 下失败 `directory prefix . does not contain modules`）：test job 的 Build/Test/coverage、security 的 govulncheck/go-licenses、operator-envtest、build-cli、cross-compile、api-diff、release.yml 全部补 `working-directory: synth`
 - **distributed-backend-tests 容器初始化失败**：`bitnami/etcd:3.5` 镜像已从 Docker Hub 下架 → 换 `quay.io/coreos/etcd:v3.5.12`（compose 两处同步）
 - **Agent Eval 失败**：Build sanity 同路径问题 + 软失败逻辑 `$?` 读到 `cat` 退出码恒为 0 → 补 working-directory + `set +e` 捕获真实退出码
 - **Supply Chain SBOM 失败**：`scripts/generate-sbom.sh` / `cosign-sign.sh` 被 workflow 引用但从未提交 → 新建两脚本
 - **jsonutil `ReadAllPooled` 脏读回归修复**（真实 bug）：Get 后未 Reset 就 `io.Copy`，同包 `Marshal` 留下的池残留导致结果含陈旧数据（实测 4096+1889=5985）→ Get 处补 `buf.Reset()` + 新增确定性回归测试
-- **悬空文档引用修正**：两处指向不存在的 `docs/plans/2026-06-04-phase6-implementation.md` 改为指向 `agentprimordia/docs/版本规范.md`
+- **悬空文档引用修正**：两处指向不存在的 `docs/plans/2026-06-04-phase6-implementation.md` 改为指向 `synth/docs/版本规范.md`
 
 ### Changed — Lint 门修复（TS ESLint + Go golangci-lint 长期红灯）
 
@@ -340,7 +340,7 @@
 
 ### Added — Studio Web UI 补全为可构建应用
 
-- **Studio 应用壳补全** (`agentprimordia/studio/web/`): 新增 `package.json`、`vite.config.ts`、`tsconfig.json`、`index.html`、`src/main.tsx`、`src/router.tsx`（路由树）、`src/App.tsx`（侧边导航布局）、`src/styles.css`，接入已有 4 页面（ChaosLab / ClusterDashboard / LearningMonitor / MarketplacePage）
+- **Studio 应用壳补全** (`synth/studio/web/`): 新增 `package.json`、`vite.config.ts`、`tsconfig.json`、`index.html`、`src/main.tsx`、`src/router.tsx`（路由树）、`src/App.tsx`（侧边导航布局）、`src/styles.css`，接入已有 4 页面（ChaosLab / ClusterDashboard / LearningMonitor / MarketplacePage）
   - `npm run dev` 启动开发服务器，`/api` 代理到本地管理后端（默认 `:8080`）；`npm run build` 产出可部署的 `dist/`（替换了此前与源码不符的过期构建产物）
   - 修复 `LearningMonitor.tsx` 内部 `fetch` 函数遮蔽全局 `fetch` 导致 API 调用递归自身的 bug
 - **Studio 组件测试** (`src/App.test.tsx`): vitest + @testing-library/react 渲染测试 6 例，覆盖导航渲染、四页面路由切换、深链直达
@@ -442,7 +442,7 @@
 - 集群×市场、学习×记忆、隐私×集群、混沌×Soak 联动
 
 **Phase 3: 开发者体验**
-- **CLI 集群/市场/Edge 命令**: `ap cluster`、`ap market`、`ap create-edge-agent` 脚手架
+- **CLI 集群/市场/Edge 命令**: `synth cluster`、`synth market`、`synth create-edge-agent` 脚手架
 - **Studio UI 四面板**: ChaosLab / ClusterDashboard / LearningMonitor / MarketplacePage
 
 **Phase 4: 性能验证**
@@ -523,7 +523,7 @@
 
 ### Added
 
-- **全局版本统一 v1.0.0** — Go SDK (`pkg.Version`)、TypeScript SDK (`package.json`)、CLI (`ap version`)、脚手架模板全部对齐为 `v1.0.0`
+- **全局版本统一 v1.0.0** — Go SDK (`pkg.Version`)、TypeScript SDK (`package.json`)、CLI (`synth version`)、脚手架模板全部对齐为 `v1.0.0`
 - **API 稳定性承诺锁定** — Stable API 向后兼容，破坏性变更需大版本（v2.0）
 - **API 参考文档全面重写** — `docs/api/` 下 7 个文件（agent / llm / tools / memory / pool / a2a / guardrail）对照源码逐行校验，修正接口签名、导入路径、类型定义
 - **Go vs TypeScript 基准对比** (`docs/benchmarks/Go与TypeScript对比.md`): 双 SDK 性能基准报告
@@ -538,12 +538,12 @@
 - **TokenCache** (`internal/agent/tokencache.go`): FNV-1a hash + `sync.Map` 的 token 估算缓存，
   面向长文档 chunk 和重复消息场景。当前保留供未来启用（`len()/4` 启发式已足够快）。
 - **JSON Buffer Pool** (`internal/jsonutil/pool.go`): JSON 序列化/反序列化的 buffer 复用池。
-- **pprof 端点** (`internal/health/pprof.go`): `ap.RegisterPProf(mux)` 和 `ap.PProfHandler()`
+- **pprof 端点** (`internal/health/pprof.go`): `synth.RegisterPProf(mux)` 和 `synth.PProfHandler()`
   导出至 `pkg/`，支持所有标准 profile 类型（heap / goroutine / cpu / block / mutex）。
-- **`ap loop` CLI 子命令** (`cmd/ap/loop.go`): ReAct Loop 工程化工具
-  - `ap loop trace` — 查看 Agent 执行追踪
-  - `ap loop inspect` — 查看 Agent 当前状态
-  - `ap loop resume` — 从检查点恢复运行
+- **`synth loop` CLI 子命令** (`cmd/synth/loop.go`): ReAct Loop 工程化工具
+  - `synth loop trace` — 查看 Agent 执行追踪
+  - `synth loop inspect` — 查看 Agent 当前状态
+  - `synth loop resume` — 从检查点恢复运行
 - **Fuzz 测试**: Sandbox 路径遍历（`sandbox_fuzz_test.go`）、RAG 检索（`rag_fuzz_test.go`）、
   工具执行器（`executor_fuzz_test.go`）安全模糊测试
 - **供应链安全文档** (`docs/advanced/供应链安全.md`): govulncheck + npm audit + Trivy + cosign 签名 + SBOM 生成完整指南
@@ -597,7 +597,7 @@
 ### Added
 
 - **GitHub Issue Triage Bot** (Phase 18): `ecosystem/examples/github-issue-triage/`
-  生产级 demo，展示 AgentPrimordia 在真实业务场景下的能力
+  生产级 demo，展示 Synth 在真实业务场景下的能力
   - 5 个预置 Issue，涵盖 bug/feature/question/duplicate 4 种分类
   - 3 个自定义工具（list_issues / read_issue / add_label）
   - httptest 模拟 GitHub API（生产可换成真实 API）
@@ -622,15 +622,15 @@
   - 7 个测试覆盖 `deepseek-chat` / `deepseek-reasoner` / `deepseek-coder` 三种模型
   - 验证 OpenAI 兼容接口（`BaseURL=https://api.deepseek.com/v1`）的 Complete / CallTools / Stream 路径
 - **Phase 16 实施计划** (Phase 16): `docs/plans/2026-06-12-llm-provider-tests.md`
-- **FAQ 文档** (Phase 15 补遗): `agentprimordia/ecosystem/docs/faq.md` — 7 大分类 22 个问答
-- **RAG Agent Cookbook** (Phase 15 补遗): `agentprimordia/ecosystem/docs/cookbook/RAG-Agent.md` — 含架构图、完整代码、三种 RAG 模式对比
+- **FAQ 文档** (Phase 15 补遗): `synth/ecosystem/docs/faq.md` — 7 大分类 22 个问答
+- **RAG Agent Cookbook** (Phase 15 补遗): `synth/ecosystem/docs/cookbook/RAG-Agent.md` — 含架构图、完整代码、三种 RAG 模式对比
 - **`pkg/example_test.go`**: 8 个 Go Example 函数（NewAgent / Pool / DAG / Session / ResilientProvider 等）
   覆盖公共 API，可在 `go doc` 和 pkg.go.dev 上展示
 
 ### Fixed
 
 - **文档 API 路径不一致** (Phase 15 补遗): `getting-started.md` 和 `best-practices.md` 大量使用 `internal/` 旧路径，
-  统一改为 `ap.Xxx` 公共 API；删除不存在的 API 引用（`memory.NewMemory`, `debugger.NewDebugServer` 等）
+  统一改为 `synth.Xxx` 公共 API；删除不存在的 API 引用（`memory.NewMemory`, `debugger.NewDebugServer` 等）
 - **`pkg/version.go` 版本号** (Phase 15 补遗): 从 `0.1.0` 修正为 `0.7.0`，与 README/CHANGELOG 一致
 - **异步摘要结果丢失** (P2 M2): 扩展 `MemoryStore` 接口添加 `UpdateSummary` 方法，
   ReAct 异步摘要 goroutine 现在将结果写入记忆存储而非仅日志记录
@@ -650,7 +650,7 @@
 - **GLM 真实 API 集成测试** (Phase 17-B): `TestIntegration_GLM_Complete/Stream`（CallTools 跳过，Phase 16-B 已锁定 `ErrNotSupported`）
 - **Qwen/DeepSeek Stream 集成测试** (Phase 17-C): `TestIntegration_Qwen_Stream`, `TestIntegration_DeepSeek_Stream`
 - **`pkg/` 公共 API 端到端测试** (Phase 17-D): `pkg/integration_test.go` — 4 个 e2e 测试
-  验证 `ap.NewAgent / NewSession / WithMemory / StreamRun` 的真实跑通路径
+  验证 `synth.NewAgent / NewSession / WithMemory / StreamRun` 的真实跑通路径
 - **跨平台集成测试脚本** (Phase 17-E): `scripts/test-integration.ps1`
   自动检测 API Key 并报告跳过情况，支持 Provider 过滤（`-Provider openai` 等）
 - **异步摘要存储测试** (P2): `summary_store_test.go` — 验证 `UpdateSummary` 被正确调用
@@ -674,7 +674,7 @@
   取代 `ReActConfig` 中 14 个能力字段
 - **LLM Provider 模板** (Phase 6.5.3): `internal/llm/provider_template.go`
   启动期拒绝构造,防误用
-- **`ap init` 脚手架可编译** (Phase 6.5.5, 6.5.9): 生成 go.mod + replace 指向 `..`
+- **`synth init` 脚手架可编译** (Phase 6.5.5, 6.5.9): 生成 go.mod + replace 指向 `..`
 - **`TemplateProvider` 误用防护** (Phase 6.5.3): `ErrTemplateNotImplemented` sentinel 错误
 - **生态 README** (Phase 6.5.8): `ecosystem/README.md` 显式核心/生态边界
 - **CONTRIBUTING 模块边界同步** (Phase 6.5.6): 把 AGENTS.md 关键规则纳入仓库
@@ -691,7 +691,7 @@
 - **TypeScript A2A**: A2ABus 跨 Agent 消息通信
 - **TypeScript MCP**: MCPClient 占位 + 完整类型定义
 - **E2E 集成测试**: ReActAgent 真实 API 调用测试 (//go:build integration)
-- **架构文档重写**: 架构图.md 从 CodeCast 改为 AP 架构（6 张图）
+- **架构文档重写**: 架构图.md 从 CodeCast 改为 Synth 架构（6 张图）
 - **CHANGELOG 回填**: v0.3.0 - v0.6.0 完整条目
 - **TypeScript 上下文窗口管理**: `maxMessages` 配置 + `trimMessages()` 保留 system prompt
 - **TypeScript AgentPool 并发安全**: 索引分派替代 queue.shift()
@@ -707,7 +707,7 @@
 - **Operator ConfigMap**: yaml.Marshal 替代 fmt.Sprintf 安全生成 YAML
 - **Operator 镜像**: imageOrDefault() 方法，spec.Image > DefaultImage > 硬编码默认值
 - **Makefile**: `make test` 自动检测 CGO，Windows 无 gcc 也能跑
-- **统一 License**: Apache-2.0 (Copyright 2026 AgentPrimordia Contributors)
+- **统一 License**: Apache-2.0 (Copyright 2026 Synth Contributors)
 
 ### Deprecated
 
@@ -717,9 +717,9 @@
 
 ### Fixed
 
-- `ap init` 生成的项目缺 `go.mod`, 此前无法编译 (Phase 6.5.5)
-- `ap init` 生成的 `go.mod` replace 路径错 (`../agentprimordia` → `..`) (Phase 6.5.9)
-- `cmd/ap/scaffold/main.go` 孤儿文件被 `//go:embed` 包含 (Phase 6.5.9)
+- `synth init` 生成的项目缺 `go.mod`, 此前无法编译 (Phase 6.5.5)
+- `synth init` 生成的 `go.mod` replace 路径错 (`../synth` → `..`) (Phase 6.5.9)
+- `cmd/synth/scaffold/main.go` 孤儿文件被 `//go:embed` 包含 (Phase 6.5.9)
 - 6 个生态插件补单元测试: git / http / json / sql (Phase 6.5.4)
 - **CRITICAL**: filesystem.go EvalSymlinks 失败静默放行 symlink 逃逸
 - **CRITICAL**: react_loop.go searchRAG nil 解引用 panic
@@ -769,7 +769,7 @@
 
 - **协议式微内核**: 12 个 `*Capable` 接口 + `WithXxx` 链式 API（Phase 6.5.4）
 - **LLM Provider 模板**: 启动期拒绝构造防误用（Phase 6.5.3）
-- **ap init 可编译**: 生成 go.mod + replace 指向 `..`（Phase 6.5.5, 6.5.9）
+- **synth init 可编译**: 生成 go.mod + replace 指向 `..`（Phase 6.5.5, 6.5.9）
 - **生态 README**: 显式核心/生态边界（Phase 6.5.8）
 - **CONTRIBUTING 模块边界同步**: AGENTS.md 关键规则纳入仓库（Phase 6.5.6）
 
@@ -782,9 +782,9 @@
 
 ### Fixed
 
-- `ap init` 生成的项目缺 go.mod，此前无法编译（Phase 6.5.5）
-- `ap init` 生成的 go.mod replace 路径错（Phase 6.5.9）
-- `cmd/ap/scaffold/main.go` 孤儿文件被 `//go:embed` 包含（Phase 6.5.9）
+- `synth init` 生成的项目缺 go.mod，此前无法编译（Phase 6.5.5）
+- `synth init` 生成的 go.mod replace 路径错（Phase 6.5.9）
+- `cmd/synth/scaffold/main.go` 孤儿文件被 `//go:embed` 包含（Phase 6.5.9）
 
 ### Deprecated
 

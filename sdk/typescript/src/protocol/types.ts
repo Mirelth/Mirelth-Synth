@@ -1,5 +1,5 @@
 ﻿/**
- * AgentPrimordia 统一协议层（TypeScript 端）。
+ * Synth 统一协议层（TypeScript 端）。
  *
  * 与 Go 端 internal/protocol/types.go 对齐：
  * - 字段名使用 camelCase（对应 Go 的 json tag）

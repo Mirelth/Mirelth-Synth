@@ -11,7 +11,7 @@
  *
  * 使用方式：
  *   // app/page.tsx (Server Component)
- *   import { AgentServerComponent } from '@agentprimordia/sdk/react/server-components';
+ *   import { AgentServerComponent } from '@synth/sdk/react/server-components';
  *   export default function Page() {
  *     return <AgentServerComponent input="你好" provider={provider} toolkit={toolkit} />;
  *   }
@@ -60,8 +60,8 @@ export async function AgentServerComponent({
   const response: Response = await agent.run(input);
 
   return (
-    <div className="ap-agent-server-component">
-      <p className="ap-agent-response">{response.content}</p>
+    <div className="synth-agent-server-component">
+      <p className="synth-agent-response">{response.content}</p>
       <AgentMetrics metrics={response.metrics} />
     </div>
   );
@@ -70,7 +70,7 @@ export async function AgentServerComponent({
 /** Agent 运行指标展示（纯展示，无副作用） */
 export function AgentMetrics({ metrics }: { metrics: AgentMetrics }): ReactElement {
   return (
-    <dl className="ap-agent-metrics">
+    <dl className="synth-agent-metrics">
       <dt>Turns</dt>
       <dd>{metrics.totalTurns}</dd>
       <dt>Tools</dt>

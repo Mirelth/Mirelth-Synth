@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""生成 AgentPrimordia v4.0 架构图（SVG + PNG）。
+"""生成 Synth v4.0 架构图（SVG + PNG）。
 
 布局：7 层纵向分层（入口 → 公共API → 核心引擎 → 能力四件套 → 编排 → 横向支撑 → 基础设施）
 风格：现代化深色技术风（深空背景 + 霓虹渐变 + 清晰分区）
@@ -123,7 +123,7 @@ svg.append(f'<rect width="{W}" height="{H}" fill="url(#bgR)"/>')
 svg.append(f'<rect width="{W}" height="{H}" fill="url(#gp)"/>')
 
 # ---------- 标题区 ----------
-svg.append(title(1200, 52, "AGENTPRIMORDIA", fs=38, weight=200, color="#0f172a"))
+svg.append(title(1200, 52, "SYNTH", fs=38, weight=200, color="#0f172a"))
 svg.append('<text x="1200" y="84" text-anchor="middle" fill="#64748b" font-family="system-ui,sans-serif" '
            'font-size="13" letter-spacing="5" opacity="0.8">UNIVERSAL AI AGENT FRAMEWORK · GO + TYPESCRIPT DUAL SDK</text>')
 svg.append('<line x1="860" y1="100" x2="1540" y2="100" stroke="#00d4ff" stroke-width="0.5" opacity="0.3"/>')
@@ -132,7 +132,7 @@ svg.append(sub(1200, 122, "v5.0.0  ·  38 Modules Parity  ·  Apache-2.0  ·  Ze
 # ============ ① 入口层 ============
 p1 = panel(60, 150, 2280, 100, "①  APPLICATION / ENTRYPOINTS", C["infra"], label_x=80)
 svg.append(p1)
-entries = [("Your App", "Go / TS 集成"), ("CLI · ap", "init / run / debug"), ("Studio UI", "可视化编排"),
+entries = [("Your App", "Go / TS 集成"), ("CLI · synth", "init / run / debug"), ("Studio UI", "可视化编排"),
            ("VSCode", "Inspector 扩展"), ("Edge / Browser", "WASM 沙箱")]
 ex = 90
 for name, desc in entries:
@@ -148,12 +148,12 @@ svg.append(p2)
 # Go pkg
 svg.append(box(90, 318, 1080, 64, "#84cc16", "#84cc16", rx=12, sw=0.9, fill_op=0.05))
 svg.append(title(340, 343, "Go  ·  pkg/", fs=14, color="#0f172a"))
-svg.append(sub(340, 367, "ap.NewAgent() · Chain API · Type Aliases", fs=9.5, color="#84cc16"))
+svg.append(sub(340, 367, "synth.NewAgent() · Chain API · Type Aliases", fs=9.5, color="#84cc16"))
 svg.append(chip(90, 334, 150, 32, "#84cc16", "public API", fs=11))
 # TS SDK
 svg.append(box(1230, 318, 1080, 64, "#84cc16", "#84cc16", rx=12, sw=0.9, fill_op=0.05))
-svg.append(title(1480, 343, "TypeScript  ·  @agentprimordia/sdk", fs=14, color="#0f172a"))
-svg.append(sub(1480, 367, "34 模块 Go Parity · npm install @agentprimordia/sdk", fs=9.5, color="#84cc16"))
+svg.append(title(1480, 343, "TypeScript  ·  @synth/sdk", fs=14, color="#0f172a"))
+svg.append(sub(1480, 367, "34 模块 Go Parity · npm install @synth/sdk", fs=9.5, color="#84cc16"))
 svg.append(chip(1230, 334, 150, 32, "#84cc16", "npm SDK", fs=11))
 svg.append(arrow(1200, 400, 1200, 442, C["cfg"], dash="4 4", marker="a_l", opacity=0.5))
 
@@ -257,15 +257,15 @@ for t in infra:
 
 # ============ 图例 ============
 legend_y = 1450
-svg.append(sub(1200, legend_y, "Go: agentprimordia/ · TS: sdk/typescript/ · 双语言功能对等，34 模块全覆盖", fs=10, color="#64748b"))
+svg.append(sub(1200, legend_y, "Go: synth/ · TS: sdk/typescript/ · 双语言功能对等，34 模块全覆盖", fs=10, color="#64748b"))
 
 svg.append("</g>")
 svg.append("</svg>")
 
 svg_text = "\n".join(svg)
 repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-svg_path = os.path.join(repo, "agentprimordia", "docs", "ap-architecture.svg")
-png_path = os.path.join(repo, "agentprimordia", "docs", "ap-architecture.png")
+svg_path = os.path.join(repo, "synth", "docs", "synth-architecture.svg")
+png_path = os.path.join(repo, "synth", "docs", "synth-architecture.png")
 os.makedirs(os.path.dirname(svg_path), exist_ok=True)
 
 with open(svg_path, "w", encoding="utf-8") as f:
@@ -274,7 +274,7 @@ print(f"SVG 写入: {svg_path}")
 
 # ---------- 转 PNG ----------
 def try_edge():
-    html_path = os.path.join(repo, "agentprimordia", "docs", "_arch_tmp.html")
+    html_path = os.path.join(repo, "synth", "docs", "_arch_tmp.html")
     with open(html_path, "w", encoding="utf-8") as f:
         f.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>'
                 '<body style="margin:0;padding:0;background:#ffffff">'

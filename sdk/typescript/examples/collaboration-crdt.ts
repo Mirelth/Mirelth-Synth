@@ -6,7 +6,7 @@
 import { CRDTDocumentImpl, LamportClock, InMemoryCRDTPersistence, createSnapshot } from '../src/collaboration/crdt.js';
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: CRDT Collaboration ===\n');
+  console.log('=== Synth TS SDK: CRDT Collaboration ===\n');
 
   // 创建两个协作客户端（模拟分布式环境）
   const docA = new CRDTDocumentImpl<{ title: string; content: string }>('client-A');

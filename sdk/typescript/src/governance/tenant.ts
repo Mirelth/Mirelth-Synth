@@ -50,7 +50,7 @@ export class TenantManager {
     this.tenants.set(id, tenant);
 
     // 生成 API Key
-    const apiKey = `ap-${id}-${Date.now().toString(36)}`;
+    const apiKey = `synth-${id}-${Date.now().toString(36)}`;
     const hashed = this.hashKey(apiKey);
     this.apiKeys.set(hashed, id);
 

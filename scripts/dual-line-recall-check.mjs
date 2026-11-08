@@ -6,15 +6,15 @@
 //   1. 双线差 ≤0.02（逐档与均值，docs/V7路线图.md §二 S0-3 验收行）；
 //   2. 两侧均为 semantic=false 的降级位臂（结果不得计入语义验收）；
 //   3. 两侧均携带语义缓存命中率基线（冷+暖双轮口径 = 0.5）。
-// 结果文件由测试在 AP_WRITE_S03_RESULTS=1 时产出：
-//   Go: agentprimordia/bench/results/s0-3-recall-go.json
+// 结果文件由测试在 SYNTH_WRITE_S03_RESULTS=1 时产出：
+//   Go: synth/bench/results/s0-3-recall-go.json
 //   TS: sdk/typescript/bench/results/s0-3-recall-ts.json
 // 语义臂（≥0.95，需真实端点）结果落 *-semantic.json，本门不做数值对账
 //（端点浮点有噪声），只在校验模式 --with-semantic 下要求两侧同时存在且 ≥0.95。
 //
 // 接线（2026-10-17）：本门此前全仓零消费者（门存在但从不运行）。现由
 //   - CI: .github/workflows/ci.yml job `dual-line-recall`（重生成两侧 → 对账 → 断言夹具零 diff）；
-//   - 本地: `make -C agentprimordia dual-line-recall`
+//   - 本地: `make -C synth dual-line-recall`
 // 消费。两臂均为离线 lexical 底档臂（semantic=false，无需端点），实测重生成逐字节一致。
 // 本脚本本身只对账"已落盘的两份夹具"；夹具是否与真跑一致由调用方的
 // `git diff --exit-code` 步骤负责（两侧同步漂移时仅靠本脚本无法发现）。
@@ -23,13 +23,13 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const goPath = resolve(repoRoot, 'agentprimordia/bench/results/s0-3-recall-go.json');
+const goPath = resolve(repoRoot, 'synth/bench/results/s0-3-recall-go.json');
 const tsPath = resolve(repoRoot, 'sdk/typescript/bench/results/s0-3-recall-ts.json');
 
 if (!existsSync(goPath) || !existsSync(tsPath)) {
-  console.error('❌ 结果文件缺失——先在两侧跑基准（AP_WRITE_S03_RESULTS=1）：');
-  if (!existsSync(goPath)) console.error('  Go: cd agentprimordia && AP_WRITE_S03_RESULTS=1 go test ./internal/memory/ -run TestEmbeddingCorpusRecall$');
-  if (!existsSync(tsPath)) console.error('  TS: cd sdk/typescript && AP_WRITE_S03_RESULTS=1 npx vitest run src/llm/__tests__/embedding-recall.test.ts');
+  console.error('❌ 结果文件缺失——先在两侧跑基准（SYNTH_WRITE_S03_RESULTS=1）：');
+  if (!existsSync(goPath)) console.error('  Go: cd synth && SYNTH_WRITE_S03_RESULTS=1 go test ./internal/memory/ -run TestEmbeddingCorpusRecall$');
+  if (!existsSync(tsPath)) console.error('  TS: cd sdk/typescript && SYNTH_WRITE_S03_RESULTS=1 npx vitest run src/llm/__tests__/embedding-recall.test.ts');
   process.exit(1);
 }
 

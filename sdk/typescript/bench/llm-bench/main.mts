@@ -1,5 +1,5 @@
 /**
- * AgentPrimordia TS 端真实 LLM 跑分工具（v3.7-2）。
+ * Synth TS 端真实 LLM 跑分工具（v3.7-2）。
  *
  * 与 Go 端 bench/llm-bench 对齐：对同一套 harness 基准集
  * （HARNESS_BENCHMARK_CASES，60 条真实编码任务）跑真实 LLM Provider，

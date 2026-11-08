@@ -1,4 +1,4 @@
-# AgentPrimordia 双语言 SDK 实施计划
+# Synth 双语言 SDK 实施计划
 
 > 基于源码级验证的准确实施路线图
 > 生成日期：2026-07-31 | 基线版本：Go v3.1.0 / TS v3.0.0
@@ -34,10 +34,10 @@
 
 | 组件 | 版本 | 文件 |
 |------|------|------|
-| Go SDK | v3.1.0 | `agentprimordia/VERSION` |
+| Go SDK | v3.1.0 | `synth/VERSION` |
 | TypeScript SDK | v3.0.0 | `sdk/typescript/package.json` |
-| Go 工具链 | go 1.26.3 / toolchain go1.26.4 | `agentprimordia/go.mod` |
-| Operator | go 1.26.3 | `agentprimordia/operator/go.mod` |
+| Go 工具链 | go 1.26.3 / toolchain go1.26.4 | `synth/go.mod` |
+| Operator | go 1.26.3 | `synth/operator/go.mod` |
 | 跨语言规范 | v2.0.0（10 个测试套件） | `sdk/typescript/tests/shared/cross-language-spec.json` |
 
 ### 1.2 已有基础设施
@@ -65,7 +65,7 @@
 | **P2** | otel/ 测试文件占比 41.2%（7/17） | `internal/otel/` | 可观测性桥接验证偏弱 |
 | **P2** | persist/ 测试文件占比 47.4%（9/19） | `internal/persist/` | 分布式后端验证偏少 |
 | **P2** | governance/ 测试文件占比 43.5%（10/23） | `internal/governance/` | 治理模块验证偏弱 |
-| **P2** | Phase 5 待办：远程插件注册中心 + cosign 签名 | `cmd/ap/` | plugin install 无远程源、无签名校验 |
+| **P2** | Phase 5 待办：远程插件注册中心 + cosign 签名 | `cmd/synth/` | plugin install 无远程源、无签名校验 |
 | **P3** | react_loop 等文件未迁出到 react/ 子包 | `internal/agent/` 根目录 | 包结构不够清晰 |
 | **P3** | PoolStats 指标未导出到 Prometheus | `internal/pool/` | 调度器运行状态不可观测 |
 | **P3** | TS SDK 小版本落后 Go（3.0 vs 3.1） | `sdk/typescript/package.json` | 功能对等性信号不一致 |
@@ -75,8 +75,8 @@
 总计 18 处 TODO，其中：
 - **14 处**：`internal/llm/provider_template.go` — 模板引导占位（设计模式，非债务）
 - **1 处**：`internal/debugger/visual_editor.go:272` — 异步执行编排（真实债务）
-- **1 处**：`cmd/ap/scaffold/provider/main.go:108` — 脚手架模板引导
-- **1 处**：`cmd/ap/test.go:100` — 测试模板引导
+- **1 处**：`cmd/synth/scaffold/provider/main.go:108` — 脚手架模板引导
+- **1 处**：`cmd/synth/test.go:100` — 测试模板引导
 - **1 处**：`internal/llm/provider_template.go` 注释引用
 
 **真实 TODO 仅 1 处**。
@@ -99,9 +99,9 @@
 `handleExecute` 端点（`POST /api/editor/execution`）当前返回 `202 Accepted` 和 `execution_id`，但实际不启动任何 goroutine 执行编排流程。调用方轮询执行状态永远得到 `running`。
 
 **涉及文件**：
-- `agentprimordia/internal/debugger/visual_editor.go` — 主改动
-- `agentprimordia/internal/debugger/visual_editor_test.go` — 测试
-- `agentprimordia/internal/orchestration/` — 消费编排引擎接口
+- `synth/internal/debugger/visual_editor.go` — 主改动
+- `synth/internal/debugger/visual_editor_test.go` — 测试
+- `synth/internal/orchestration/` — 消费编排引擎接口
 
 **实施步骤**：
 1. 在 `handleExecute` 中启动 goroutine，调用 `orchestration.Engine.Execute()` 执行 DAG/Pipeline
@@ -128,10 +128,10 @@
 `internal/concurrency/pool.go` 已实现动态协程池，但 `internal/pool/dispatcher.go` 仍使用固定 worker 模式，未接入动态伸缩能力。
 
 **涉及文件**：
-- `agentprimordia/internal/pool/dispatcher.go` — 主改动
-- `agentprimordia/internal/pool/dispatcher_test.go` — 测试
-- `agentprimordia/internal/concurrency/pool.go` — 消费接口
-- `agentprimordia/internal/pool/pool.go` — 可能需要调整接口
+- `synth/internal/pool/dispatcher.go` — 主改动
+- `synth/internal/pool/dispatcher_test.go` — 测试
+- `synth/internal/concurrency/pool.go` — 消费接口
+- `synth/internal/pool/pool.go` — 可能需要调整接口
 
 **实施步骤**：
 1. 在 `Dispatcher` 中引入 `concurrency.GoroutinePool` 作为执行后端
@@ -142,7 +142,7 @@
 **验收标准**：
 - [ ] Dispatcher 支持 `WithDynamicPool()` 选项启用动态协程池
 - [ ] 默认行为不变（固定 worker），向后兼容
-- [ ] PoolStats 指标在 `/metrics` 端点可见（`ap_pool_active_goroutines`、`ap_pool_queue_depth`、`ap_pool_completed_total`）
+- [ ] PoolStats 指标在 `/metrics` 端点可见（`synth_pool_active_goroutines`、`synth_pool_queue_depth`、`synth_pool_completed_total`）
 - [ ] 新增测试 ≥ 4 个
 - [ ] 现有 `internal/pool/` 测试全部通过
 
@@ -156,9 +156,9 @@
 `internal/llm/batch.go` 的 `BatchProcessor` 已实现请求合并逻辑，但未与 Pool 调度器集成。多 Agent 并发请求场景下无法自动合并批次。
 
 **涉及文件**：
-- `agentprimordia/internal/llm/batch.go` — 主改动
-- `agentprimordia/internal/llm/batch_test.go` — 测试
-- `agentprimordia/internal/pool/dispatcher.go` — 集成点
+- `synth/internal/llm/batch.go` — 主改动
+- `synth/internal/llm/batch_test.go` — 测试
+- `synth/internal/pool/dispatcher.go` — 集成点
 
 **实施步骤**：
 1. 在 Dispatcher 的请求分发路径中，检测是否启用 BatchProcessor
@@ -183,10 +183,10 @@
 `internal/otel/` 17 个文件中 7 个测试文件（41.2%），`bridge_enhanced.go`、`metric_export.go` 等核心路径测试偏薄。
 
 **涉及文件**：
-- `agentprimordia/internal/otel/bridge_enhanced_test.go` — 扩充
-- `agentprimordia/internal/otel/metric_export_test.go` — 扩充
-- `agentprimordia/internal/otel/otlp_exporter_test.go` — 扩充
-- `agentprimordia/internal/otel/ebpf/tracer_test.go` — 扩充（当前仅 31 行）
+- `synth/internal/otel/bridge_enhanced_test.go` — 扩充
+- `synth/internal/otel/metric_export_test.go` — 扩充
+- `synth/internal/otel/otlp_exporter_test.go` — 扩充
+- `synth/internal/otel/ebpf/tracer_test.go` — 扩充（当前仅 31 行）
 
 **实施步骤**：
 1. 为 `bridge_enhanced.go` 补充 Span 属性注入、Trace Context 传播的边界测试
@@ -210,11 +210,11 @@
 `internal/persist/` 19 个文件中 9 个测试文件（47.4%）。`etcd_checkpoint.go`（99 行）和 `redis_checkpoint.go`（100 行）因 build tag 门控，缺少充分的单元测试。`leader_election.go`（356 行）仅有 1 个测试文件。
 
 **涉及文件**：
-- `agentprimordia/internal/persist/etcd_checkpoint.go` — 被测目标
-- `agentprimordia/internal/persist/redis_checkpoint.go` — 被测目标
-- `agentprimordia/internal/persist/leader_election.go` — 被测目标
-- `agentprimordia/internal/persist/leader_election_test.go` — 扩充
-- `agentprimordia/internal/persist/fs_coordinator.go` — 被测目标
+- `synth/internal/persist/etcd_checkpoint.go` — 被测目标
+- `synth/internal/persist/redis_checkpoint.go` — 被测目标
+- `synth/internal/persist/leader_election.go` — 被测目标
+- `synth/internal/persist/leader_election_test.go` — 扩充
+- `synth/internal/persist/fs_coordinator.go` — 被测目标
 
 **实施步骤**：
 1. 为 etcd/Redis checkpoint 编写基于 mock KV 的单元测试（不依赖真实 etcd/Redis）
@@ -237,9 +237,9 @@
 `internal/governance/` 23 个文件中 10 个测试文件（43.5%）。`policy_watcher.go`（309 行）、`metrics.go`（236 行）、`audit_log.go`（290 行）测试偏薄。
 
 **涉及文件**：
-- `agentprimordia/internal/governance/policy_watcher.go` — 被测目标
-- `agentprimordia/internal/governance/metrics.go` — 被测目标
-- `agentprimordia/internal/governance/audit_log.go` — 被测目标
+- `synth/internal/governance/policy_watcher.go` — 被测目标
+- `synth/internal/governance/metrics.go` — 被测目标
+- `synth/internal/governance/audit_log.go` — 被测目标
 
 **实施步骤**：
 1. 为 policy_watcher 补充热加载触发、文件损坏回退、并发读写测试
@@ -267,21 +267,21 @@
 **优先级**：P1 | **预估工时**：5-7 天
 
 **问题描述**：
-`ap plugin search` 当前仅查询本地 `ecosystem/plugins/registry.json`，无远程源。Phase 5 Task 2 待办。
+`synth plugin search` 当前仅查询本地 `ecosystem/plugins/registry.json`，无远程源。Phase 5 Task 2 待办。
 
 **涉及文件**：
-- `agentprimordia/cmd/ap/plugin.go`（或相关子命令文件）— 主改动
-- `agentprimordia/internal/registry/` — 远程注册中心客户端
-- `agentprimordia/ecosystem/plugins/registry.json` — 本地缓存
+- `synth/cmd/synth/plugin.go`（或相关子命令文件）— 主改动
+- `synth/internal/registry/` — 远程注册中心客户端
+- `synth/ecosystem/plugins/registry.json` — 本地缓存
 
 **实施步骤**：
 1. 实现远程注册中心 HTTP 客户端（`GET /plugins`、`GET /plugins/{name}`）
-2. `ap plugin search` 优先查远程，失败时降级到本地 JSON
-3. 远程查询结果缓存到 `$HOME/.agentprimordia/plugins/registry-cache.json`（TTL 24h）
+2. `synth plugin search` 优先查远程，失败时降级到本地 JSON
+3. 远程查询结果缓存到 `$HOME/.synth/plugins/registry-cache.json`（TTL 24h）
 4. 补充测试（httptest.Server 模拟远程注册中心）
 
 **验收标准**：
-- [ ] `ap plugin search <keyword>` 支持远程查询
+- [ ] `synth plugin search <keyword>` 支持远程查询
 - [ ] 远程不可达时自动降级到本地，不报错
 - [ ] 缓存 TTL 可配置
 - [ ] 新增测试 ≥ 4 个（含降级路径）
@@ -293,11 +293,11 @@
 **优先级**：P1 | **预估工时**：3-5 天
 
 **问题描述**：
-`ap plugin install` 当前不校验插件包签名。Phase 5 Task 3 待办。
+`synth plugin install` 当前不校验插件包签名。Phase 5 Task 3 待办。
 
 **涉及文件**：
-- `agentprimordia/cmd/ap/plugin.go` — 主改动
-- `agentprimordia/internal/security/` — 签名验证逻辑
+- `synth/cmd/synth/plugin.go` — 主改动
+- `synth/internal/security/` — 签名验证逻辑
 
 **实施步骤**：
 1. 在 `install` 流程中增加 cosign 签名验证步骤
@@ -306,7 +306,7 @@
 4. 补充测试（模拟签名/验证流程）
 
 **验收标准**：
-- [ ] `ap plugin install <name>` 默认验证签名
+- [ ] `synth plugin install <name>` 默认验证签名
 - [ ] 签名不匹配时安装被拒绝，错误信息包含预期/实际摘要
 - [ ] `--skip-verify` 可跳过
 - [ ] 新增测试 ≥ 3 个
@@ -321,9 +321,9 @@
 `internal/agent/` 根目录仍有 `react_loop.go`、`react_loop_core.go`、`react_loop_tools.go` 等文件未迁出到 `react/` 子包。Phase 3 残留。
 
 **涉及文件**：
-- `agentprimordia/internal/agent/react_loop*.go` — 迁移到 `internal/agent/react/`
-- `agentprimordia/internal/agent/` 下所有引用方 — 更新 import
-- `agentprimordia/pkg/` — 公共 API 别名可能需要调整
+- `synth/internal/agent/react_loop*.go` — 迁移到 `internal/agent/react/`
+- `synth/internal/agent/` 下所有引用方 — 更新 import
+- `synth/pkg/` — 公共 API 别名可能需要调整
 
 **实施步骤**：
 1. 创建 `internal/agent/react/` 子包
@@ -334,7 +334,7 @@
 
 **验收标准**：
 - [ ] `internal/agent/` 根目录不再包含 `react_loop*.go`
-- [ ] `pkg/` 公共 API 表面不变（`go doc agentprimordia/pkg` 输出一致）
+- [ ] `pkg/` 公共 API 表面不变（`go doc synth/pkg` 输出一致）
 - [ ] `go build ./...` 零错误
 - [ ] `go test -count=1 ./internal/agent/...` 全绿
 - [ ] `go vet ./...` 零警告
@@ -351,8 +351,8 @@
 **涉及文件**：
 - `sdk/typescript/tests/shared/cross-language-spec.json` — 扩展
 - `sdk/typescript/tests/shared/cross-language.test.ts` — TS 侧测试运行器
-- `agentprimordia/pkg/cross_language_test.go` — Go 侧测试运行器
-- `agentprimordia/internal/memory/cross_language_test.go` — Go 侧测试运行器
+- `synth/pkg/cross_language_test.go` — Go 侧测试运行器
+- `synth/internal/memory/cross_language_test.go` — Go 侧测试运行器
 - `scripts/cross-language-api-check.mjs` — SUITE_SYMBOLS 映射扩展
 
 **实施步骤**：
@@ -416,10 +416,10 @@ TS SDK v3.0.0 落后 Go v3.1.0 一个小版本。需确认 v3.1.0 新增的 Go �
 CI 已有性能回归检查（`bench-regression-check.sh`），但缺少官方公开的性能基线报告。
 
 **涉及文件**：
-- `agentprimordia/bench/suite/` — 6 个基准测试套件
-- `agentprimordia/bench/results/` — 结果存储
+- `synth/bench/suite/` — 6 个基准测试套件
+- `synth/bench/results/` — 结果存储
 - `scripts/bench-compare.sh` — 对比脚本
-- `agentprimordia/docs/benchmarks/` — 文档输出
+- `synth/docs/benchmarks/` — 文档输出
 
 **实施步骤**：
 1. 在标准化硬件上运行全量基准测试（capacity/cluster/latency/learning/privacy/tool_calling）
@@ -444,10 +444,10 @@ CI 已有性能回归检查（`bench-regression-check.sh`），但缺少官方�
 `internal/governance/` 已有 tenant.go / quota.go / isolation.go 等基础，但 Memory 分区和 Pool 配额尚未与租户绑定。Phase 5 Task 5 待办。
 
 **涉及文件**：
-- `agentprimordia/internal/governance/tenant_manager.go` — 主改动
-- `agentprimordia/internal/memory/` — Memory 分区
-- `agentprimordia/internal/pool/` — Pool 配额
-- `agentprimordia/internal/governance/isolation.go` — 隔离策略
+- `synth/internal/governance/tenant_manager.go` — 主改动
+- `synth/internal/memory/` — Memory 分区
+- `synth/internal/pool/` — Pool 配额
+- `synth/internal/governance/isolation.go` — 隔离策略
 
 **实施步骤**：
 1. Memory Store 支持按 tenant_id 分区（命名空间隔离）
@@ -567,7 +567,7 @@ TS SDK 已有 `marketplace/` 模块（registry / deployer / validator / types）
 - `sdk/typescript/src/marketplace/types.ts`（59 行）— 协议类型
 - `sdk/typescript/src/marketplace/registry.ts`（138 行）— 注册表
 - `sdk/typescript/src/marketplace/validator.ts`（82 行）— 验证器
-- `agentprimordia/internal/` 对应 Go 实现
+- `synth/internal/` 对应 Go 实现
 - 新增 `docs/市场协议.md` — 协议规范文档
 
 **实施步骤**：
@@ -691,7 +691,7 @@ Phase D（差异化）
 
 ```bash
 # Go 侧
-cd agentprimordia
+cd synth
 go build ./...                              # 编译通过
 go vet ./...                                # 零警告
 go test -count=1 ./internal/<module>/...    # 目标模块测试全绿

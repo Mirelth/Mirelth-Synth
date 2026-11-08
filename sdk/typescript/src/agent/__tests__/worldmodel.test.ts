@@ -2,7 +2,7 @@
  * worldmodel.test.ts — 世界模型 TS 端测试（矩阵 #1 对等）。
  *
  * 两层验证：
- *  1. 跨语言夹具对账门：Go 为权威生成方（agentprimordia/internal/agent/
+ *  1. 跨语言夹具对账门：Go 为权威生成方（synth/internal/agent/
  *     worldmodel/testdata/worldmodel_fixtures.json），本文件逐项断言 TS 实现
  *     与 Go 确定性语义一致（NodeID 位级 / ComparePaths 判定 / Rehearse 文案 /
  *     Snapshot JSON 形态可直接互换）；
@@ -28,7 +28,7 @@ import {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FIXTURES_PATH = resolve(
   __dirname,
-  '../../../../../agentprimordia/internal/agent/worldmodel/testdata/worldmodel_fixtures.json',
+  '../../../../../synth/internal/agent/worldmodel/testdata/worldmodel_fixtures.json',
 );
 
 interface WmFixtures {

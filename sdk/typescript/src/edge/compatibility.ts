@@ -232,7 +232,7 @@ export async function edgeFetch(
   // Edge Runtime 特殊处理
   if (rt.isEdge) {
     const headers = new Headers(init.headers);
-    headers.set('User-Agent', 'AgentPrimordia-Edge/1.0');
+    headers.set('User-Agent', 'Synth-Edge/1.0');
     // Edge Runtime 不支持 keep-alive
     if (!init.headers || !new Headers(init.headers).has('Connection')) {
       headers.set('Connection', 'close');

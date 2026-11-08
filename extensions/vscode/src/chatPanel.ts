@@ -1,5 +1,5 @@
 /**
- * AgentPrimordia Chat Panel — 侧边栏 WebviewViewProvider。
+ * Synth Chat Panel — 侧边栏 WebviewViewProvider。
  *
  * 职责：
  * 1. 在 VS Code 侧边栏提供持久化聊天界面
@@ -71,7 +71,7 @@ window.addEventListener('message',ev=>{const m=ev.data;if(m.type==='messages'){s
 
 /** 聊天面板提供者 — 实现 WebviewViewProvider 接口 */
 export class ChatPanelProvider {
-  static readonly viewId = 'agentprimordia.chat';
+  static readonly viewId = 'synth.chat';
 
   private view: any = null;
   private history: ChatMessage[] = [];

@@ -27,7 +27,7 @@ jobs:
 
       - name: Extract source version
         id: version
-        working-directory: agentprimordia
+        working-directory: synth
         run: |
           # 从 pkg/agent.go const Version 提取版本号（单一事实来源）
           VERSION=$(grep -oP 'const Version = "\K[0-9.]+' pkg/agent.go)

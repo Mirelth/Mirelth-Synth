@@ -44,10 +44,10 @@ export function validateConfigOrThrow(config: ProviderConfig): void {
 /** 从环境变量加载配置，与 Go 端 ConfigFromEnv 对齐
  *
  * 使用方式：
- *   const config = configFromEnv('AP_LLM');
- *   // 读取 AP_LLM_API_KEY, AP_LLM_BASE_URL, AP_LLM_MODEL 等
+ *   const config = configFromEnv('SYNTH_LLM');
+ *   // 读取 SYNTH_LLM_API_KEY, SYNTH_LLM_BASE_URL, SYNTH_LLM_MODEL 等
  */
-export function configFromEnv(prefix: string = 'AP_LLM'): ProviderConfig {
+export function configFromEnv(prefix: string = 'SYNTH_LLM'): ProviderConfig {
   const getEnv = (key: string): string | undefined => {
     // Node.js 环境
     if (typeof process !== 'undefined' && process.env) {
@@ -68,7 +68,7 @@ export function configFromEnv(prefix: string = 'AP_LLM'): ProviderConfig {
 }
 
 /** 从环境变量加载配置，返回已验证的配置 */
-export function configFromEnvValidated(prefix: string = 'AP_LLM'): ProviderConfig {
+export function configFromEnvValidated(prefix: string = 'SYNTH_LLM'): ProviderConfig {
   const config = configFromEnv(prefix);
   validateConfigOrThrow(config);
   return config;
@@ -97,7 +97,7 @@ export type ConfigChangeCallback = (config: ProviderConfig) => void;
 export interface LLMConfigWatcherOptions {
   /** 检查间隔（毫秒，默认 30000） */
   interval?: number;
-  /** 环境变量前缀（默认 AP_LLM） */
+  /** 环境变量前缀（默认 SYNTH_LLM） */
   prefix?: string;
 }
 
@@ -124,7 +124,7 @@ export class LLMConfigWatcher {
   constructor(callback: ConfigChangeCallback, options?: LLMConfigWatcherOptions) {
     this.callback = callback;
     this.interval = options?.interval ?? 30000;
-    this.prefix = options?.prefix ?? 'AP_LLM';
+    this.prefix = options?.prefix ?? 'SYNTH_LLM';
     this.currentConfig = configFromEnv(this.prefix);
   }
 

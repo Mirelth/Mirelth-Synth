@@ -214,11 +214,11 @@ describe('Config from Environment', () => {
   });
 
   it('should load config from env', () => {
-    process.env.AP_LLM_API_KEY = 'env-key';
-    process.env.AP_LLM_BASE_URL = 'https://api.example.com';
-    process.env.AP_LLM_MODEL = 'gpt-4';
-    process.env.AP_LLM_TEMPERATURE = '0.5';
-    process.env.AP_LLM_MAX_TOKENS = '1000';
+    process.env.SYNTH_LLM_API_KEY = 'env-key';
+    process.env.SYNTH_LLM_BASE_URL = 'https://api.example.com';
+    process.env.SYNTH_LLM_MODEL = 'gpt-4';
+    process.env.SYNTH_LLM_TEMPERATURE = '0.5';
+    process.env.SYNTH_LLM_MAX_TOKENS = '1000';
 
     const cfg = configFromEnv();
     expect(cfg.apiKey).toBe('env-key');
@@ -237,11 +237,11 @@ describe('Config from Environment', () => {
   });
 
   it('should handle missing env vars', () => {
-    delete process.env.AP_LLM_API_KEY;
-    delete process.env.AP_LLM_BASE_URL;
-    delete process.env.AP_LLM_MODEL;
-    delete process.env.AP_LLM_TEMPERATURE;
-    delete process.env.AP_LLM_MAX_TOKENS;
+    delete process.env.SYNTH_LLM_API_KEY;
+    delete process.env.SYNTH_LLM_BASE_URL;
+    delete process.env.SYNTH_LLM_MODEL;
+    delete process.env.SYNTH_LLM_TEMPERATURE;
+    delete process.env.SYNTH_LLM_MAX_TOKENS;
     const cfg = configFromEnv();
     expect(cfg.apiKey).toBe('');
     expect(cfg.model).toBeUndefined();
@@ -250,27 +250,27 @@ describe('Config from Environment', () => {
   });
 
   it('should handle invalid temperature in env', () => {
-    process.env.AP_LLM_TEMPERATURE = 'not-a-number';
+    process.env.SYNTH_LLM_TEMPERATURE = 'not-a-number';
     const cfg = configFromEnv();
     expect(cfg.temperature).toBeUndefined();
   });
 
   it('should handle invalid maxTokens in env', () => {
-    process.env.AP_LLM_MAX_TOKENS = 'abc';
+    process.env.SYNTH_LLM_MAX_TOKENS = 'abc';
     const cfg = configFromEnv();
     expect(cfg.maxTokens).toBeUndefined();
   });
 
   it('should validate config from env', () => {
-    process.env.AP_LLM_API_KEY = 'key';
-    process.env.AP_LLM_MODEL = 'gpt-4';
+    process.env.SYNTH_LLM_API_KEY = 'key';
+    process.env.SYNTH_LLM_MODEL = 'gpt-4';
     const cfg = configFromEnvValidated();
     expect(cfg.model).toBe('gpt-4');
   });
 
   it('should throw on invalid env config', () => {
-    process.env.AP_LLM_API_KEY = 'key';
-    delete process.env.AP_LLM_MODEL;
+    process.env.SYNTH_LLM_API_KEY = 'key';
+    delete process.env.SYNTH_LLM_MODEL;
     expect(() => configFromEnvValidated()).toThrow('config validation failed');
   });
 });
@@ -283,8 +283,8 @@ describe('LLMConfigWatcher', () => {
   });
 
   it('should get current config', () => {
-    process.env.AP_LLM_API_KEY = 'key';
-    process.env.AP_LLM_MODEL = 'gpt-4';
+    process.env.SYNTH_LLM_API_KEY = 'key';
+    process.env.SYNTH_LLM_MODEL = 'gpt-4';
     const watcher = new LLMConfigWatcher(() => {}, { interval: 100 });
     const cfg = watcher.getConfig();
     expect(cfg.model).toBe('gpt-4');
@@ -292,8 +292,8 @@ describe('LLMConfigWatcher', () => {
   });
 
   it('should detect config changes', async () => {
-    process.env.AP_LLM_API_KEY = 'key1';
-    process.env.AP_LLM_MODEL = 'gpt-4';
+    process.env.SYNTH_LLM_API_KEY = 'key1';
+    process.env.SYNTH_LLM_MODEL = 'gpt-4';
     let changed = false;
     const watcher = new LLMConfigWatcher(
       () => { changed = true; },
@@ -302,15 +302,15 @@ describe('LLMConfigWatcher', () => {
     watcher.start();
 
     // Change env
-    process.env.AP_LLM_MODEL = 'gpt-5';
+    process.env.SYNTH_LLM_MODEL = 'gpt-5';
     await new Promise((r) => setTimeout(r, 200));
     expect(changed).toBe(true);
     watcher.stop();
   });
 
   it('should not fire when config unchanged', async () => {
-    process.env.AP_LLM_API_KEY = 'key';
-    process.env.AP_LLM_MODEL = 'gpt-4';
+    process.env.SYNTH_LLM_API_KEY = 'key';
+    process.env.SYNTH_LLM_MODEL = 'gpt-4';
     let changed = false;
     const watcher = new LLMConfigWatcher(
       () => { changed = true; },

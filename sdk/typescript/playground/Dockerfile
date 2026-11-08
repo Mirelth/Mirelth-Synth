@@ -1,52 +1,41 @@
-# AgentPrimordia Playground — 多阶段构建
-# 构建：docker build -t ap-playground .
-# 运行：docker run -d -p 8080:8080 -e AP_LLM_API_KEY=sk-xxx ap-playground
+# Synth Playground — 参考实现镜像（内存 demo 服务）
+# 构建（必须在仓库根执行）：
+#   docker build -f sdk/typescript/playground/Dockerfile -t synth-playground .
+# 运行：
+#   docker run -d -p 8080:8080 -e SYNTH_LLM_API_KEY=sk-xxx synth-playground
+#
+# 修复说明：旧 CMD 指向 tsup 未产出的 dist 子目录入口（tsup 只以
+# src/index.ts 为入口），产物中并不存在该文件，容器必然启动失败。现改为零依赖的
+# server.cjs（CommonJS 显式扩展名，避免 sdk/typescript/package.json 的
+# "type": "module" 把 .js 当 ESM），不依赖 npm 构建，也不引入第三方运行时依赖。
+#
+# 该镜像是本地/演示用途的参考实现，不调用真实 LLM；生产用途请替换引擎、
+# 配置鉴权（SYNTH_API_TOKEN）与持久化。
 
-# ===== Stage 1: 构建 =====
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-
-# 复制 SDK 根目录的包配置
-COPY sdk/typescript/package.json sdk/typescript/package-lock.json* ./sdk/typescript/
-WORKDIR /app/sdk/typescript
-RUN npm ci --ignore-scripts
-
-# 复制源码并构建
-COPY sdk/typescript/ ./
-RUN npm run build
-
-# ===== Stage 2: 运行时 =====
 FROM node:20-alpine AS runtime
 
-LABEL maintainer="AgentPrimordia Team"
-LABEL description="AgentPrimordia Playground - Interactive Multi-Agent Environment"
+LABEL maintainer="Synth Team"
+LABEL description="Synth Playground - In-memory reference server (demo)"
 
 WORKDIR /app
 
-# 安全：使用非 root 用户
-RUN addgroup -S apgroup && adduser -S apuser -G apgroup
+RUN addgroup -S synthgroup && adduser -S synthuser -G synthgroup
 
-# 仅复制构建产物和生产依赖
-COPY --from=builder /app/sdk/typescript/dist ./dist
-COPY --from=builder /app/sdk/typescript/package.json ./
-RUN npm install --omit=dev --ignore-scripts && npm cache clean --force
+COPY sdk/typescript/playground/server.cjs ./server.cjs
 
-# 环境变量
 ENV NODE_ENV=production \
-    AP_PLAYGROUND_PORT=8080 \
-    AP_LLM_PROVIDER=openai \
-    AP_LLM_MODEL=gpt-4 \
-    AP_MAX_AGENTS=50 \
-    AP_LOG_LEVEL=info
+    SYNTH_PLAYGROUND_PORT=8080 \
+    SYNTH_LLM_PROVIDER=openai \
+    SYNTH_LLM_MODEL=gpt-4 \
+    SYNTH_MAX_AGENTS=50 \
+    SYNTH_LOG_LEVEL=info \
+    SYNTH_PLAYGROUND_MOCK_LLM=true
 
 EXPOSE 8080
 
-# 健康检查
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget -qO- http://localhost:${AP_PLAYGROUND_PORT}/healthz || exit 1
+  CMD wget -qO- http://localhost:${SYNTH_PLAYGROUND_PORT}/healthz || exit 1
 
-USER apuser
+USER synthuser
 
-# 启动 Playground 服务
-CMD ["node", "dist/playground/index.js"]
+CMD ["node", "server.cjs"]

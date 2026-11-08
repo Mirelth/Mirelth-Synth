@@ -3,7 +3,7 @@
 ## 安装
 
 ```bash
-npm install @agentprimordia/sdk
+npm install @synth/sdk
 ```
 
 **环境要求：**
@@ -16,10 +16,10 @@ npm install @agentprimordia/sdk
 ### 导入 SDK 并创建 Agent
 
 ```typescript
-import { createAgent, MockProvider } from "@agentprimordia/sdk";
+import { createAgent, MockProvider } from "@synth/sdk";
 
 // 使用 MockProvider 快速体验（无需 API Key）
-const provider = new MockProvider({ response: "你好，我是 AgentPrimordia！" });
+const provider = new MockProvider({ response: "你好，我是 Synth！" });
 
 const agent = createAgent("assistant")
   .withProvider(provider)
@@ -36,7 +36,7 @@ console.log(result.content);
 **OpenAI：**
 
 ```typescript
-import { OpenAIProvider } from "@agentprimordia/sdk";
+import { OpenAIProvider } from "@synth/sdk";
 
 const provider = new OpenAIProvider({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -52,7 +52,7 @@ const agent = createAgent("assistant")
 **Anthropic：**
 
 ```typescript
-import { AnthropicProvider } from "@agentprimordia/sdk";
+import { AnthropicProvider } from "@synth/sdk";
 
 const provider = new AnthropicProvider({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -63,7 +63,7 @@ const provider = new AnthropicProvider({
 **弹性 Provider（自动重试 + 限流）：**
 
 ```typescript
-import { ResilientProvider, OpenAIProvider } from "@agentprimordia/sdk";
+import { ResilientProvider, OpenAIProvider } from "@synth/sdk";
 
 const base = new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY! });
 const provider = new ResilientProvider(base, {
@@ -75,7 +75,7 @@ const provider = new ResilientProvider(base, {
 ### 运行对话
 
 ```typescript
-import { Session } from "@agentprimordia/sdk";
+import { Session } from "@synth/sdk";
 
 const session = new Session();
 
@@ -92,7 +92,7 @@ console.log(r2.content);
 ### 注册自定义工具
 
 ```typescript
-import { AgentTool } from "@agentprimordia/sdk";
+import { AgentTool } from "@synth/sdk";
 
 // 定义一个天气查询工具
 const weatherTool = new AgentTool({
@@ -124,9 +124,9 @@ console.log(result.content);
 ### 使用内置工具模块
 
 ```typescript
-import { createAgent } from "@agentprimordia/sdk";
+import { createAgent } from "@synth/sdk";
 // 从 tools 子路径导入内置工具集
-import { BuiltinTools } from "@agentprimordia/sdk/tools";
+import { BuiltinTools } from "@synth/sdk/tools";
 
 const agent = createAgent("tool-assistant")
   .withProvider(provider)
@@ -137,7 +137,7 @@ const agent = createAgent("tool-assistant")
 ## 记忆系统
 
 ```typescript
-import { InMemoryStore } from "@agentprimordia/sdk";
+import { InMemoryStore } from "@synth/sdk";
 
 const memory = new InMemoryStore();
 
@@ -154,7 +154,7 @@ await agent.run("我喜欢什么编程语言？"); // 会从记忆中检索
 ## 多 Agent 编排
 
 ```typescript
-import { createAgent, AgentPool } from "@agentprimordia/sdk";
+import { createAgent, AgentPool } from "@synth/sdk";
 
 const researcher = createAgent("researcher")
   .withProvider(provider)
@@ -177,7 +177,7 @@ TS SDK 支持多种边缘环境：
 
 ```typescript
 // Cloudflare Workers
-import { createAgent } from "@agentprimordia/sdk";
+import { createAgent } from "@synth/sdk";
 // Deno / Bun 同样支持
 ```
 

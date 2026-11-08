@@ -1,6 +1,6 @@
 /**
  * 真实 harness 基准集（v3.5-1）— GENERATED 文件，请勿手工编辑。
- * 权威来源: agentprimordia/internal/eval/benchmark_cases.json
+ * 权威来源: synth/internal/eval/benchmark_cases.json
  * 重新生成: node scripts/generate-benchmark-ts.mjs
  */
 import type { EvalCase } from './shared-cases.js';

@@ -2,12 +2,12 @@ package wasm
 
 // abi.go — WASM 工具模块 ABI（应用二进制接口）约定
 //
-// 本文件定义了 AgentPrimordia WASM 工具模块必须遵循的导出函数签名和内存协议。
+// 本文件定义了 Synth WASM 工具模块必须遵循的导出函数签名和内存协议。
 // 所有 WASM 工具（无论用 TinyGo、Rust、AssemblyScript 编写）都必须实现此 ABI。
 //
 // # 内存模型
 //
-// WASM 线性内存由工具模块管理。宿主（AgentPrimordia）通过以下协议与工具通信：
+// WASM 线性内存由工具模块管理。宿主（Synth）通过以下协议与工具通信：
 //
 //	宿主 → 工具：将 JSON 参数写入 WASM 内存，传递 (ptr, len)
 //	工具 → 宿主：工具将 JSON 结果写入内存，返回 (ptr, len)

@@ -2,15 +2,15 @@
  * Agent 调试配置提供者（与 VS Code API 解耦）。
  *
  * 职责：
- * 1. 解析 .ap.yaml / ap.yaml → AgentDebugConfig
+ * 1. 解析 .synth.yaml / synth.yaml → AgentDebugConfig
  * 2. 验证调试配置必填字段
  * 3. 生成 VS Code DebugConfiguration（仅在 extension.ts 中组合 vscode API）
  */
 
 import type { AgentDebugConfig, ApYamlConfig } from './types.js';
 
-/** .ap.yaml 候选文件名（按优先级） */
-const AP_YAML_CANDIDATES = ['.ap.yaml', 'ap.yaml', 'agent.yaml'] as const;
+/** .synth.yaml 候选文件名（按优先级） */
+const SYNTH_YAML_CANDIDATES = ['.synth.yaml', 'synth.yaml', 'agent.yaml'] as const;
 
 /** 解析 YAML 字符串为对象。
  *
@@ -114,7 +114,7 @@ const KNOWN_FIELDS = new Set([
   'tools',
 ]);
 
-/** 规范化 .ap.yaml 配置字段 */
+/** 规范化 .synth.yaml 配置字段 */
 export function normalizeApConfig(raw: Record<string, unknown>): ApYamlConfig {
   const cfg: ApYamlConfig = {};
   if (typeof raw['name'] === 'string') cfg.name = raw['name'];
@@ -148,8 +148,8 @@ export function toDebugConfig(
   trace: boolean = true,
 ): AgentDebugConfig {
   return {
-    name: cfg.name ?? 'agentprimordia-agent',
-    agentName: cfg.name ?? 'agentprimordia-agent',
+    name: cfg.name ?? 'synth-agent',
+    agentName: cfg.name ?? 'synth-agent',
     systemPrompt: cfg.systemPrompt ?? '',
     initialPrompt: cfg.initialPrompt ?? '',
     maxTurns: cfg.maxTurns ?? 10,
@@ -176,7 +176,7 @@ export function validateDebugConfig(cfg: AgentDebugConfig): DebugConfigError[] {
 /** 生成 launch.json 风格 debug configuration 段 */
 export function buildLaunchJson(cfg: AgentDebugConfig): Record<string, unknown> {
   return {
-    type: 'agentprimordia',
+    type: 'synth',
     request: 'launch',
     name: cfg.name,
     agentName: cfg.agentName,
@@ -188,9 +188,9 @@ export function buildLaunchJson(cfg: AgentDebugConfig): Record<string, unknown> 
   };
 }
 
-/** 选择已找到的 .ap.yaml 文件名（按优先级 .ap.yaml > ap.yaml > agent.yaml） */
+/** 选择已找到的 .synth.yaml 文件名（按优先级 .synth.yaml > synth.yaml > agent.yaml） */
 export function pickApYamlFilename(available: readonly string[]): string | null {
-  for (const cand of AP_YAML_CANDIDATES) {
+  for (const cand of SYNTH_YAML_CANDIDATES) {
     if (available.includes(cand)) return cand;
   }
   return null;
@@ -202,9 +202,9 @@ export function generateLaunchJsonTemplate(): string {
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "agentprimordia",
+      "type": "synth",
       "request": "launch",
-      "name": "AgentPrimordia: Debug",
+      "name": "Synth: Debug",
       "agentName": "my-agent",
       "systemPrompt": "You are a helpful assistant.",
       "initialPrompt": "Hello!",

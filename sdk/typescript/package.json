@@ -1,7 +1,7 @@
 {
-  "name": "@agentprimordia/sdk",
+  "name": "@synth/sdk",
   "version": "7.8.0",
-  "description": "AgentPrimordia - Universal AI Agent Development Framework for TypeScript",
+  "description": "Synth - Universal AI Agent Development Framework for TypeScript",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -36,10 +36,10 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/agentprimordia/ap.git",
+    "url": "https://github.com/Mirelth/Synth.git",
     "directory": "sdk/typescript"
   },
-  "homepage": "https://github.com/agentprimordia/ap#readme",
+  "homepage": "https://github.com/Mirelth/Synth#readme",
   "engines": {
     "node": ">=18.0.0"
   },

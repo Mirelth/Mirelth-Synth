@@ -1,5 +1,5 @@
 name: Bug 报告
-description: 报告 AgentPrimordia 的 Bug
+description: 报告 Synth 的 Bug
 labels: ["bug", "triage"]
 body:
   - type: markdown
@@ -40,8 +40,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: AP 版本
-      description: `ap version` 的输出
+      label: Synth 版本
+      description: `synth version` 的输出
       placeholder: "0.1.0"
   - type: input
     id: goversion
@@ -62,4 +62,4 @@ body:
         - guardrail (安全)
         - metrics (指标)
         - otel (可观测性)
-        - CLI (ap)
+        - CLI (synth)

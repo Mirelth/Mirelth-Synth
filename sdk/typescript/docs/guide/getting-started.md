@@ -5,13 +5,13 @@
 ### 1. Install
 
 ```bash
-npm install @agentprimordia/sdk
+npm install @synth/sdk
 ```
 
 ### 2. Create an Agent
 
 ```typescript
-import { ReActAgent, MockProvider, ToolRegistry } from '@agentprimordia/sdk';
+import { ReActAgent, MockProvider, ToolRegistry } from '@synth/sdk';
 
 const provider = new MockProvider({ response: 'Hello! How can I help?' });
 const registry = new ToolRegistry();
@@ -30,7 +30,7 @@ console.log(response.content); // "Hello! How can I help?"
 ### 3. Add Tools
 
 ```typescript
-import { Tool } from '@agentprimordia/sdk';
+import { Tool } from '@synth/sdk';
 
 class WeatherTool implements Tool {
   name = 'get_weather';
@@ -54,7 +54,7 @@ registry.register(new WeatherTool());
 ### 4. Use OpenAI Provider
 
 ```typescript
-import { OpenAIProvider } from '@agentprimordia/sdk';
+import { OpenAIProvider } from '@synth/sdk';
 
 const provider = new OpenAIProvider({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -73,7 +73,7 @@ const agent = new ReActAgent({
 ### 5. Add Resilience
 
 ```typescript
-import { ResilientProvider } from '@agentprimordia/sdk';
+import { ResilientProvider } from '@synth/sdk';
 
 const resilient = new ResilientProvider(provider);
 resilient.addFallback(new MockProvider({ response: 'Service temporarily unavailable' }));

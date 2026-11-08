@@ -18,7 +18,7 @@ export class APIError extends Error {
 
 const DEFAULT_BASE_URL = 'https://api.openai.com/v1';
 const DEFAULT_TIMEOUT = 120_000;
-const USER_AGENT = 'AgentPrimordia-TS/1.0';
+const USER_AGENT = 'Synth-TS/1.0';
 
 export class OpenAIProvider implements Provider {
   private config: Required<ProviderConfig>;
@@ -103,7 +103,7 @@ export class OpenAIProvider implements Provider {
           }
           yield chunk;
         } catch (err) {
-          console.error(`[AgentPrimordia] Failed to parse stream chunk: ${data}`, err);
+          console.error(`[Synth] Failed to parse stream chunk: ${data}`, err);
           continue;
         }
       }

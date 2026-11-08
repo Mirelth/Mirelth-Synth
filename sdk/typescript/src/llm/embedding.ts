@@ -1,6 +1,6 @@
 // embedding.ts — S0-3 语义原生化：Embedding Provider 抽象与三线实现
 //（OpenAI 兼容 / ollama 原生 / 无 key 词面降级位）——与 Go 侧
-// agentprimordia/internal/llm/embedding.go 逐位对齐（docs/双线豁免矩阵.md #6）。
+// synth/internal/llm/embedding.go 逐位对齐（docs/双线豁免矩阵.md #6）。
 //
 // 对齐纪律：LexicalEmbedder 的算法（分词、FNV-1a、维度、sqrt TF、L2 归一化、
 // 浮点累加次序）与 Go 侧完全一致，任何一侧改动必须同步另一侧——
@@ -134,7 +134,7 @@ export class OpenAIEmbeddingProvider implements EmbeddingProvider {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${this.apiKey}`,
-        'User-Agent': 'AgentPrimordia-TS/1.0',
+        'User-Agent': 'Synth-TS/1.0',
       },
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(this.timeoutMs),
@@ -237,7 +237,7 @@ export class OllamaEmbeddingProvider implements EmbeddingProvider {
   private async doRequest(path: string, body: unknown): Promise<string> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'User-Agent': 'AgentPrimordia-TS/1.0',
+      'User-Agent': 'Synth-TS/1.0',
     };
     if (this.apiKey) headers.Authorization = `Bearer ${this.apiKey}`;
     const resp = await this.fetchImpl(this.baseURL + path, {
@@ -269,7 +269,7 @@ const FNV_PRIME_32 = 0x01000193;
 /**
  * LexicalEmbedder 是「无 key 降级位」：完全本地、确定性的词面统计伪嵌入，
  * 不是语义嵌入（semantic() 恒 false）。用途边界：
- *  1. 未配置 AP_EMBEDDINGS_* 时 memory 向量路径的兜底；
+ *  1. 未配置 SYNTH_EMBEDDINGS_* 时 memory 向量路径的兜底；
  *  2. 双线召回基准的回归底档臂（阈值取自实测，见 bench/results/s0-3-recall-*.json）。
  *
  * 算法（与 Go 侧 internal/llm/embedding.go 的 LexicalEmbedder 逐位对齐，不得单侧改动）：
@@ -411,20 +411,20 @@ export class EmbeddingProviderAdapter implements EmbeddingProvider {
 }
 
 /** 从环境变量装配语义嵌入 Provider（对齐 Go NewEmbeddingProviderFromEnv；命名沿用
- *  AP_LLM_* 前缀约定）：
- *  - AP_EMBEDDINGS_PROVIDER: openai（默认）| ollama
- *  - AP_EMBEDDINGS_API_KEY / AP_EMBEDDINGS_BASE_URL / AP_EMBEDDINGS_MODEL
- *  - AP_EMBEDDINGS_DIMENSIONS: 期望维度（可选）
+ *  SYNTH_LLM_* 前缀约定）：
+ *  - SYNTH_EMBEDDINGS_PROVIDER: openai（默认）| ollama
+ *  - SYNTH_EMBEDDINGS_API_KEY / SYNTH_EMBEDDINGS_BASE_URL / SYNTH_EMBEDDINGS_MODEL
+ *  - SYNTH_EMBEDDINGS_DIMENSIONS: 期望维度（可选）
  *  全部未设置时返回 LexicalEmbedder（无 key 降级位）——不配置即词面兜底，
  *  绝不把降级位伪装成语义臂。 */
 export function createEmbeddingProviderFromEnv(
   env: Record<string, string | undefined> = process.env,
 ): EmbeddingProvider {
-  const provider = (env.AP_EMBEDDINGS_PROVIDER ?? '').trim().toLowerCase();
-  const baseURL = (env.AP_EMBEDDINGS_BASE_URL ?? '').trim();
-  const model = (env.AP_EMBEDDINGS_MODEL ?? '').trim();
-  const apiKey = env.AP_EMBEDDINGS_API_KEY ?? '';
-  const dims = Number.parseInt(env.AP_EMBEDDINGS_DIMENSIONS ?? '', 10);
+  const provider = (env.SYNTH_EMBEDDINGS_PROVIDER ?? '').trim().toLowerCase();
+  const baseURL = (env.SYNTH_EMBEDDINGS_BASE_URL ?? '').trim();
+  const model = (env.SYNTH_EMBEDDINGS_MODEL ?? '').trim();
+  const apiKey = env.SYNTH_EMBEDDINGS_API_KEY ?? '';
+  const dims = Number.parseInt(env.SYNTH_EMBEDDINGS_DIMENSIONS ?? '', 10);
 
   if (!provider && !baseURL && !model && !apiKey && Number.isNaN(dims)) {
     return new LexicalEmbedder(); // 未配置 → 降级位兜底
@@ -438,7 +438,7 @@ export function createEmbeddingProviderFromEnv(
   };
   if (effective === 'openai') return new OpenAIEmbeddingProvider(config);
   if (effective === 'ollama') return new OllamaEmbeddingProvider(config);
-  throw new Error(`未知 AP_EMBEDDINGS_PROVIDER "${effective}"（支持 openai|ollama）`);
+  throw new Error(`未知 SYNTH_EMBEDDINGS_PROVIDER "${effective}"（支持 openai|ollama）`);
 }
 
 // ===== 语义缓存（S0-3 命中率基线）=====

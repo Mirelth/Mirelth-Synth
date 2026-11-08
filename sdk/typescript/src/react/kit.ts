@@ -2,7 +2,7 @@
  * 零样板 React Hooks kit（v3.7-4）。
  *
  * 直接可用的 useAgent / useReActLoop：
- *   import { useAgent, useReActLoop } from '@agentprimordia/sdk/react';
+ *   import { useAgent, useReActLoop } from '@synth/sdk/react';
  *
  *   function Chat() {
  *     const { messages, run } = useAgent({ name: 'chat', model: provider });
@@ -71,5 +71,5 @@ export function useReActLoop(options: UseAgentOptions = {}): UseReActLoopResult 
   return useReActLoopImpl({ useState, useCallback, useRef, useEffect }, streamerFactory);
 }
 
-/** useAgent 的 HTTP 版（连接 AgentPrimordia REST 服务），零样板。 */
+/** useAgent 的 HTTP 版（连接 Synth REST 服务），零样板。 */
 export { useAgent as useRemoteAgent } from './useAgent.js';

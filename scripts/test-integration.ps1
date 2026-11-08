@@ -21,7 +21,7 @@ param(
 
     [string]$Timeout = "5m",
 
-    [string]$Path = "./agentprimordia"
+    [string]$Path = "./synth"
 )
 
 $ErrorActionPreference = "Stop"
@@ -49,7 +49,7 @@ $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $projectRoot = Resolve-Path (Join-Path $scriptRoot "..")
 Push-Location $projectRoot
 try {
-    Write-Section "AgentPrimordia 集成测试"
+    Write-Section "Synth 集成测试"
     Write-Host "  Provider 过滤: $Provider"
     Write-Host "  Build tag:     $Tag"
     Write-Host "  超时:          $Timeout"

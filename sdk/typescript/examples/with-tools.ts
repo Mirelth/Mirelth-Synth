@@ -7,7 +7,7 @@ import { ToolRegistry } from '../src/tools/registry.js';
 import { Executor } from '../src/tools/executor.js';
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: Tools Example ===\n');
+  console.log('=== Synth TS SDK: Tools Example ===\n');
 
   const registry = new ToolRegistry();
 

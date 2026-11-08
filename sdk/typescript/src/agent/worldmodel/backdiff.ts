@@ -3,7 +3,7 @@
  *
  * 与 Go 端 internal/agent/worldmodel/backdiff.go 逐语义对齐（矩阵 #1 对等承诺）：
  * ComparePaths 为纯函数，相同输入必得相同输出（确定性可测试）。
- * 跨语言对账门：agentprimordia/internal/agent/worldmodel/testdata/worldmodel_fixtures.json
+ * 跨语言对账门：synth/internal/agent/worldmodel/testdata/worldmodel_fixtures.json
  * （Go 为权威生成方），由 src/agent/__tests__/worldmodel.test.ts 逐项断言。
  */
 

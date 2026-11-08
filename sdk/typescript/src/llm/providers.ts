@@ -126,7 +126,7 @@ export abstract class OpenAICompatibleProvider implements Provider {
     return {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.config.apiKey}`,
-      'User-Agent': 'AgentPrimordia-TS/1.0',
+      'User-Agent': 'Synth-TS/1.0',
     };
   }
 

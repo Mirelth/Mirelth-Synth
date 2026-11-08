@@ -5,7 +5,7 @@
 Episodic memory store for conversation history.
 
 ```typescript
-import { InMemoryStore } from '@agentprimordia/sdk';
+import { InMemoryStore } from '@synth/sdk';
 
 const store = new InMemoryStore();
 
@@ -53,7 +53,7 @@ const timeline = await store.getTimeline(7); // Last 7 days
 Cosine similarity vector search.
 
 ```typescript
-import { VectorStore } from '@agentprimordia/sdk';
+import { VectorStore } from '@synth/sdk';
 
 const vectors = new VectorStore(128); // 128-dimensional vectors
 

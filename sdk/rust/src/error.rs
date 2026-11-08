@@ -1,7 +1,7 @@
 use thiserror::Error;
 
 #[derive(Error, Debug)]
-pub enum AgentPrimordiaError {
+pub enum SynthError {
     #[error("API error: {message} (status: {status:?}")]
     APIError { message: String, status: Option<u16> },
     #[error("Authentication error: {0}")]
@@ -18,7 +18,7 @@ pub enum AgentPrimordiaError {
     IO(#[from] std::io::Error),
 }
 
-impl From<reqwest::Error> for AgentPrimordiaError {
+impl From<reqwest::Error> for SynthError {
     fn from(e: reqwest::Error) -> Self {
         if e.is_timeout() { return Self::Timeout; }
         if let Some(s) = e.status() {
@@ -31,7 +31,7 @@ impl From<reqwest::Error> for AgentPrimordiaError {
     }
 }
 
-impl From<reqwest::Response> for AgentPrimordiaError {
+impl From<reqwest::Response> for SynthError {
     fn from(resp: reqwest::Response) -> Self {
         let status = resp.status();
         match status.as_u16() {

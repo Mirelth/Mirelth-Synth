@@ -6,7 +6,7 @@
 import { MCPClient } from '../src/mcp/client.js';
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: MCP Client ===\n');
+  console.log('=== Synth TS SDK: MCP Client ===\n');
 
   // 创建 MCP 客户端（连接到本地 MCP 服务器）
   const client = new MCPClient({

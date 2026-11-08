@@ -43,7 +43,7 @@ echo "Deprecated: $total_deprecated, Removed in: $total_removed"
 # 简单约定：若某文件同时含 Deprecated 与 Removed in，且该文件位于 pkg/，
 # 则要求 Removed 版本必须 >= 当前主版本（v4），否则视为超期残留。
 ROOT_DIR=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-VERSION_FILE="$ROOT_DIR/agentprimordia/VERSION"
+VERSION_FILE="$ROOT_DIR/synth/VERSION"
 if [ -f "$VERSION_FILE" ]; then
   CURRENT_MAJOR=$(cut -d. -f1 "$VERSION_FILE" | tr -d 'v[:space:]')
 else

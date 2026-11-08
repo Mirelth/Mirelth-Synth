@@ -4,11 +4,11 @@
 
 | 导出路径 | 说明 |
 |------|------|
-| `@agentprimordia/sdk` | 主入口 |
-| `@agentprimordia/sdk/agent` | ReActAgent、Builder |
-| `@agentprimordia/sdk/llm` | LLM Providers |
-| `@agentprimordia/sdk/tools` | 工具系统 |
-| `@agentprimordia/sdk/orchestration` | 编排模式 |
+| `@synth/sdk` | 主入口 |
+| `@synth/sdk/agent` | ReActAgent、Builder |
+| `@synth/sdk/llm` | LLM Providers |
+| `@synth/sdk/tools` | 工具系统 |
+| `@synth/sdk/orchestration` | 编排模式 |
 
 ## 核心类型
 
@@ -52,7 +52,7 @@
 ## 快速示例
 
 ```typescript
-import { createAgent, OpenAIProvider } from "@agentprimordia/sdk";
+import { createAgent, OpenAIProvider } from "@synth/sdk";
 
 const provider = new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY! });
 const agent = createAgent("assistant")
@@ -74,7 +74,7 @@ for await (const chunk of agent.stream("Explain recursion")) {
 ## 错误处理
 
 ```typescript
-import { CodeError, ErrMaxTurnsExceeded } from "@agentprimordia/sdk";
+import { CodeError, ErrMaxTurnsExceeded } from "@synth/sdk";
 
 try {
   await agent.run(input);

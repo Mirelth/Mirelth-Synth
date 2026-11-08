@@ -1,7 +1,7 @@
 /**
  * stats.test.ts — V7 弧线 S0-1 统计框架数值对账测试（TypeScript 端）。
  *
- * 权威夹具 agentprimordia/internal/eval/testdata/stats_fixtures.json 由 Go 侧
+ * 权威夹具 synth/internal/eval/testdata/stats_fixtures.json 由 Go 侧
  * 生成（internal/eval/stats_test.go 的 TestWriteStatsFixtures，Go 为权威侧），
  * 本文件逐项断言 TS 实现与之一致：
  * - 跨语言容差 1e-9；
@@ -37,7 +37,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 /** Go 侧权威夹具（跨语言对账门；字段名与 Go stats_test.go 的 json tag 一致）。 */
 const FIXTURES_PATH = resolve(
   __dirname,
-  '../../../../../agentprimordia/internal/eval/testdata/stats_fixtures.json',
+  '../../../../../synth/internal/eval/testdata/stats_fixtures.json',
 );
 
 /** 夹具结构（字段名即 Go 侧 json tag，改名即破坏对账门）。 */

@@ -1,8 +1,8 @@
-# AgentPrimordia Studio — 设计文档
+# Synth Studio — 设计文档
 
 > **状态**: 生产可用 · 设计评分 **40/40**（八轮设计批判迭代）
 > **技术栈**: React 19 + TypeScript + Vite（前端，零第三方运行时依赖）/ Go 标准库（后端）
-> **入口**: `agentprimordia/studio/web`（前端）· `agentprimordia/cmd/studio`（后端）
+> **入口**: `synth/studio/web`（前端）· `synth/cmd/studio`（后端）
 
 ## 一键启动
 
@@ -21,10 +21,10 @@ powershell -ExecutionPolicy Bypass -File scripts\dev-studio.ps1
 
 ```bash
 # 后端（:8090，内置 demo 数据，开箱即演示）
-cd agentprimordia && go run ./cmd/studio
+cd synth && go run ./cmd/studio
 
 # 前端（:5173，/api 代理到 :8090）
-cd agentprimordia/studio/web && npm install && npm run dev
+cd synth/studio/web && npm install && npm run dev
 ```
 
 > 生产接入真实引擎：通过 `internal/studio` 的 `WithChaos / WithCluster / WithLearning / WithMarketplace / WithAutonomy / WithSkills / WithRealtime` 注入对应服务替换 demo 实现（真实引擎适配器见 `internal/studio/adapters_v3x.go`，如 `NewAutonomyServiceAdapter(rt)` / `NewSkillServiceAdapter(store)` / `NewRealtimeServiceAdapter(hub, bus)`）。
@@ -97,16 +97,16 @@ cd agentprimordia/studio/web && npm install && npm run dev
 
 ```bash
 # 前端（Studio 30 例 + 壳层 9 例）
-cd agentprimordia/studio/web && npm test
+cd synth/studio/web && npm test
 
 # 后端 handler
-cd agentprimordia && go test ./internal/studio/...
+cd synth && go test ./internal/studio/...
 
 # 类型检查
-cd agentprimordia/studio/web && npm run typecheck
+cd synth/studio/web && npm run typecheck
 
 # 压力测试（v5.0：并发/写路径/轮询/极限 + 30 分钟稳态 Soak，报告见 bench/results/studio-load-report.md）
-cd agentprimordia
+cd synth
 go test -count=1 -run TestStudio_ -v ./bench/suite/                        # 读/写/轮询/极限
 go test -bench=BenchmarkStudioEndpoints -benchtime=200ms ./bench/suite/    # 端点延迟分布
 SOAK_STUDIO_DURATION=30m SOAK_STUDIO_RPS=50 go test -timeout 40m -run TestSoak_Studio -v ./bench/soak/
@@ -115,5 +115,5 @@ SOAK_STUDIO_DURATION=30m SOAK_STUDIO_RPS=50 go test -timeout 40m -run TestSoak_S
 ## 构建
 
 ```bash
-cd agentprimordia/studio/web && npm run build   # 产物输出到 dist/
+cd synth/studio/web && npm run build   # 产物输出到 dist/
 ```

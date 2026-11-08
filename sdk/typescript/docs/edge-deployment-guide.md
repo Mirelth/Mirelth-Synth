@@ -1,6 +1,6 @@
 # 边缘运行时部署指南
 
-本指南介绍如何将 AgentPrimordia TS SDK 部署到 Cloudflare Workers、Deno Deploy 和 Bun 等边缘运行时。
+本指南介绍如何将 Synth TS SDK 部署到 Cloudflare Workers、Deno Deploy 和 Bun 等边缘运行时。
 
 ---
 
@@ -20,7 +20,7 @@
 ### 1. 安装依赖
 
 ```bash
-npm install @agentprimordia/sdk
+npm install @synth/sdk
 npm install -D wrangler
 ```
 
@@ -28,7 +28,7 @@ npm install -D wrangler
 
 ```typescript
 // src/worker.ts
-import { CloudflareAgentAdapter } from '@agentprimordia/sdk';
+import { CloudflareAgentAdapter } from '@synth/sdk';
 
 const adapter = new CloudflareAgentAdapter({
   name: 'edge-assistant',
@@ -80,7 +80,7 @@ npx wrangler deploy
 
 ```typescript
 // main.ts
-import { DenoEdgeAgent } from '@agentprimordia/sdk';
+import { DenoEdgeAgent } from '@synth/sdk';
 
 const agent = new DenoEdgeAgent({
   name: 'deno-assistant',
@@ -116,7 +116,7 @@ deployctl deploy --project=my-agent main.ts
 
 ```typescript
 // server.ts
-import { BunEdgeAgent } from '@agentprimordia/sdk';
+import { BunEdgeAgent } from '@synth/sdk';
 
 const agent = new BunEdgeAgent({
   name: 'bun-assistant',
@@ -150,7 +150,7 @@ bun run server.ts
 SDK 内置冷启动优化模块（`src/edge/cold-start.ts`）：
 
 ```typescript
-import { ColdStartOptimizer } from '@agentprimordia/sdk';
+import { ColdStartOptimizer } from '@synth/sdk';
 
 const optimizer = new ColdStartOptimizer({
   warmupInterval: 30_000,  // 每 30s 预热
@@ -169,7 +169,7 @@ optimizer.warmup();
 SDK 提供自动运行时检测：
 
 ```typescript
-import { detectRuntime, detectEnv } from '@agentprimordia/sdk';
+import { detectRuntime, detectEnv } from '@synth/sdk';
 
 const runtime = detectRuntime(); // 'cloudflare' | 'deno' | 'bun' | 'node'
 const env = detectEnv();         // 'production' | 'development' | 'test'

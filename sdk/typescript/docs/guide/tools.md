@@ -5,7 +5,7 @@
 Register and execute tools for agent use.
 
 ```typescript
-import { ToolRegistry, Tool } from '@agentprimordia/sdk';
+import { ToolRegistry, Tool } from '@synth/sdk';
 
 const registry = new ToolRegistry();
 
@@ -65,7 +65,7 @@ const definitions = registry.definitions();
 Manage file access scopes for multi-agent setups.
 
 ```typescript
-import { FileScopePolicy } from '@agentprimordia/sdk';
+import { FileScopePolicy } from '@synth/sdk';
 
 const policy = new FileScopePolicy();
 

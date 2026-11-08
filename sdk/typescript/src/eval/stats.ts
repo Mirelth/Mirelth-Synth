@@ -19,7 +19,7 @@
  * - 入参非法一律 throw Error，message 前缀与 Go ErrInvalidStatInput 一致
  *   （"eval: 统计入参非法"）。
  *
- * 跨语言数值对账门：agentprimordia/internal/eval/testdata/stats_fixtures.json
+ * 跨语言数值对账门：synth/internal/eval/testdata/stats_fixtures.json
  * （Go 为权威生成方），由 src/eval/__tests__/stats.test.ts 逐项断言。
  */
 

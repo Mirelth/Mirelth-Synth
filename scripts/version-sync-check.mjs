@@ -26,18 +26,18 @@ const tsMajor = parseInt(tsVersion.split('.')[0], 10);
 // 读取 Go SDK 版本（从 go.mod 或 VERSION 文件）
 let goVersion = null;
 try {
-  const versionFile = resolve(root, 'agentprimordia/VERSION');
+  const versionFile = resolve(root, 'synth/VERSION');
   goVersion = readFileSync(versionFile, 'utf-8').trim();
 } catch {
   // 回退：从 git tag 推断
   try {
     const { execFileSync } = await import('node:child_process');
     goVersion = execFileSync('git', ['describe', '--tags', '--abbrev=0'], {
-      cwd: resolve(root, 'agentprimordia'),
+      cwd: resolve(root, 'synth'),
       encoding: 'utf-8',
     }).trim().replace(/^v/, '');
   } catch {
-    // 最终回退：与 agentprimordia/VERSION 与 pkg/agent.go 保持同步的已知版本
+    // 最终回退：与 synth/VERSION 与 pkg/agent.go 保持同步的已知版本
     goVersion = '5.0.0';
   }
 }
@@ -56,18 +56,18 @@ if (goMajor !== tsMajor) {
   console.log(`\n✅ 版本一致: major=${goMajor}`);
 }
 
-// v5.0-5: Helm 生产部署载体版本同步检查（ap/ap-studio 镜像 tag + Chart appVersion）
+// v5.0-5: Helm 生产部署载体版本同步检查（synth/synth-studio 镜像 tag + Chart appVersion）
 try {
-  const valuesPath = resolve(root, 'agentprimordia/deploy/helm/agentprimordia/values.yaml');
+  const valuesPath = resolve(root, 'synth/deploy/helm/synth/values.yaml');
   const values = readFileSync(valuesPath, 'utf-8');
-  const chartPath = resolve(root, 'agentprimordia/deploy/helm/agentprimordia/Chart.yaml');
+  const chartPath = resolve(root, 'synth/deploy/helm/synth/Chart.yaml');
   const chart = readFileSync(chartPath, 'utf-8');
   const apTag = values.match(/tag: "v([\d.]+)"/);
   const appVersion = chart.match(/appVersion: "([\d.]+)"/);
   const helmTag = apTag ? apTag[1] : null;
   const chartVer = appVersion ? appVersion[1] : null;
   const mismatches = [];
-  if (helmTag !== goVersion) mismatches.push(`values.yaml ap tag=${helmTag} != ${goVersion}`);
+  if (helmTag !== goVersion) mismatches.push(`values.yaml synth tag=${helmTag} != ${goVersion}`);
   if (chartVer !== goVersion) mismatches.push(`Chart.yaml appVersion=${chartVer} != ${goVersion}`);
   if (mismatches.length > 0) {
     console.error(`❌ Helm 部署载体版本不一致: ${mismatches.join('; ')}`);

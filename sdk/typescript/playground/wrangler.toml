@@ -1,13 +1,13 @@
-# AgentPrimordia Playground 部署配置
+# Synth Playground 部署配置
 # 目标平台：Cloudflare Pages（静态站点 + Serverless Functions）
 #
 # 部署步骤：
 #   1. cd sdk/typescript && npm run build
-#   2. npx wrangler pages deploy dist/playground --project-name=ap-playground
+#   2. npx wrangler pages deploy dist/playground --project-name=synth-playground
 #
 # 或使用 GitHub Actions 自动部署（见 .github/workflows/ 扩展）
 
-name = "ap-playground"
+name = "synth-playground"
 compatibility_date = "2026-07-01"
 
 [build]
@@ -16,12 +16,12 @@ output_directory = "sdk/typescript/dist/playground"
 
 [env.production]
 # Playground 使用模拟 LLM（无需真实 API Key）
-AP_PLAYGROUND_MOCK_LLM = "true"
-AP_PLAYGROUND_MAX_TURNS = "10"
+SYNTH_PLAYGROUND_MOCK_LLM = "true"
+SYNTH_PLAYGROUND_MAX_TURNS = "10"
 
 [env.preview]
-AP_PLAYGROUND_MOCK_LLM = "true"
-AP_PLAYGROUND_MAX_TURNS = "5"
+SYNTH_PLAYGROUND_MOCK_LLM = "true"
+SYNTH_PLAYGROUND_MAX_TURNS = "5"
 
 # 静态资源缓存策略
 [[headers]]

@@ -1,0 +1,355 @@
+// Package integration 提供 Synth 集成测试。
+//
+// 运行方式：
+//
+//	go test -v ./tests/integration/
+//
+// 测试覆盖：
+//   - synth start 完整流程
+//   - 多轮对话
+//   - synth profile 成长报告
+//   - A2A 通信
+package integration
+
+import (
+	"context"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+	"testing"
+	"time"
+
+	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+)
+
+// TestApStartFlow 测试 synth start 完整流程
+func TestApStartFlow(t *testing.T) {
+	// 创建临时目录
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// 切换到临时目录
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("切换目录失败: %v", err)
+	}
+
+	// 编译 synth 命令
+	apBin := filepath.Join(tmpDir, "synth")
+	buildCmd := exec.Command("go", "build", "-o", apBin, "./cmd/synth")
+	buildCmd.Dir = filepath.Join(origDir, "..", "..")
+	if output, err := buildCmd.CombinedOutput(); err != nil {
+		t.Fatalf("编译 synth 失败: %v\n%s", err, output)
+	}
+
+	// 运行 synth start：SYNTH_ROOT 让 start 知道框架源码位置，
+	// 否则在 t.TempDir() 这种隔离环境会落入 standalone 模式
+	startCmd := exec.Command(apBin, "start", "test-agent")
+	startCmd.Dir = tmpDir
+	startCmd.Env = append(os.Environ(), "SYNTH_ROOT="+filepath.Join(origDir, "..", "..", ".."))
+	output, err := startCmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("synth start 失败: %v\n%s", err, output)
+	}
+
+	// 验证输出
+	outputStr := string(output)
+	if !strings.Contains(outputStr, "创建项目") {
+		t.Error("输出中未包含'创建项目'")
+	}
+	if !strings.Contains(outputStr, "test-agent") {
+		t.Error("输出中未包含项目名称")
+	}
+
+	// 验证项目目录
+	projectDir := filepath.Join(tmpDir, "test-agent")
+	if _, err := os.Stat(projectDir); os.IsNotExist(err) {
+		t.Error("项目目录未创建")
+	}
+
+	// 验证关键文件
+	files := []string{"main.go", "go.mod", ".synth.yaml"}
+	for _, file := range files {
+		path := filepath.Join(projectDir, file)
+		if _, err := os.Stat(path); os.IsNotExist(err) {
+			t.Errorf("关键文件缺失: %s", file)
+		}
+	}
+}
+
+// TestMultiTurnConversation 测试多轮对话
+func TestMultiTurnConversation(t *testing.T) {
+	ctx := context.Background()
+	provider := synth.NewDemoProvider()
+
+	// 模拟多轮对话
+	messages := []struct {
+		input    string
+		expected []string // 期望包含的关键词
+	}{
+		{
+			input:    "你好",
+			expected: []string{"你好", "欢迎"},
+		},
+		{
+			input:    "帮我审查代码",
+			expected: []string{"代码", "审查"},
+		},
+		{
+			input:    "谢谢",
+			expected: []string{"不客气"},
+		},
+	}
+
+	for i, msg := range messages {
+		req := &synth.CompletionRequest{
+			Messages: []synth.ChatMessage{
+				{Role: "user", Content: msg.input},
+			},
+		}
+
+		resp, err := provider.Complete(ctx, req)
+		if err != nil {
+			t.Fatalf("第 %d 轮对话失败: %v", i+1, err)
+		}
+
+		// 验证响应包含期望关键词
+		found := false
+		for _, keyword := range msg.expected {
+			if strings.Contains(resp.Content, keyword) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("第 %d 轮响应未包含期望关键词: %v", i+1, msg.expected)
+		}
+	}
+}
+
+// TestApProfileCommand 测试 synth profile 命令
+func TestApProfileCommand(t *testing.T) {
+	// 创建临时目录
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// 切换到临时目录
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("切换目录失败: %v", err)
+	}
+
+	// 编译 synth 命令
+	apBin := filepath.Join(tmpDir, "synth")
+	buildCmd := exec.Command("go", "build", "-o", apBin, "./cmd/synth")
+	buildCmd.Dir = filepath.Join(origDir, "..", "..")
+	if output, err := buildCmd.CombinedOutput(); err != nil {
+		t.Fatalf("编译 synth 失败: %v\n%s", err, output)
+	}
+
+	// 创建项目
+	initCmd := exec.Command(apBin, "init", "profile-test")
+	initCmd.Dir = tmpDir
+	if output, err := initCmd.CombinedOutput(); err != nil {
+		t.Fatalf("synth init 失败: %v\n%s", err, output)
+	}
+
+	// 切换到项目目录
+	projectDir := filepath.Join(tmpDir, "profile-test")
+	if err := os.Chdir(projectDir); err != nil {
+		t.Fatalf("切换项目目录失败: %v", err)
+	}
+
+	// 运行 synth profile
+	profileCmd := exec.Command(apBin, "profile")
+	profileCmd.Dir = projectDir
+	output, err := profileCmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("synth profile 失败: %v\n%s", err, output)
+	}
+
+	// 验证输出
+	outputStr := string(output)
+	if !strings.Contains(outputStr, "Agent Growth Profile") {
+		t.Error("输出中未包含'Agent Growth Profile'")
+	}
+	if !strings.Contains(outputStr, "Overall") {
+		t.Error("输出中未包含'Overall'")
+	}
+}
+
+// TestA2ACommunication 测试 A2A 通信
+func TestA2ACommunication(t *testing.T) {
+	ctx := context.Background()
+
+	// 创建 Agent Card
+	card := synth.OpenAgentCard{
+		Name:               "test-agent",
+		Description:        "integration test agent",
+		URL:                "http://localhost:9876",
+		Version:            "1.0.0",
+		DefaultInputModes:  []string{"text"},
+		DefaultOutputModes: []string{"text"},
+	}
+
+	cfg := synth.DefaultInteropConfig()
+
+	// 创建 server
+	server := synth.NewOpenInteropServer(card, cfg)
+	if server == nil {
+		t.Fatal("创建 server 失败")
+	}
+
+	// 创建 client
+	client := synth.NewOpenInteropClient("http://localhost:9876")
+	if client == nil {
+		t.Fatal("创建 client 失败")
+	}
+
+	// 获取 Agent Card
+	discoveredCard, err := client.FetchAgentCard(ctx)
+	if err != nil {
+		// 注意：这里会失败因为 server 没有真正启动，只测试 API 存在
+		t.Logf("预期失败（server 未启动）: %v", err)
+	} else {
+		// 如果成功，验证 card
+		if discoveredCard.Name != card.Name {
+			t.Errorf("Card name 不匹配: got %s, want %s", discoveredCard.Name, card.Name)
+		}
+	}
+}
+
+// TestDemoProvider 测试 DemoProvider
+func TestDemoProvider(t *testing.T) {
+	ctx := context.Background()
+	provider := synth.NewDemoProvider()
+
+	tests := []struct {
+		input    string
+		expected []string
+	}{
+		{
+			input:    "你好",
+			expected: []string{"你好", "欢迎"},
+		},
+		{
+			input:    "hello",
+			expected: []string{"你好"},
+		},
+		{
+			input:    "帮助",
+			expected: []string{"帮助", "能力"},
+		},
+	}
+
+	for _, test := range tests {
+		req := &synth.CompletionRequest{
+			Messages: []synth.ChatMessage{
+				{Role: "user", Content: test.input},
+			},
+		}
+
+		resp, err := provider.Complete(ctx, req)
+		if err != nil {
+			t.Fatalf("Complete 失败: %v", err)
+		}
+
+		// 验证响应
+		found := false
+		for _, keyword := range test.expected {
+			if strings.Contains(resp.Content, keyword) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("输入 %q 的响应未包含期望关键词: %v", test.input, test.expected)
+		}
+	}
+}
+
+// TestProjectStructure 测试项目结构
+func TestProjectStructure(t *testing.T) {
+	// 创建临时目录
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// 切换到临时目录
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("切换目录失败: %v", err)
+	}
+
+	// 编译 synth 命令
+	apBin := filepath.Join(tmpDir, "synth")
+	buildCmd := exec.Command("go", "build", "-o", apBin, "./cmd/synth")
+	buildCmd.Dir = filepath.Join(origDir, "..", "..")
+	if output, err := buildCmd.CombinedOutput(); err != nil {
+		t.Fatalf("编译 synth 失败: %v\n%s", err, output)
+	}
+
+	// 创建项目
+	initCmd := exec.Command(apBin, "init", "structure-test")
+	initCmd.Dir = tmpDir
+	if output, err := initCmd.CombinedOutput(); err != nil {
+		t.Fatalf("synth init 失败: %v\n%s", err, output)
+	}
+
+	// 验证项目结构
+	projectDir := filepath.Join(tmpDir, "structure-test")
+
+	// 检查目录（data/ 由 sqlite memory backend 首次使用时惰性创建，不在 init 时生成）
+	dirs := []string{}
+	for _, dir := range dirs {
+		path := filepath.Join(projectDir, dir)
+		info, err := os.Stat(path)
+		if os.IsNotExist(err) {
+			t.Errorf("目录缺失: %s", dir)
+		} else if !info.IsDir() {
+			t.Errorf("%s 不是目录", dir)
+		}
+	}
+
+	// 检查文件
+	files := []string{"main.go", "go.mod", ".synth.yaml"}
+	for _, file := range files {
+		path := filepath.Join(projectDir, file)
+		info, err := os.Stat(path)
+		if os.IsNotExist(err) {
+			t.Errorf("文件缺失: %s", file)
+		} else if info.IsDir() {
+			t.Errorf("%s 是目录而不是文件", file)
+		}
+	}
+}
+
+// TestPerformance 测试基本性能
+func TestPerformance(t *testing.T) {
+	if testing.Short() {
+		t.Skip("跳过性能测试")
+	}
+
+	ctx := context.Background()
+	provider := synth.NewDemoProvider()
+
+	// 测试响应时间
+	start := time.Now()
+	for i := 0; i < 100; i++ {
+		req := &synth.CompletionRequest{
+			Messages: []synth.ChatMessage{
+				{Role: "user", Content: "test"},
+			},
+		}
+		_, _ = provider.Complete(ctx, req)
+	}
+	elapsed := time.Since(start)
+
+	avgTime := elapsed / 100
+	t.Logf("平均响应时间: %v", avgTime)
+
+	// 应该小于 100ms
+	if avgTime > 100*time.Millisecond {
+		t.Errorf("响应时间过长: %v", avgTime)
+	}
+}

@@ -1,5 +1,5 @@
 /**
- * AgentPrimordia Studio REST API 客户端。
+ * Synth Studio REST API 客户端。
  *
  * 职责：
  * 1. 封装对 Studio 后端的基础 CRUD 操作（runs / templates / agents）

@@ -1,6 +1,6 @@
 ﻿/**
  * 中文语言包 (简体)
- * Simplified Chinese locale strings for the AgentPrimordia SDK.
+ * Simplified Chinese locale strings for the Synth SDK.
  */
 
 export const zhCN = {

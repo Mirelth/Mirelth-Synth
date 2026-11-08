@@ -120,13 +120,13 @@ function buildCodeExecEnv(language: string): Record<string, string> {
  * 通过 child_process 执行，具有超时控制、输出截断、环境变量隔离。
  *
  * 安全警告：此工具 NOT a sandbox，代码直接在主机上运行。
- * 仅在可信环境中启用（设置 AP_ALLOW_CODE_EXECUTION=true）。
+ * 仅在可信环境中启用（设置 SYNTH_ALLOW_CODE_EXECUTION=true）。
  */
 export class CodeExecutionTool implements Tool {
   name = 'code_execution';
   description = 'Execute code with timeout and output limits. Supports Python, JavaScript, and Go. ' +
     'WARNING: This is NOT a security sandbox. Code runs directly on the host. ' +
-    'Enable only in trusted environments by setting AP_ALLOW_CODE_EXECUTION=true.';
+    'Enable only in trusted environments by setting SYNTH_ALLOW_CODE_EXECUTION=true.';
   parameters = {
     type: 'object',
     properties: {
@@ -147,10 +147,10 @@ export class CodeExecutionTool implements Tool {
 
   async execute(args: Record<string, unknown>): Promise<string> {
     // 安全门控
-    if (process.env.AP_ALLOW_CODE_EXECUTION !== 'true') {
+    if (process.env.SYNTH_ALLOW_CODE_EXECUTION !== 'true') {
       return 'code_execution is disabled by default for security reasons. ' +
         'It is NOT a sandbox and runs arbitrary code on the host. ' +
-        'Set AP_ALLOW_CODE_EXECUTION=true to enable it only in trusted environments.';
+        'Set SYNTH_ALLOW_CODE_EXECUTION=true to enable it only in trusted environments.';
     }
 
     const language = (args.language as string)?.toLowerCase().trim();

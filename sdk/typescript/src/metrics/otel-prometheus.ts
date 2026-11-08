@@ -312,7 +312,7 @@ export class OTelTracer {
       resourceSpans: [{
         resource: { attributes: {} },
         scopeSpans: [{
-          scope: { name: 'agentprimordia-ts' },
+          scope: { name: 'synth-ts' },
           spans: this.spans.map((s) => ({
             traceId: s.traceID,
             spanId: s.spanID,

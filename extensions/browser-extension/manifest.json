@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "AgentPrimordia DevTools",
+    "name": "Synth DevTools",
     "version": "5.0.0",
-    "description": "Inspect and interact with AgentPrimordia agents on any webpage",
+    "description": "Inspect and interact with Synth agents on any webpage",
     "permissions": ["activeTab", "storage", "scripting"],
     "host_permissions": ["http://localhost:8765/*", "http://localhost:6060/*"],
     "background": {

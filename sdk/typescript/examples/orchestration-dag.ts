@@ -23,7 +23,7 @@ function namedProvider(name: string): Provider {
 }
 
 async function main() {
-  console.log('=== AgentPrimordia TS SDK: DAG Orchestration ===\n');
+  console.log('=== Synth TS SDK: DAG Orchestration ===\n');
 
   // 构建 DAG:
   //   A (数据采集) → B (分析)

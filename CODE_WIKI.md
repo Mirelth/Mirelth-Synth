@@ -1,4 +1,4 @@
-# AgentPrimordia Code Wiki
+# Synth Code Wiki
 
 > 万物之源,智能之始 — 生产级 AI Agent 开发框架 (Go + TypeScript 双语言 SDK)
 
@@ -75,7 +75,7 @@
 
 ## 1. 项目概述
 
-**AgentPrimordia** 是一个用 Go 构建的通用 AI Agent 开发框架，从 CodeCast 生产环境验证的 Agent 架构中提炼而来。
+**Synth** 是一个用 Go 构建的通用 AI Agent 开发框架，从 CodeCast 生产环境验证的 Agent 架构中提炼而来。
 
 ### 核心特性
 
@@ -96,7 +96,7 @@
 | **技能进化 (v3.4)** | 运行中习得/验证/沉淀可复用技能，语义匹配自动调用（`internal/agent/skills/`） |
 | **协议互操作 (v3.5)** | 对齐开放 Agent2Agent 协议，跨生态委托 + 符合性报告（`internal/agent/a2a/interop_*`） |
 | **多模态实时 (v3.6)** | 语音/视觉实时双向流 + 打断，ASR/TTS 可插拔（`internal/agent/realtime/`） |
-| **CLI 工具** | `ap init / run / debug / loop / test / mcp / plugin / autonomy / skill / a2a / realtime / doctor / config / completion` |
+| **CLI 工具** | `synth init / run / debug / loop / test / mcp / plugin / autonomy / skill / a2a / realtime / doctor / config / completion` |
 | **TypeScript SDK** | Go 功能对等，模块全覆盖（含 v3.3 自治 / v3.4 技能 / v3.5 互操作 / v3.6 实时 对等实现） |
 
 ### 数据流
@@ -143,7 +143,7 @@
 ┌──────────────────────────────────────────────────────────┐
 │                    Your Application                       │
 ├──────────────────────────────────────────────────────────┤
-│                   AgentPrimordia Framework                 │
+│                   Synth Framework                 │
 │                                                            │
 │  ┌──────────┐ ┌──────────┐ ┌────────┐ ┌──────────────┐  │
 │  │ ReActLoop │ │   Pool   │ │  DAG   │ │  Pipeline    │  │
@@ -179,17 +179,17 @@
 ## 3. 项目结构
 
 ```
-agentprimordia/
+synth/
 ├── cmd/
-│   ├── ap/                       # CLI 工具 (ap init/run/debug/test/mcp/plugin)
+│   ├── synth/                       # CLI 工具 (synth init/run/debug/test/mcp/plugin)
 │   │   ├── scaffold/             # 项目模板 (basic/with-tools/multi-agent 等)
 │   │   ├── main.go               # CLI 入口
-│   │   ├── run.go                # ap run 命令
-│   │   ├── init.go               # ap init 命令
-│   │   ├── debug.go              # ap debug 命令
-│   │   ├── test.go               # ap test 命令
-│   │   ├── mcp.go                # ap mcp 命令
-│   │   └── plugin.go             # ap plugin 命令
+│   │   ├── run.go                # synth run 命令
+│   │   ├── init.go               # synth init 命令
+│   │   ├── debug.go              # synth debug 命令
+│   │   ├── test.go               # synth test 命令
+│   │   ├── mcp.go                # synth mcp 命令
+│   │   └── plugin.go             # synth plugin 命令
 │   ├── admin/                    # 管理后台
 │   └── example/                  # 示例应用
 │       ├── hello-agent/          # 最简 Agent
@@ -1026,12 +1026,12 @@ prompt := fewshot.BuildPrompt("输入: 谢谢")
 
 ```bash
 # 启动调试服务器
-ap debug
+synth debug
 
 # ReAct Loop 工程化工具
-ap loop trace                 # 查看 Agent 执行追踪
-ap loop inspect               # 查看 Agent 当前状态
-ap loop resume                # 从检查点恢复运行
+synth loop trace                 # 查看 Agent 执行追踪
+synth loop inspect               # 查看 Agent 当前状态
+synth loop resume                # 从检查点恢复运行
 
 # 访问端点
 http://localhost:6060/debug/pprof/     # pprof 性能分析
@@ -1399,7 +1399,7 @@ ChaosEngine.Run()
 | `IdempotencyGuard` | `idempotency.go` | 幂等键保护（goalID→keys 精确重置） |
 | `AutonomyRuntime` | `runtime.go` | 端到端装配 |
 
-**目标状态机：** `created → planned → executing → validated → done`；非终态可转 `failed`；`validated` 可回 `executing` 重规划；`failed` 可回 `planned` 重试。能力注入 `WithAutonomy(...)`，引擎经 `AutonomyCapable` 发现。详见 [concepts/autonomy](agentprimordia/docs/concepts/自治.md)。
+**目标状态机：** `created → planned → executing → validated → done`；非终态可转 `failed`；`validated` 可回 `executing` 重规划；`failed` 可回 `planned` 重试。能力注入 `WithAutonomy(...)`，引擎经 `AutonomyCapable` 发现。详见 [concepts/autonomy](synth/docs/concepts/自治.md)。
 
 ---
 
@@ -1424,7 +1424,7 @@ ChaosEngine.Run()
 | `Store` / `Matcher` | `store.go` / `matcher.go` | 技能库存取 + 语义匹配（置信度三档） |
 | `UsageTracker` | `usage.go` | 命中率/成功率/成本统计 |
 
-**跨组件集成：** 技能 × 工具/学习/市场/自治/RAG（`integration.go`）。能力注入 `WithSkills(...)`，引擎经 `SkillsCapable` 发现。详见 [concepts/skills](agentprimordia/docs/concepts/技能系统.md)。
+**跨组件集成：** 技能 × 工具/学习/市场/自治/RAG（`integration.go`）。能力注入 `WithSkills(...)`，引擎经 `SkillsCapable` 发现。详见 [concepts/skills](synth/docs/concepts/技能系统.md)。
 
 ---
 
@@ -1449,7 +1449,7 @@ ChaosEngine.Run()
 | `CleanupManager` | `cleanup.go` | 空闲超时关闭 + 资源回收 |
 | `Runtime` | `runtime.go` | Hub+感知流+事件+清理+ReAct 桥接装配 |
 
-**跨组件集成：** 实时 × 多模态/边缘/自治/守卫/A2A（`integration.go`）。能力注入 `WithRealtime(...)`，引擎经 `RealtimeCapable` 发现。详见 [concepts/realtime](agentprimordia/docs/concepts/实时通信.md)。
+**跨组件集成：** 实时 × 多模态/边缘/自治/守卫/A2A（`integration.go`）。能力注入 `WithRealtime(...)`，引擎经 `RealtimeCapable` 发现。详见 [concepts/realtime](synth/docs/concepts/实时通信.md)。
 
 ---
 
@@ -1457,7 +1457,7 @@ ChaosEngine.Run()
 
 **位置：** `internal/agent/capabilities.go`
 
-AgentPrimordia 采用协议式微内核设计，通过 20 个 Capable 接口实现能力的自动发现与组合（v3.3–v3.6 新增 `AutonomyCapable` / `SkillsCapable` / `RealtimeCapable`）：
+Synth 采用协议式微内核设计，通过 20 个 Capable 接口实现能力的自动发现与组合（v3.3–v3.6 新增 `AutonomyCapable` / `SkillsCapable` / `RealtimeCapable`）：
 
 ```go
 // 能力接口 — 引擎通过类型断言自动发现
@@ -1485,8 +1485,8 @@ type ToolLearningCapable interface { GetToolLearningConfig() *toollearning.Confi
 `CapabilityAgent` 实现所有 Capable 接口，提供链式 API：
 
 ```go
-agent, _ := ap.NewAgent("my-agent", "你是一个助手", provider,
-    ap.WithMaxTurns(10),
+agent, _ := synth.NewAgent("my-agent", "你是一个助手", provider,
+    synth.WithMaxTurns(10),
 )
 agent.
     WithMemory(mem).
@@ -1525,8 +1525,8 @@ a.self = capAgent  // 引擎通过 a.self.(XxxCapable) 发现能力
 ### 插件使用
 
 ```go
-registry := ap.NewToolRegistry()
-loader := ap.NewPluginLoader(registry)
+registry := synth.NewToolRegistry()
+loader := synth.NewPluginLoader(registry)
 
 // 无配置插件
 loader.Load(jsonplugin.New())
@@ -1702,7 +1702,7 @@ type OpenInteropClient = a2a.OpenInteropClient
 ```go
 resp, err := agent.Run(ctx, msg)
 if err != nil {
-    code := ap.GetErrorCode(err)
+    code := synth.GetErrorCode(err)
     switch {
     case strings.HasPrefix(code, "LLM_"):
         // LLM 调用失败，可重试
@@ -1728,23 +1728,23 @@ import (
     "log"
     "os"
     
-    ap "github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/pkg"
+    synth "github.com/Mirelth/Synth/v7/synth/pkg"
 )
 
 func main() {
     // 1. 创建 LLM Provider
-    provider := ap.NewOpenAIProvider(ap.Config{
+    provider := synth.NewOpenAIProvider(synth.Config{
         APIKey: os.Getenv("OPENAI_API_KEY"),
         Model:  "gpt-4o-mini",
     })
     
     // 2. 创建 Agent（3 行即可，链式添加能力）
-    agent := ap.NewAgent("my-first-agent", "你是一个友好的助手", provider,
-        ap.WithMaxTurns(10),
+    agent := synth.NewAgent("my-first-agent", "你是一个友好的助手", provider,
+        synth.WithMaxTurns(10),
     )
     
     // 3. 运行
-    resp, err := agent.Run(context.Background(), ap.UserMessage("你好！"))
+    resp, err := agent.Run(context.Background(), synth.UserMessage("你好！"))
     if err != nil {
         log.Fatal(err)
     }
@@ -1756,16 +1756,16 @@ func main() {
 ### 链式 API（CapabilityAgent）
 
 ```go
-agent, _ := ap.NewAgent("my-first-agent", "你是一个友好的助手", provider,
-    ap.WithMaxTurns(10),
+agent, _ := synth.NewAgent("my-first-agent", "你是一个友好的助手", provider,
+    synth.WithMaxTurns(10),
 )
 ```
 
 ### 渐进式添加能力
 
 ```go
-agent, _ := ap.NewAgent("capable-agent", "你是一个助手", provider,
-    ap.WithMaxTurns(10),
+agent, _ := synth.NewAgent("capable-agent", "你是一个助手", provider,
+    synth.WithMaxTurns(10),
 )
 agent.
     WithMemory(mem).              // 添加记忆
@@ -1783,44 +1783,44 @@ agent.
 ### 安装 CLI
 
 ```bash
-cd agentprimordia
-go build -o ap ./cmd/ap/
+cd synth
+go build -o synth ./cmd/synth/
 ```
 
 ### 创建项目
 
 ```bash
-ap init my-agent              # 创建项目
-ap init my-agent --template with-tools  # 带工具模板
-ap init my-agent --template multi-agent # 多 Agent 模板
+synth init my-agent              # 创建项目
+synth init my-agent --template with-tools  # 带工具模板
+synth init my-agent --template multi-agent # 多 Agent 模板
 ```
 
 ### 运行
 
 ```bash
-ap run                        # 编译运行
-ap run --watch                # 监视模式
-ap debug                      # 调试服务器 (http://localhost:6060)
-ap loop trace                 # 查看 Agent 执行追踪
-ap loop inspect               # 查看 Agent 当前状态
-ap loop resume                # 从检查点恢复运行
-ap doctor                     # 健康检查
-ap completion bash            # 生成 Shell 补全脚本 (bash/zsh/fish/powershell)
+synth run                        # 编译运行
+synth run --watch                # 监视模式
+synth debug                      # 调试服务器 (http://localhost:6060)
+synth loop trace                 # 查看 Agent 执行追踪
+synth loop inspect               # 查看 Agent 当前状态
+synth loop resume                # 从检查点恢复运行
+synth doctor                     # 健康检查
+synth completion bash            # 生成 Shell 补全脚本 (bash/zsh/fish/powershell)
 ```
 
 ### MCP 管理
 
 ```bash
-ap mcp list
-ap mcp add fs --command npx --args "@mcp/server-filesystem,/tmp"
-ap mcp test fs
+synth mcp list
+synth mcp add fs --command npx --args "@mcp/server-filesystem,/tmp"
+synth mcp test fs
 ```
 
 ### 插件管理
 
 ```bash
-ap plugin install github.com/user/ap-plugin-xxx
-ap plugin create ap-plugin-weather
+synth plugin install github.com/user/synth-plugin-xxx
+synth plugin create synth-plugin-weather
 ```
 
 ### K8s 部署
@@ -1844,7 +1844,7 @@ kubectl get svc       # 查看 Service
 make docker-build
 
 # 或手动构建
-docker build -t agentprimordia/agent:latest .
+docker build -t synth/agent:latest .
 ```
 
 ### Docker Compose
@@ -1854,10 +1854,10 @@ version: '3.8'
 
 services:
   agent:
-    image: agentprimordia/agent:latest
+    image: synth/agent:latest
     environment:
-      - AP_LLM_API_KEY=${OPENAI_API_KEY}
-      - AP_LLM_MODEL=gpt-4o-mini
+      - SYNTH_LLM_API_KEY=${OPENAI_API_KEY}
+      - SYNTH_LLM_MODEL=gpt-4o-mini
     ports:
       - "8080:8080"   # Admin API
       - "9090:9090"   # Metrics
@@ -1890,7 +1890,7 @@ docker-compose down
 go test ./internal/... ./pkg/... -race
 
 # CLI 测试
-go test ./cmd/ap/
+go test ./cmd/synth/
 
 # 集成测试（需要 API Key）
 make test-integration
@@ -1959,7 +1959,7 @@ BenchmarkToolCall-8          200     6.2 ms/op     512 B/op     8 allocs/op
 | **BufferPool** | `internal/agent/bufferpool.go` | `sync.Pool` 复用 `bytes.Buffer`，减少 LLM 请求体构造和 SSE chunk 解析热路径上的内存分配 |
 | **TokenCache** | `internal/agent/tokencache.go` | FNV-1a hash + `sync.Map` 的 token 估算缓存，面向长文档 chunk 和重复消息场景 |
 | **JSON Buffer Pool** | `internal/jsonutil/pool.go` | JSON 序列化/反序列化的 buffer 复用池 |
-| **pprof 端点** | `internal/health/pprof.go` | `ap.RegisterPProf(mux)` 和 `ap.PProfHandler()` 导出至 `pkg/`，支持所有标准 profile 类型 |
+| **pprof 端点** | `internal/health/pprof.go` | `synth.RegisterPProf(mux)` 和 `synth.PProfHandler()` 导出至 `pkg/`，支持所有标准 profile 类型 |
 | **PGO** | `docs/advanced/PGO调优.md` | Profile-Guided Optimization 使用指南 |
 | **Fuzz 测试** | `internal/security/`, `internal/memory/`, `internal/tools/` | Sandbox 路径遍历、RAG 检索、工具执行器安全模糊测试 |
 | **供应链安全** | `docs/advanced/供应链安全.md` | govulncheck + npm audit + Trivy + cosign 签名 + SBOM 生成 |
@@ -2226,7 +2226,7 @@ sdk/typescript/src/
 ### 使用示例
 
 ```typescript
-import { ReActAgent, OpenAIProvider, ToolRegistry, AuditLogger, HealthServer } from '@agentprimordia/sdk';
+import { ReActAgent, OpenAIProvider, ToolRegistry, AuditLogger, HealthServer } from '@synth/sdk';
 
 const provider = new OpenAIProvider({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -2262,28 +2262,28 @@ await audit.log({ actor: 'user-1', action: 'agent.run', resource: 'my-agent' });
 
 **新特性（向后兼容）：**
 
-1. **简化 Agent 入口** — 推荐使用 `ap.NewAgent()`，返回 `(*CapabilityAgent, error)`
+1. **简化 Agent 入口** — 推荐使用 `synth.NewAgent()`，返回 `(*CapabilityAgent, error)`
    ```go
    // v0.8.0 推荐写法
-   agent, err := ap.NewAgent("hello", "你是一个助手", provider, ap.WithMaxTurns(10))
+   agent, err := synth.NewAgent("hello", "你是一个助手", provider, synth.WithMaxTurns(10))
    ```
 
 2. **`WithRAGMemory()` 一步 RAG**
    ```go
    // v0.7（链式 API）
-   agent, _ := ap.NewAgent(name, system, provider).
+   agent, _ := synth.NewAgent(name, system, provider).
        WithRAG(ragCfg).
        WithMemory(store)
    
    // v0.8.0
-   agent, err := ap.NewAgent(name, system, provider,
-       ap.WithRAGMemory(ragMemoryConfig),
+   agent, err := synth.NewAgent(name, system, provider,
+       synth.WithRAGMemory(ragMemoryConfig),
    )
    ```
 
 3. **`testutil` 测试包**
    ```go
-   import "github.com/Gleamseekers/AgentPrimordia/v7/agentprimordia/testutil"
+   import "github.com/Mirelth/Synth/v7/synth/testutil"
    
    provider := testutil.NewMockProvider()
    agent := testutil.NewTestAgent(provider)
@@ -2301,7 +2301,7 @@ await audit.log({ actor: 'user-1', action: 'agent.run', resource: 'my-agent' });
    }
    
    // v0.7
-   agent, _ := ap.NewAgent(name, system, provider, ap.WithToolkit(registry))
+   agent, _ := synth.NewAgent(name, system, provider, synth.WithToolkit(registry))
    ```
 
 2. **Memory 接口组合**
@@ -2341,9 +2341,9 @@ await audit.log({ actor: 'user-1', action: 'agent.run', resource: 'my-agent' });
 
 ```bash
 # 升级依赖
-go get agentprimordia@v2.0.0
-npm install @agentprimordia/sdk@2.0.0
-ap version   # 验证: v2.0.0
+go get synth@v2.0.0
+npm install @synth/sdk@2.0.0
+synth version   # 验证: v2.0.0
 ```
 
 ### 19.4 v2.0 → v3.0 迁移
@@ -2359,23 +2359,23 @@ ap version   # 验证: v2.0.0
 
 ```bash
 # 升级依赖
-go get agentprimordia@v3.1.0
-ap version   # 验证: v3.1.0
+go get synth@v3.1.0
+synth version   # 验证: v3.1.0
 ```
 
 ### 19.5 v3.2 → v3.3+ 迁移（V4 能力跃迁）
 
 **完全向后兼容**，v3.2 代码无需修改。v3.3–v3.6 新增能力均为可选注入：
 
-1. **长期自治**（可选，v3.3）— `internal/agent/autonomy/` + `WithAutonomy(...)` + `ap autonomy`
-2. **技能进化**（可选，v3.4）— `internal/agent/skills/` + `WithSkills(...)` + `ap skill`
-3. **协议互操作**（可选，v3.5）— `internal/agent/a2a/interop_*` 对齐开放 A2A 协议 + `ap a2a interop-check`；JSON-RPC 重新定位为开放协议标准传输（不再标记移除）
-4. **多模态实时**（可选，v3.6）— `internal/agent/realtime/` + `WithRealtime(...)` + `ap realtime`
+1. **长期自治**（可选，v3.3）— `internal/agent/autonomy/` + `WithAutonomy(...)` + `synth autonomy`
+2. **技能进化**（可选，v3.4）— `internal/agent/skills/` + `WithSkills(...)` + `synth skill`
+3. **协议互操作**（可选，v3.5）— `internal/agent/a2a/interop_*` 对齐开放 A2A 协议 + `synth a2a interop-check`；JSON-RPC 重新定位为开放协议标准传输（不再标记移除）
+4. **多模态实时**（可选，v3.6）— `internal/agent/realtime/` + `WithRealtime(...)` + `synth realtime`
 
 ```bash
 # 升级依赖
-go get agentprimordia@latest
-ap version
+go get synth@latest
+synth version
 ```
 
 ### 迁移检查清单
@@ -2394,7 +2394,7 @@ ap version
 PostgreSQL pgvector 扩展适配器，用于生产级向量存储：
 
 ```go
-import "github.com/Gleamseekers/AgentPrimordia/pgvector"
+import "github.com/Mirelth/Synth/pgvector"
 
 // 创建 pgvector 存储
 store, err := pgvector.New(pgvector.Config{
@@ -2402,7 +2402,7 @@ store, err := pgvector.New(pgvector.Config{
     Port:     5432,
     User:     "postgres",
     Password: "password",
-    Database: "agentprimordia",
+    Database: "synth",
     Table:    "vectors",
 })
 if err != nil {
@@ -2411,7 +2411,7 @@ if err != nil {
 defer store.Close()
 
 // 使用与 VectorStore 相同的接口
-agent, _ := ap.NewAgent("my-agent", "你是一个助手", provider).
+agent, _ := synth.NewAgent("my-agent", "你是一个助手", provider).
     WithMemory(store)
 ```
 
@@ -2438,7 +2438,7 @@ agent, _ := ap.NewAgent("my-agent", "你是一个助手", provider).
 | 快速入门 | `ecosystem/docs/getting-started.md` | 5 分钟上手 |
 | API 参考 | `ecosystem/docs/api-reference.md` | 完整 API 文档 |
 | 最佳实践 | `ecosystem/docs/best-practices.md` | 生产环境建议 |
-| CLI 指南 | `ecosystem/docs/ap-guide.md` | ap 命令详解 |
+| CLI 指南 | `ecosystem/docs/synth-guide.md` | synth 命令详解 |
 | Go 生态 | `ecosystem/docs/go-ecosystem.md` | Go 生态集成 |
 | 向量库指南 | `ecosystem/docs/vector-db-guide.md` | 向量数据库集成 |
 | Cookbook | `ecosystem/docs/cookbook/` | 实战菜谱 |
