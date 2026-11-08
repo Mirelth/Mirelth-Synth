@@ -22,7 +22,7 @@ import (
     "context"
     "fmt"
 
-    "github.com/Mirelth/Synth/v7/synth/wasm"
+    "github.com/Mirelth/Mirelth-Synth/v7/synth/wasm"
 )
 
 func main() {

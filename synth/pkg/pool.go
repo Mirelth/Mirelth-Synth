@@ -2,7 +2,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/pool"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/pool"
 )
 
 // Pool 是多 Agent 并发调度器，支持任务分发、重试、取消和会话管理

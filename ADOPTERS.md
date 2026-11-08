@@ -9,7 +9,7 @@
 ## How to add yourself
 
 Open a PR against this file (or comment on
-[discussions](https://github.com/Mirelth/Synth/discussions)) with
+[discussions](https://github.com/Mirelth/Mirelth-Synth/discussions)) with
 one row. Self-report is the only bar — no logo, no permission, no minimum
 usage. Anonymous entries ("a fintech team in Singapore") are welcome; what helps
 most is the **use case**, not the name.

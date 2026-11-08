@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // ===== Phase 17-D: pkg/ 公共 API 端到端集成测试 =====

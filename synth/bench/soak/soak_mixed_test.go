@@ -20,9 +20,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm/soak"
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm/soak"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // mixedProvider 确定性混合流量 Provider：Complete 给结论（QA 轮收尾），

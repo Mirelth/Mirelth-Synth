@@ -7,9 +7,9 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/concurrency"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/builtin"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/concurrency"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/builtin"
 )
 
 // Tool 是所有tool必须实现的接口，定义名称、描述、参数和执行方法

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // mockProvider 是最简的 llm.Provider 实现，仅用于 Phase 3 Task 6 集成测试。

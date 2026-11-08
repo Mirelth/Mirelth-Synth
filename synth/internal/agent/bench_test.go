@@ -7,8 +7,8 @@ import (
 	"log/slog"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // silentToolLogs 把 tools 包全局 slog 重定向到 io.Discard，benchmark 结束后恢复。

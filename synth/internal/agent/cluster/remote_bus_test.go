@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/bus"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/bus"
 )
 
 func TestRemoteNodePing(t *testing.T) {

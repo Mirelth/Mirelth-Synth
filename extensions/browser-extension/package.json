@@ -25,10 +25,10 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mirelth/Synth.git",
+    "url": "https://github.com/Mirelth/Mirelth-Synth.git",
     "directory": "sdk/browser-extension"
   },
-  "homepage": "https://github.com/Mirelth/Synth/tree/main/sdk/browser-extension",
+  "homepage": "https://github.com/Mirelth/Mirelth-Synth/tree/main/sdk/browser-extension",
   "devDependencies": {
     "@types/chrome": "^0.0.260.0",
     "bestzip": "^2.2.1",

@@ -10,7 +10,7 @@ import (
 	"context"
 	"sort"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 )
 
 // maxSessionHistoryMessages 会话历史回读上限（条）。

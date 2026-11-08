@@ -15,8 +15,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
 )
 
 // Scope 改进作用域（沙箱白名单）

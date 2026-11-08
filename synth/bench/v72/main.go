@@ -27,14 +27,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/planning"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/worldmodel"
-	"github.com/Mirelth/Synth/v7/synth/internal/eval"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/builtin"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/planning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/worldmodel"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/eval"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/builtin"
 )
 
 // taskResult 单条任务单臂运行结果。

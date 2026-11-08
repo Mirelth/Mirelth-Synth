@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // MarkdownDocument 表示解析后的 Markdown 文档结构

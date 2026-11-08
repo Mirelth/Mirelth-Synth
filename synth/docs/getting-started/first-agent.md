@@ -28,12 +28,12 @@ my-agent/
 mkdir my-agent && cd my-agent
 go mod init my-agent
 
-go get github.com/Mirelth/Synth/v7@latest
+go get github.com/Mirelth/Mirelth-Synth/v7@latest
 ```
 
 `go get` resolves the framework (and its dependencies) from the module proxy and records the
 current released version in `go.mod`. The import path you will use is
-`github.com/Mirelth/Synth/v7/synth/pkg` — the `/synth`
+`github.com/Mirelth/Mirelth-Synth/v7/synth/pkg` — the `/synth`
 segment is part of it because the code lives in the `synth/` subdirectory.
 
 ## Step 2 — Define tools
@@ -49,7 +49,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // WeatherTool answers weather questions for a city.
@@ -124,7 +124,7 @@ import (
 	"os"
 	"strings"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/a2a"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/a2a"
 )
 
 const a2aUsage = `Usage: synth a2a <subcommand> [arguments]

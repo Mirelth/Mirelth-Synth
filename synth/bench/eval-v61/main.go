@@ -32,15 +32,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	agenthooks "github.com/Mirelth/Synth/v7/synth/internal/agent/hooks"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/worldmodel"
-	"github.com/Mirelth/Synth/v7/synth/internal/eval"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/multi_agent/federation"
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/builtin"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	agenthooks "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/hooks"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/worldmodel"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/eval"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/multi_agent/federation"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/builtin"
 )
 
 // ===== 题面结构（long-horizon-v1.json）=====

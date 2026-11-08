@@ -324,7 +324,7 @@ var (
         "log"
         "os"
 
-        synth "github.com/Mirelth/Synth/v7/synth/pkg"
+        synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
     )
 
     func main() {

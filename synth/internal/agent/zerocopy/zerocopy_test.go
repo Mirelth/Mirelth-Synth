@@ -4,7 +4,7 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 )
 
 func TestZeroCopyMessage_Create(t *testing.T) {

@@ -18,9 +18,9 @@ B = r"(?<![A-Za-z0-9_])"
 E = r"(?![A-Za-z0-9_])"
 
 RULES = [
-    ("module/v7", "github.com/Gleamseekers/AgentPrimordia/v7", "github.com/Mirelth/Synth/v7"),
-    ("module/other", "github.com/Gleamseekers/AgentPrimordia", "github.com/Mirelth/Synth"),
-    ("repo-short-url", "github.com/agentprimordia/ap", "github.com/Mirelth/Synth"),
+    ("module/v7", "github.com/Gleamseekers/AgentPrimordia/v7", "github.com/Mirelth/Mirelth-Synth/v7"),
+    ("module/other", "github.com/Gleamseekers/AgentPrimordia", "github.com/Mirelth/Mirelth-Synth"),
+    ("repo-short-url", "github.com/agentprimordia/ap", "github.com/Mirelth/Mirelth-Synth"),
     ("crd-group", "agent.primordia.dev", "synth.dev"),
     ("upper-brand", "AGENTPRIMORDIA", "SYNTH"),
     ("title-brand", "AgentPrimordia", "Synth"),

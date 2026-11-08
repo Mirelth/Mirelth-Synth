@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/tool_learning"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/tool_learning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // wiringEchoTool 端到端测试用的最小工具。

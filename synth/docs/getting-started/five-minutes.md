@@ -12,7 +12,7 @@ Create and run your first Synth agent in five minutes — **without an API key**
 ## Step 1 — Install the CLI
 
 ```bash
-go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@latest
 
 synth version
 ```

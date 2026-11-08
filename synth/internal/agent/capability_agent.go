@@ -2,19 +2,19 @@ package agent
 
 import (
 	"context"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/autonomy"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/learning"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/planning"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/realtime"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/reflection"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/skills"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/tool_learning"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/worldmodel"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
-	"github.com/Mirelth/Synth/v7/synth/internal/observability"
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/autonomy"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/learning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/planning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/realtime"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/reflection"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/skills"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/tool_learning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/worldmodel"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // CapabilityAgent 是可组合能力的 Agent 包装器。

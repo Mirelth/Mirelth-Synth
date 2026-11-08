@@ -15,8 +15,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/eval"
-	"github.com/Mirelth/Synth/v7/synth/internal/self_bootstrap"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/eval"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/self_bootstrap"
 )
 
 func main() {

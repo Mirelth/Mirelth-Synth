@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 )
 
 // RealLearningService 基于真实 SelfModel 数据的 LearningService 实现。

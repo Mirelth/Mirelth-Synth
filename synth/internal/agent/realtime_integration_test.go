@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/realtime"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/realtime"
 )
 
 type integMultimodal struct{ calls int }

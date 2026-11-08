@@ -18,10 +18,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/concurrency"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/concurrency"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 const (

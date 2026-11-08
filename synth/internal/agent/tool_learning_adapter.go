@@ -14,8 +14,8 @@ package agent
 import (
 	"context"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/tool_learning"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/tool_learning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 )
 
 // memoryEpisodeStore 是适配所需的记忆存储最小能力集。

@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/realtime"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/realtime"
 )
 
 const realtimeUsage = `Usage: synth realtime <subcommand> [arguments]

@@ -28,7 +28,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/discovery"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/discovery"
 )
 
 // NodeRole 节点角色

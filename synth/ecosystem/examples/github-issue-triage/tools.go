@@ -21,7 +21,7 @@ import (
 	"strings"
 	"time"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // apiBase 是 GitHub API 基础 URL。

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/jsonutil"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/jsonutil"
 )
 
 // BenchmarkRequestMarshal_Map 对比 map[string]any 与 typed struct 的序列化性能

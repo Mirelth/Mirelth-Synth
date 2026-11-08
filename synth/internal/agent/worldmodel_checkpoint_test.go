@@ -13,9 +13,9 @@ import (
 	"log/slog"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/worldmodel"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/worldmodel"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
 )
 
 // TestWorldModel_StateCheckpoint_ContinueKnowing 续知端到端：

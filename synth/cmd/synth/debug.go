@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/debugger"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/debugger"
 )
 
 func runDebug(args []string) error {

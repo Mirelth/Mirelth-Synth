@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // MCPToolAdapter 将 MCP tool适配为 Synth 的 tools.Tool 接口

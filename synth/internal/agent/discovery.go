@@ -3,7 +3,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/discovery"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/discovery"
 )
 
 // AgentInfo 表示 Agent 的注册信息

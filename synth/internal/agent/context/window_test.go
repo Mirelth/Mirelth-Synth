@@ -3,7 +3,7 @@ package context
 import (
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 )
 
 func TestDefaultTrim_UnderLimit(t *testing.T) {

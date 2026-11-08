@@ -26,10 +26,10 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence"
-	"github.com/Mirelth/Synth/v7/synth/wasm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/wasm"
 )
 
 // ToolForge 工具锻造装配：验签门 + wasm 沙箱执行通道。

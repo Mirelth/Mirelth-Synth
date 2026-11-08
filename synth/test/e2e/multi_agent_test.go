@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/orchestration"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/orchestration"
 )
 
 // TestE2E_Pipeline_TwoStages 验证两阶段 Pipeline 编排：

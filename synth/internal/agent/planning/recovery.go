@@ -7,7 +7,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // DeadlockDetector 死路检测器——连续失败超过阈值即判定死路

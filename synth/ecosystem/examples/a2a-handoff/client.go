@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // pollInterval 轮询间隔；pollTimeout 轮询总超时（防止对端异常时死等）。

@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/worldmodel"
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/worldmodel"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
 	"log/slog"
 )
 

@@ -1,7 +1,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/trace"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/trace"
 )
 
 // SpanKind Span 类型

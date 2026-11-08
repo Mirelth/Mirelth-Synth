@@ -18,10 +18,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/hitl"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/hitl"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // recordingSpan 记录自身是否已闭合的 Span 实现（测试专用）。

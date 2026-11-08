@@ -2,7 +2,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/context"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/context"
 )
 
 // CompressConfig 压缩配置

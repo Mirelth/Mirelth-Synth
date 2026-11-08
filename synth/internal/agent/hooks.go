@@ -5,7 +5,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/hooks"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/hooks"
 )
 
 // ===== 类型别名 =====

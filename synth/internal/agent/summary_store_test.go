@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 )
 
 // summaryTrackingStore 是带摘要存储追踪的 MemoryStore，

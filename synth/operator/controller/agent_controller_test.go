@@ -15,7 +15,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	agentv1 "github.com/Mirelth/Synth/v7/synth/operator/api/v1"
+	agentv1 "github.com/Mirelth/Mirelth-Synth/v7/synth/operator/api/v1"
 )
 
 func newScheme() *runtime.Scheme {

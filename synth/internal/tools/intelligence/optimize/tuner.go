@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence"
 )
 
 // DataDrivenTuner 数据驱动调优器（基于画像提出参数调整建议）

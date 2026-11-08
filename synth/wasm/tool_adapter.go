@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // ToolMetadata WASM 工具元数据

@@ -6,8 +6,8 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/hooks"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/hooks"
 )
 
 // NodeHandler 节点处理函数类型

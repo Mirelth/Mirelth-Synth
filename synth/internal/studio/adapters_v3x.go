@@ -9,9 +9,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/autonomy"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/realtime"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/skills"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/autonomy"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/realtime"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/skills"
 )
 
 // ===== AutonomyService 适配器 =====

@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/jsonutil" // perf-v6 round 5 Task 1：JSON 池化
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/jsonutil" // perf-v6 round 5 Task 1：JSON 池化
 )
 
 const (

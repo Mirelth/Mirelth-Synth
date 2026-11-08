@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/skills"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/skills"
 )
 
 // TestSkillCLIAddListVerifyRemove 生产路径回归：synth skill 必须真实读写持久化技能库，

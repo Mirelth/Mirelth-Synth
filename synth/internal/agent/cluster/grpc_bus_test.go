@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/bus"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/bus"
 )
 
 // TestGRPCRemoteNode_InvalidConfig 测试无效配置

@@ -13,7 +13,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 )
 
 const (

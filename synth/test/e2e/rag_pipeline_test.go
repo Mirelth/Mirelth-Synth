@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 )
 
 // TestE2E_RAG_DocumentToChunk 验证文档加载→切分→存储的完整流程

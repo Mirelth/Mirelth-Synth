@@ -1,7 +1,7 @@
 // Stability: Stable — 结构化日志。
 package synth
 
-import "github.com/Mirelth/Synth/v7/synth/internal/logger"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/logger"
 
 // Logger 结构化日志器
 type Logger = logger.Logger

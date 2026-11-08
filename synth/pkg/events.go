@@ -2,7 +2,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/events"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/events"
 )
 
 // Bus 是事件总线，支持发布/订阅模式的事件分发

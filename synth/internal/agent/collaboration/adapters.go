@@ -3,7 +3,7 @@ package collaboration
 import (
 	"context"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 )
 
 // CoreAgentAdapter 将 core.Agent 适配为 collaboration.Agent 接口。

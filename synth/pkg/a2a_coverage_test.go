@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/a2a"
-	"github.com/Mirelth/Synth/v7/synth/internal/events"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/a2a"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/events"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 	"log/slog"
 )
 

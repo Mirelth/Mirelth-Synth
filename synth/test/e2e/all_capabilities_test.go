@@ -16,11 +16,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/autonomy"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/realtime"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/skills"
-	"github.com/Mirelth/Synth/v7/synth/internal/studio"
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/autonomy"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/realtime"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/skills"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/studio"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // allCapExecutor 全能力链路步骤执行器（确定性）。

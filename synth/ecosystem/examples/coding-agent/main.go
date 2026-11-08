@@ -26,9 +26,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/cmd/example/demo"
-	gitplugin "github.com/Mirelth/Synth/v7/synth/ecosystem/plugins/git"
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/example/demo"
+	gitplugin "github.com/Mirelth/Mirelth-Synth/v7/synth/ecosystem/plugins/git"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // 计划协议：JSON 数组 [{id, description, depends_on}]。

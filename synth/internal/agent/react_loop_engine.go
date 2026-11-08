@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/observability"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability"
 )
 
 // reactLoopEngine ReAct 循环核心引擎

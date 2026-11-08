@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	agentv1 "github.com/Mirelth/Synth/v7/synth/operator/api/v1"
+	agentv1 "github.com/Mirelth/Mirelth-Synth/v7/synth/operator/api/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

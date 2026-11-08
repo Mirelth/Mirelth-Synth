@@ -21,13 +21,13 @@
 
 ### 报告 Bug
 
-1. 首先检查 [现有 Issue](https://github.com/Mirelth/Synth/issues) 是否已报告该问题
+1. 首先检查 [现有 Issue](https://github.com/Mirelth/Mirelth-Synth/issues) 是否已报告该问题
 2. 如果没有，创建新的 Issue 并选择 "Bug Report" 模板
 3. 提供清晰的描述、复现步骤和环境信息
 
 ### 提出新功能
 
-1. 先在 [Discussions](https://github.com/Mirelth/Synth/discussions) 中讨论您的想法
+1. 先在 [Discussions](https://github.com/Mirelth/Mirelth-Synth/discussions) 中讨论您的想法
 2. 获得社区反馈后，创建 Feature Request Issue
 3. 等待维护者确认方向后再开始开发
 
@@ -60,7 +60,7 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/Mirelth/Synth.git
+git clone https://github.com/Mirelth/Mirelth-Synth.git
 cd Synth
 
 # 安装依赖
@@ -268,7 +268,7 @@ Fixes #456
 
 ### 讨论区
 
-- [GitHub Discussions](https://github.com/Mirelth/Synth/discussions)
+- [GitHub Discussions](https://github.com/Mirelth/Mirelth-Synth/discussions)
   - 提问和答疑
   - 功能讨论
   - 展示项目
@@ -294,4 +294,4 @@ Fixes #456
 
 ---
 
-**有问题？** 欢迎在 [Discussions](https://github.com/Mirelth/Synth/discussions) 中提问，或联系维护者。
+**有问题？** 欢迎在 [Discussions](https://github.com/Mirelth/Mirelth-Synth/discussions) 中提问，或联系维护者。

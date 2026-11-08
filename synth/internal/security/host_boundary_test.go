@@ -17,14 +17,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/builtin"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/builtin"
 )
 
 // wasmWhitelistPrefixes 允许 import wazero 的包路径前缀（AGENTS.md §2.1 白名单边界）：
-// 根 wasm 模块 github.com/Mirelth/Synth/wasm（仓库 wasm/ 目录）与主模块内 wasm 包 github.com/Mirelth/Synth/v7/synth/wasm。
+// 根 wasm 模块 github.com/Mirelth/Mirelth-Synth/wasm（仓库 wasm/ 目录）与主模块内 wasm 包 github.com/Mirelth/Mirelth-Synth/v7/synth/wasm。
 var wasmWhitelistPrefixes = []string{
-	"github.com/Mirelth/Synth/v7/synth/wasm", // 主模块内 wasm 包
-	"github.com/Mirelth/Synth/wasm",          // 根 wasm 模块
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/wasm", // 主模块内 wasm 包
+	"github.com/Mirelth/Mirelth-Synth/wasm",          // 根 wasm 模块
 }
 
 // moduleRoots 参与扫描的 Go 模块目录（相对仓库根）。
@@ -36,11 +36,11 @@ var wasmWhitelistPrefixes = []string{
 // 历史缺陷：此处只列主模块与根 wasm 模块，gateway / pgvector / operator 三个模块
 // 完全在扫描面之外——白名单外的包 import wazero 无从发现，A1 的"全量枚举"名不副实。
 var moduleRoots = []struct{ dir, module string }{
-	{"synth", "github.com/Mirelth/Synth/v7/synth"},
-	{"synth/operator", "github.com/Mirelth/Synth/v7/synth/operator"},
-	{"gateway", "github.com/Mirelth/Synth/gateway"},
-	{"pgvector", "github.com/Mirelth/Synth/pgvector"},
-	{"wasm", "github.com/Mirelth/Synth/wasm"},
+	{"synth", "github.com/Mirelth/Mirelth-Synth/v7/synth"},
+	{"synth/operator", "github.com/Mirelth/Mirelth-Synth/v7/synth/operator"},
+	{"gateway", "github.com/Mirelth/Mirelth-Synth/gateway"},
+	{"pgvector", "github.com/Mirelth/Mirelth-Synth/pgvector"},
+	{"wasm", "github.com/Mirelth/Mirelth-Synth/wasm"},
 }
 
 func findRepoRoot(t *testing.T) string {
@@ -105,17 +105,17 @@ func TestA1_WazeroImportMatcher(t *testing.T) {
 	}
 	// 白名单前缀判定同向：白名单包自身与其子包都必须命中。
 	for _, p := range []string{
-		"github.com/Mirelth/Synth/v7/synth/wasm",
-		"github.com/Mirelth/Synth/v7/synth/wasm/sub",
-		"github.com/Mirelth/Synth/wasm",
+		"github.com/Mirelth/Mirelth-Synth/v7/synth/wasm",
+		"github.com/Mirelth/Mirelth-Synth/v7/synth/wasm/sub",
+		"github.com/Mirelth/Mirelth-Synth/wasm",
 	} {
 		if !hasWhitelistPrefix(p) {
 			t.Errorf("白名单前缀漏判: %s", p)
 		}
 	}
 	for _, p := range []string{
-		"github.com/Mirelth/Synth/v7/synth/wasmx",
-		"github.com/Mirelth/Synth/v7/synth/internal/tools",
+		"github.com/Mirelth/Mirelth-Synth/v7/synth/wasmx",
+		"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools",
 	} {
 		if hasWhitelistPrefix(p) {
 			t.Errorf("白名单前缀误判: %s", p)

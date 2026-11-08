@@ -158,7 +158,7 @@ func TestBuildGoMod_StandalonePlaceholder(t *testing.T) {
 	if !standalone {
 		t.Fatal("空目录应判定为 standalone")
 	}
-	want := "github.com/Mirelth/Synth/v7 " + frameworkRequireVersion()
+	want := "github.com/Mirelth/Mirelth-Synth/v7 " + frameworkRequireVersion()
 	if !strings.Contains(content, want) {
 		t.Errorf("standalone go.mod 应包含 require %s:\n%s", want, content)
 	}
@@ -175,7 +175,7 @@ func TestBuildGoMod_StandaloneInjectedVersion(t *testing.T) {
 	t.Setenv("SYNTH_ROOT", "")
 	Version = "7.6.0"
 	content, _ := buildGoMod("my-agent", filepath.Join(t.TempDir(), "my-agent"))
-	if !strings.Contains(content, "github.com/Mirelth/Synth/v7 v7.6.0") {
+	if !strings.Contains(content, "github.com/Mirelth/Mirelth-Synth/v7 v7.6.0") {
 		t.Errorf("standalone go.mod 应包含注入版本 v7.6.0:\n%s", content)
 	}
 	if strings.Contains(content, "v7.0.0") {
@@ -189,13 +189,13 @@ func TestBuildGoMod_StandaloneInjectedVersion(t *testing.T) {
 func TestStandaloneHint_ModulePathHasV7(t *testing.T) {
 	for _, autoResolve := range []bool{true, false} {
 		hint := standaloneHint(autoResolve)
-		if !strings.Contains(hint, "replace github.com/Mirelth/Synth/v7 =>") {
+		if !strings.Contains(hint, "replace github.com/Mirelth/Mirelth-Synth/v7 =>") {
 			t.Errorf("autoResolve=%v: 提示文案的 replace 路径应带 /v7:\n%s", autoResolve, hint)
 		}
 		if strings.Contains(hint, "Synth/synth") {
 			t.Errorf("autoResolve=%v: 提示文案不应再出现缺 /v7 的旧路径:\n%s", autoResolve, hint)
 		}
-		if !strings.Contains(hint, "go get github.com/Mirelth/Synth/v7@latest") {
+		if !strings.Contains(hint, "go get github.com/Mirelth/Mirelth-Synth/v7@latest") {
 			t.Errorf("autoResolve=%v: 提示文案应指引 go get @latest 解析当前发布版:\n%s", autoResolve, hint)
 		}
 	}
@@ -234,7 +234,7 @@ func TestRunInit_Standalone_GoGetLatest(t *testing.T) {
 	if calls != 1 {
 		t.Errorf("standalone 模式应触发一次 go get @latest，实际 %d 次", calls)
 	}
-	if !strings.Contains(out, "go get github.com/Mirelth/Synth/v7@latest") {
+	if !strings.Contains(out, "go get github.com/Mirelth/Mirelth-Synth/v7@latest") {
 		t.Errorf("stdout 应包含手动提示 go get ...@latest:\n%s", out)
 	}
 	mod, err := os.ReadFile(filepath.Join(tmp, "demo", "go.mod"))
@@ -246,7 +246,7 @@ func TestRunInit_Standalone_GoGetLatest(t *testing.T) {
 		t.Errorf("go.mod 应正常生成:\n%s", s)
 	}
 	// 自愈设计：占位 require 已被移除，用户随后手动 go mod tidy 也能落到 @latest
-	if strings.Contains(s, "require github.com/Mirelth/Synth/v7") {
+	if strings.Contains(s, "require github.com/Mirelth/Mirelth-Synth/v7") {
 		t.Errorf("standalone 失败路径应已移除占位 require（交由 go get @latest 重建）:\n%s", s)
 	}
 }
@@ -280,7 +280,7 @@ func TestRunInit_Standalone_NoTidy_SkipsGet(t *testing.T) {
 	if called {
 		t.Error("--no-tidy 不应触发 go get @latest")
 	}
-	if !strings.Contains(out, "replace github.com/Mirelth/Synth/v7 =>") {
+	if !strings.Contains(out, "replace github.com/Mirelth/Mirelth-Synth/v7 =>") {
 		t.Errorf("--no-tidy 的 standalone 场景仍应打印带 /v7 的提示:\n%s", out)
 	}
 }

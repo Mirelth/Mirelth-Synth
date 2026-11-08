@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // TestPool_AutoCleanupTaskMap 验证 M8 修复：当 MaxRetainedTasks > 0 时，

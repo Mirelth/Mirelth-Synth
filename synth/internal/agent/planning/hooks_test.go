@@ -5,7 +5,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // hooksStubProvider 最小化 LLM Provider 桩（仅用于构造，不实际调用）

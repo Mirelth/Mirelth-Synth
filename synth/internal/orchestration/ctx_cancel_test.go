@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/cmd/example/demo"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/example/demo"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
 )
 
 // slowDemoLLM 创建一个带延迟的 DemoLLM，延迟期间可被 ctx 取消

@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
 )
 
 // ReplayFunc 失败重放函数签名：返回重放执行的输出内容。

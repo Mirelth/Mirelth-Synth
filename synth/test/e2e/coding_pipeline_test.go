@@ -14,9 +14,9 @@ import (
 	"strings"
 	"testing"
 
-	gitplugin "github.com/Mirelth/Synth/v7/synth/ecosystem/plugins/git"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	gitplugin "github.com/Mirelth/Mirelth-Synth/v7/synth/ecosystem/plugins/git"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // singleSubtaskPlan 是子任务 runLoop 再次触发 Planning 时的应答：

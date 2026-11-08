@@ -18,7 +18,7 @@
 ### 方案 A：迁移到 GitHub 路径（已执行）
 
 ```
-synth → github.com/Mirelth/Synth
+synth → github.com/Mirelth/Mirelth-Synth
 ```
 
 - **收益**：`go install github.com/<org>/synth/cmd/synth@latest` 直接可用；GOPROXY 生态完整支持；脚手架无需 replace；与 K8s Operator / SDK 的发布链路一致。
@@ -39,14 +39,14 @@ synth → github.com/Mirelth/Synth
 
 维护者于评估当日批准执行。实际动作与预演的差异：
 
-1. GitHub org/仓库名：Mirelth/Synth（git remote 确认）；
+1. GitHub org/仓库名：Mirelth/Mirelth-Synth（git remote 确认）；
 2. 批量替换：1390 个 Go 文件（import 路径）+ 5 个 go.mod（module 行与跨模块
    require/replace）+ 49 个文档的 import 代码块；CI paths-filter 用目录路径
    不受影响；脚手架模板（cmd/synth/scaffold.go）的模块探测与发射逻辑同步更新；
 3. 全量验证：5 模块 build + go vet + go test ./... 全绿 + go mod tidy 零漂移；
 4. README 安装说明更新为 go install 优先；版本规范.md 模块消费章节重写；
 5. GOPROXY 实解析待下一个 tag 发布后验证（`GOPROXY=https://proxy.golang.org
-   go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest`）。
+   go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@latest`）。
 
 **若短期不做公开分发 → 方案 B/C**，本提案关闭。
 

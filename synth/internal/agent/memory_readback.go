@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 )
 
 // MemoryQuerier 可选接口：实现者支持长期记忆回读。

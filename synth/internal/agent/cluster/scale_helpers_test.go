@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/discovery"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/discovery"
 )
 
 // testCluster 测试集群，包含多个 ClusterManager 和共享的 MemKVStore

@@ -5,7 +5,7 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 )
 
 // ZeroCopyMessage 零拷贝消息，直接引用原始字符串内存

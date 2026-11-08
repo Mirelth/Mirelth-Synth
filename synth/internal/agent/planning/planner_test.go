@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // TestPlannerInterface 验证 Planner 接口定义

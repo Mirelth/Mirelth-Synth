@@ -21,8 +21,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/eval"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/eval"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 func main() {

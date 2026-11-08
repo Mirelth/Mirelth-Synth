@@ -16,7 +16,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/eval"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/eval"
 )
 
 // quarterlyCases 季度测量任务集：冷启动阈值 0/1/2 交错，保证 base 曲线非平凡。

@@ -3,7 +3,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/bus"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/bus"
 )
 
 // BusMessage 是消息总线传递的统一消息类型

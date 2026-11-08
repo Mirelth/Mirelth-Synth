@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/observability"
-	obsotel "github.com/Mirelth/Synth/v7/synth/internal/observability/export/otel"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability"
+	obsotel "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability/export/otel"
 )
 
 // ===== 可观测性验收测试 A1–A5 =====

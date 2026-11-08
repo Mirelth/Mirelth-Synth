@@ -42,7 +42,7 @@ print(session.last_response.content)
 ## Go
 
 ```bash
-go get github.com/Mirelth/Synth
+go get github.com/Mirelth/Mirelth-Synth
 ```
 
 ```go
@@ -59,4 +59,4 @@ func main() {
 
 - 阅读 [Installation Guide](installation.md) 了解完整安装步骤
 - 查看 [TypeScript API Reference](../api-reference/typescript.md) 获取详细 API 文档
-- 访问 GitHub 上的 [examples/](https://github.com/Mirelth/Synth/tree/main/ecosystem/examples) 查看完整示例
+- 访问 GitHub 上的 [examples/](https://github.com/Mirelth/Mirelth-Synth/tree/main/ecosystem/examples) 查看完整示例

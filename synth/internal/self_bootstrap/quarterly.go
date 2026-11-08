@@ -22,10 +22,10 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/eval"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/eval"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 )
 
 // quarterPattern 合法季度标签：YYYY-Q[1-4]

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/discovery"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/discovery"
 )
 
 // DiscoveryAdapter 将 discovery.Discovery（内部服务发现）适配为 a2a.Discovery 接口。

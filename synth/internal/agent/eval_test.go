@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/eval"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/eval"
 )
 
 func TestExactMatchEvaluator_Match(t *testing.T) {

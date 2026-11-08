@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/skills"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/skills"
 )
 
 // getSkillMatcherOrNil 通过 SkillsCapable 接口发现技能匹配器（nil-safe）。

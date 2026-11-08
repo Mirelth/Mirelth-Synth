@@ -141,7 +141,7 @@ import (
 	"fmt"
 	"log"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 func main() {
@@ -187,7 +187,7 @@ import (
 	"log"
 	"os"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 func main() {
@@ -264,8 +264,8 @@ import (
 	"fmt"
 	"log"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
-	"github.com/Mirelth/Synth/v7/synth/testutil"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/testutil"
 )
 
 func main() {
@@ -715,7 +715,7 @@ import (
 	"context"
 	"testing"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // EvalTestSuite 定义 Agent 评估测试套件
@@ -1144,7 +1144,7 @@ synth-plugin-weather/
 package synth_plugin_weather
 
 import (
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // Plugin 实现 synth.ToolPlugin 接口
@@ -1242,7 +1242,7 @@ NewPlugin() → Init(config) → Tools() 注册到 Registry → Agent 使用 →
 ### 9.1 导入方式
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 ```
 
 ### 9.2 Agent 核心

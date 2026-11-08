@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/jsonutil" // perf-v6 round 6 Task 1
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/jsonutil" // perf-v6 round 6 Task 1
 )
 
 // ===== OpenAI 兼容多模态 Provider 的共享实现 =====

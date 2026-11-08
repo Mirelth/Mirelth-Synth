@@ -43,7 +43,7 @@ ReAct 循环由 `Agent.Run()` 方法内部驱动，用户无需手动管理循�
     import (
         "context"
         "fmt"
-        synth "github.com/Mirelth/Synth/v7/synth/pkg"
+        synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
     )
 
     func main() {

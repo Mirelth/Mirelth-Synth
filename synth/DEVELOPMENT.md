@@ -748,7 +748,7 @@ type AgentDeploymentStatus struct {
 所有公开类型通过 `pkg/agent.go` 重导出，用户只需导入一个包：
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 ```
 
 导出映射：
@@ -778,7 +778,7 @@ package myprovider
 
 import (
     "context"
-    "github.com/Mirelth/Synth/v7/synth/internal/llm"
+    "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 type MyProvider struct {
@@ -850,7 +850,7 @@ package mytools
 import (
     "context"
     "encoding/json"
-    "github.com/Mirelth/Synth/v7/synth/internal/tools"
+    "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 type WeatherTool struct{}

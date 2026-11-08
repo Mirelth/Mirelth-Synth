@@ -1,7 +1,7 @@
 package jsonplugin
 
 import (
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // Plugin 是 JSON/CSV 数据处理插件，封装 synth.JSONTool 和 synth.CSVTool

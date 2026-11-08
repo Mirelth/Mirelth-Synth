@@ -7,7 +7,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/health"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/health"
 )
 
 // ===== 稳态验证器 =====

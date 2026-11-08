@@ -4,15 +4,15 @@ package synth
 import (
 	"errors"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/concurrency"
-	"github.com/Mirelth/Synth/v7/synth/internal/events"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
-	"github.com/Mirelth/Synth/v7/synth/internal/pool"
-	"github.com/Mirelth/Synth/v7/synth/internal/security"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/concurrency"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/events"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/pool"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/security"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // CodeError 是带错误码的错误类型，用于结构化错误返回

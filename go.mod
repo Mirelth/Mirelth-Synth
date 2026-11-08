@@ -1,4 +1,4 @@
-module github.com/Mirelth/Synth/v7
+module github.com/Mirelth/Mirelth-Synth/v7
 
 go 1.26.10
 
@@ -23,7 +23,7 @@ require (
 )
 
 require (
-	github.com/Mirelth/Synth/pgvector v0.0.0
+	github.com/Mirelth/Mirelth-Synth/pgvector v0.0.0
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect

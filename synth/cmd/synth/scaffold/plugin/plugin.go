@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"sync"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // Plugin 是 {{.ProjectName}} 插件实现。

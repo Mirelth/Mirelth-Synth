@@ -7,7 +7,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/workflow"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/workflow"
 )
 
 // ===== 类型别名 =====

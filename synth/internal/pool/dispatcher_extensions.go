@@ -8,8 +8,8 @@ package pool
 import (
 	"context"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/concurrency"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/concurrency"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // SubmitBackground 把任务投递到内部 GoroutinePool（Phase 3 Task 4）。

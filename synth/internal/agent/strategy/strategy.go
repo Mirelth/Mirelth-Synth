@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // Engine 引擎原语接口（v5.2 冻结点）：策略驱动底层能力的最小依赖面。

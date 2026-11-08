@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
-	emailplugin "github.com/Mirelth/Synth/v7/synth/ecosystem/plugins/email"
-	jsonplugin "github.com/Mirelth/Synth/v7/synth/ecosystem/plugins/json"
-	kvplugin "github.com/Mirelth/Synth/v7/synth/ecosystem/plugins/kv"
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	emailplugin "github.com/Mirelth/Mirelth-Synth/v7/synth/ecosystem/plugins/email"
+	jsonplugin "github.com/Mirelth/Mirelth-Synth/v7/synth/ecosystem/plugins/json"
+	kvplugin "github.com/Mirelth/Mirelth-Synth/v7/synth/ecosystem/plugins/kv"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // MockLLM 是示例用的模拟 LLM

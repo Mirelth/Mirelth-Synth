@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // interopReportDoc 入库用的协议符合性报告文档（bench/results/a2a-interop/）。

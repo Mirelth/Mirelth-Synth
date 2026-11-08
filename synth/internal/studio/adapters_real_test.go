@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/cluster"
-	agentmarket "github.com/Mirelth/Synth/v7/synth/internal/agent/marketplace"
-	"github.com/Mirelth/Synth/v7/synth/internal/chaos"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/cluster"
+	agentmarket "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/marketplace"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/chaos"
 )
 
 // TestClusterAdapterStatus 真实集群管理器 → Cluster 面板状态映射。

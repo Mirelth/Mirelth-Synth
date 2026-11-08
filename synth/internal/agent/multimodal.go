@@ -1,8 +1,8 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/multimodal"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/multimodal"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // ContentPart 表示消息内容的一部分（文本、图片、音频等）

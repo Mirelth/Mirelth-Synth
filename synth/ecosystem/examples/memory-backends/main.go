@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/cmd/example/demo"
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/example/demo"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 func main() {

@@ -2,7 +2,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/guardrail"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/guardrail"
 )
 
 type GuardrailEngine = guardrail.Engine

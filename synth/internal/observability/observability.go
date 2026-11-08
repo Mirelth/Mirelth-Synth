@@ -15,7 +15,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/audit"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/audit"
 )
 
 // ===== Context 关联键 =====

@@ -6,9 +6,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/metrics"
-	obsotel "github.com/Mirelth/Synth/v7/synth/internal/observability/export/otel"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/metrics"
+	obsotel "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability/export/otel"
 )
 
 // TestIntegration_FullGuardrailPipeline 端到端集成测试：

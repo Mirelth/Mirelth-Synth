@@ -74,7 +74,7 @@ func TestExampleNoInternalImports(t *testing.T) {
 	if strings.Contains(src, "Synth/internal/") {
 		t.Error("main.go 仍直依赖 synth/internal/*，违反 AGENTS.md §4.2（ecosystem 应仅经 pkg 公共 API 交互）")
 	}
-	if !strings.Contains(src, `synth "github.com/Mirelth/Synth/v7/synth/pkg"`) {
+	if !strings.Contains(src, `synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"`) {
 		t.Error("main.go 未以 synth 别名导入 pkg 公共 API")
 	}
 }

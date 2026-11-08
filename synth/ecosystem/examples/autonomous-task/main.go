@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // dataMonitorExecutor 模拟数据监控修复执行器

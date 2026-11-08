@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/resilience"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/resilience"
 )
 
 // InteropRouterConfig 跨节点路由配置。

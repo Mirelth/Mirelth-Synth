@@ -2,7 +2,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/orchestration"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/orchestration"
 )
 
 // ===== Orchestration Tracing 编排追踪 =====

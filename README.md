@@ -4,8 +4,8 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Go](https://img.shields.io/badge/go-1.26+-00ADD8.svg)](https://golang.org)
-<a href="https://github.com/Mirelth/Synth/releases"><img src="https://img.shields.io/github/v/release/Mirelth/Synth?style=flat-square" alt="Latest release"></a>
-<a href="https://github.com/Mirelth/Synth/actions/workflows/ci.yml"><img src="https://github.com/Mirelth/Synth/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+<a href="https://github.com/Mirelth/Mirelth-Synth/releases"><img src="https://img.shields.io/github/v/release/Mirelth/Mirelth-Synth?style=flat-square" alt="Latest release"></a>
+<a href="https://github.com/Mirelth/Mirelth-Synth/actions/workflows/ci.yml"><img src="https://github.com/Mirelth/Mirelth-Synth/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 
 <p align="center">
   <img src="synth/docs/synth-architecture.svg" alt="Synth Architecture" width="90%">
@@ -16,7 +16,7 @@
 
 ```bash
 # Install the CLI straight from the module proxy — no clone, no replace directive
-go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@latest
 
 # Scaffold and run your first agent — no API key required
 synth init my-agent --template quickstart
@@ -62,7 +62,7 @@ real and only the model is simulated.
 
 ```bash
 # From the module proxy (recommended — the framework is a normal Go module)
-go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@latest
 
 # Or build from a source checkout, at the repository root
 go build -o synth ./synth/cmd/synth/
@@ -417,8 +417,8 @@ Apache-2.0 © Synth Contributors
   Update together with the code, then re-run: node scripts/doc-version-consistency.mjs
 
   [![Version](https://img.shields.io/badge/version-7.8.0-2ea44f.svg)](synth/docs/CHANGELOG-v7.8.md)
-  [![Tests](https://img.shields.io/badge/tests-685%20files-green.svg)](synth/internal/)
-  Red → Green → Refactor，685 个测试文件
-  核心框架主模块（163 个包，1396 个 Go 文件）
+  [![Tests](https://img.shields.io/badge/tests-686%20files-green.svg)](synth/internal/)
+  Red → Green → Refactor，686 个测试文件
+  核心框架主模块（163 个包，1397 个 Go 文件）
   微内核（34 个子包）
 -->

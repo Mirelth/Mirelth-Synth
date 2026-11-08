@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // ===== EventBusAdapter 测试 =====

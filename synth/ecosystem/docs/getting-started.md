@@ -42,8 +42,8 @@ import (
     "fmt"
     "log"
 
-    synth "github.com/Mirelth/Synth/v7/synth/pkg"
-    "github.com/Mirelth/Synth/v7/synth/testutil"
+    synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
+    "github.com/Mirelth/Mirelth-Synth/v7/synth/testutil"
 )
 
 func main() {
@@ -84,7 +84,7 @@ go run ./ecosystem/examples/basic/
 ### OpenAI (GPT-4o)
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 provider := synth.NewOpenAIProvider(synth.Config{
     APIKey: os.Getenv("OPENAI_API_KEY"),

@@ -75,12 +75,12 @@ check "go.mod 存在" test -f "$TMPDIR/demo-agent/go.mod"
 
 section "Phase 3: 项目结构验证"
 cd "$TMPDIR/demo-agent"
-check "go.mod 包含框架模块" grep -q "github.com/Mirelth/Synth/v7" go.mod
+check "go.mod 包含框架模块" grep -q "github.com/Mirelth/Mirelth-Synth/v7" go.mod
 check "main.go 包含 synth 导入" grep -q "Mirelth/Synth/v7/synth/pkg" main.go
 
 section "Phase 4: 项目编译"
 # 使用 replace 指令指向本地框架源码，避免 go work use 的模块路径校验问题
-check "添加 replace 指令" bash -c "cd '$TMPDIR/demo-agent' && go mod edit -replace github.com/Mirelth/Synth/v7='$SYNTH_ROOT'"
+check "添加 replace 指令" bash -c "cd '$TMPDIR/demo-agent' && go mod edit -replace github.com/Mirelth/Mirelth-Synth/v7='$SYNTH_ROOT'"
 check "go mod tidy 成功" bash -c "cd '$TMPDIR/demo-agent' && go mod tidy 2>/dev/null"
 check "go build 成功" bash -c "cd '$TMPDIR/demo-agent' && go build . 2>/dev/null"
 

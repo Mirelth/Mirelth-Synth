@@ -4,7 +4,7 @@ package agent
 import (
 	"context"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 )
 
 // ===== 请求 ID 关联 =====

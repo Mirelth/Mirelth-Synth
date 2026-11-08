@@ -22,7 +22,7 @@ export default defineConfig({
       ],
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/Mirelth/Synth' },
+      { icon: 'github', link: 'https://github.com/Mirelth/Mirelth-Synth' },
     ],
   },
 });

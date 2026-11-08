@@ -29,14 +29,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/autonomy"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/cluster"
-	agentmarket "github.com/Mirelth/Synth/v7/synth/internal/agent/marketplace"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/realtime"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/skills"
-	"github.com/Mirelth/Synth/v7/synth/internal/chaos"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
-	"github.com/Mirelth/Synth/v7/synth/internal/studio"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/autonomy"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/cluster"
+	agentmarket "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/marketplace"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/realtime"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/skills"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/chaos"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/studio"
 )
 
 // studioDataDir Studio 本地持久化目录（var 便于测试注入临时目录）。

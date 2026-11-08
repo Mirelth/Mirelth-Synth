@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"sync"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // scriptedProvider 零凭据脚本化 provider：首轮发起一次 WASM 工具调用，

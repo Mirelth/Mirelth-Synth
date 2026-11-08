@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/planning"
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/planning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
 )
 
 // getPlannerOrNil 通过 capCache 获取 planner（nil-safe）

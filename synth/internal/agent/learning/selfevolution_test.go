@@ -16,7 +16,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 )
 
 // evoTask 进化实验任务

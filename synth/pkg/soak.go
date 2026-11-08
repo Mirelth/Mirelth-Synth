@@ -2,7 +2,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/llm/soak"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm/soak"
 )
 
 // ===== Soak Test 运行器 =====

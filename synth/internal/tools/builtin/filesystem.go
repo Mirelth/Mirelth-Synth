@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/concurrency"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/concurrency"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 const (

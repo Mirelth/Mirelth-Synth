@@ -2,7 +2,7 @@
 package context
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 )
 
 // Strategy 上下文窗口裁剪策略接口

@@ -13,7 +13,7 @@ Synth 改名同时更换了模块路径、Go 公共 API 包名、CLI、配置契
 
 | 类别 | 旧 | 新 |
 |---|---|---|
-| Go 模块 | `github.com/Gleamseekers/AgentPrimordia/v7` | `github.com/Mirelth/Synth/v7` |
+| Go 模块 | `github.com/Gleamseekers/AgentPrimordia/v7` | `github.com/Mirelth/Mirelth-Synth/v7` |
 | Go API 包名 | `ap.NewAgent(...)`、`package ap` | `synth.NewAgent(...)`、`package synth` |
 | CLI | `ap init` / `ap run` / `ap a2a` | `synth init` / `synth run` / `synth a2a` |
 | 配置文件 | `.ap.yaml` / `.ap.json` | `.synth.yaml` / `.synth.json` |
@@ -61,7 +61,7 @@ python3 scripts/migrate-to-synth.py --target /path/to/your-agent --apply
 4. 配置文件改名后，检查 CI / 启动脚本里读取 `.ap.yaml` 的硬编码路径。
 5. 环境变量前缀替换后，逐个核对部署清单、`.env`、CI secrets。
 6. K8s：CRD group 改变意味着**新建资源**而非原地升级；先导出旧资源、按新 group 重建，再切换 HPA 与仪表盘查询。
-7. 镜像仓库：所有镜像引用统一为 `ghcr.io/mirelth/synth`（Studio / Operator 为 `ghcr.io/mirelth/synth-studio` / `ghcr.io/mirelth/synth-operator`），与 `release.yml` 推送的 `ghcr.io/${{ github.repository }}` 保持一致；Helm `values.yaml`、Terraform 变量、K8s 清单里残留的旧 namespace 会导致 `ImagePullBackOff`。
+7. 镜像仓库：所有镜像引用统一为 `ghcr.io/mirelth/mirelth-synth`（Studio / Operator 为 `ghcr.io/mirelth/mirelth-synth-studio` / `ghcr.io/mirelth/mirelth-synth-operator`），与 `release.yml` 推送的 `ghcr.io/${{ github.repository }}` 保持一致；Helm `values.yaml`、Terraform 变量、K8s 清单里残留的旧 namespace 会导致 `ImagePullBackOff`。
 8. kv 插件数据：`ecosystem/plugins/kv` 的默认库名由旧前缀改为 `synth_kv.db`、表名改为 `synth_kv_store`。插件在 `Init` 时会自动兼容：未指定 `db_path` 时若新库不存在而旧库存在，继续使用旧库；发现旧表 `ap_kv_store` 且新表不存在时，执行 `ALTER TABLE … RENAME TO` 原地迁移，存量 KV 数据不会丢。若自行维护了旧库副本，需手工执行同样的重命名。
 
 ## 5. 验证清单

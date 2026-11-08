@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
 )
 
 // subtaskFailPattern 匹配 plan 子任务失败的错误格式（见 react_plan_executor.go）

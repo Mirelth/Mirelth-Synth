@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // Plugin 是邮件发送插件，提供 SMTP 邮件发送能力

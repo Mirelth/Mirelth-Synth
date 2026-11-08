@@ -239,7 +239,7 @@ synth/bench/llm-bench/main.go:167:  os.Exit(1)
 | 8 | 镜像内 `synth-admin --version` | 显示 7.5.1（当前预期为 `dev`，即 M2） | 记录缺陷，非阻断 |
 | 9 | `npm view @mirelth/synth version` | 7.5.1（若 token 已配） | 若跳过，确认 job summary 有告警 |
 | 10 | `helm template` 渲染 chart | 版本 7.5.1、镜像 tag 正确 | 记录缺陷 |
-| 11 | `go install github.com/Mirelth/Synth/v7/synth/cmd/synth@v7.5.1` | 安装成功、`synth version` = 7.5.1 | 检查 GOPROXY 索引 |
+| 11 | `go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@v7.5.1` | 安装成功、`synth version` = 7.5.1 | 检查 GOPROXY 索引 |
 
 ### 6.5 回滚预案
 

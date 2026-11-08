@@ -16,9 +16,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence"
-	"github.com/Mirelth/Synth/v7/synth/wasm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/wasm"
 )
 
 // stubCreator 测试用基础生成器：返回预设工件。

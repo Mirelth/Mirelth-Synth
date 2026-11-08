@@ -2,7 +2,7 @@ package transport
 
 import (
 	"context"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/bus"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/bus"
 )
 
 // Transport 跨进程 Agent 通信传输层接口

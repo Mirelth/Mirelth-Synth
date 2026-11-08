@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 func TestEstimateTokens(t *testing.T) {

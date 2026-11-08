@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/resilience"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/resilience"
 )
 
 // TokenBucket 令牌桶限流器（v6.x 评估报告 §五.1 "重复实现大赏" 修复）。

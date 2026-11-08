@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/cmd/example/demo"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/example/demo"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
 )
 
 func TestDefaultStepExecutor_ExecutesAgent(t *testing.T) {

@@ -3,8 +3,8 @@ package agent
 import (
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/observability"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability"
 )
 
 // TestCorrelationStoreAutoWiredWhenObservabilityEnabled 回归：任一可观测能力开启时，

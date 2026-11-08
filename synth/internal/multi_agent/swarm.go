@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
 )
 
 // Specialist 一个专业分工的 Agent。

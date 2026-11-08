@@ -25,8 +25,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/guardrail"
-	"github.com/Mirelth/Synth/v7/synth/internal/multi_agent/federation"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/guardrail"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/multi_agent/federation"
 )
 
 type redteamItem struct {

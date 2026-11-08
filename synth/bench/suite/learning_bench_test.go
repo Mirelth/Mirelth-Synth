@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/learning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/learning"
 )
 
 // benchInteraction 构造基准测试用交互数据

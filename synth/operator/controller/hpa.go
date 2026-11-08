@@ -14,7 +14,7 @@ package controller
 import (
 	autoscalingv2 "k8s.io/api/autoscaling/v2"
 
-	agentv1 "github.com/Mirelth/Synth/v7/synth/operator/api/v1"
+	agentv1 "github.com/Mirelth/Mirelth-Synth/v7/synth/operator/api/v1"
 )
 
 // defaultScaleDownStabilizationSeconds 默认缩容稳定窗口（秒）

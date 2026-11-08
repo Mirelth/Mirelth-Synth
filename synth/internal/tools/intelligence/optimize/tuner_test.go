@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence"
 )
 
 // TestDataDrivenTuner_LowSuccessRate 测试低成功率建议重试

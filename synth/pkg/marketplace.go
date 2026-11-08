@@ -2,7 +2,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/marketplace"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/marketplace"
 )
 
 // AgentTemplate Agent 模板定义（配置+tool集+系统提示+记忆策略）

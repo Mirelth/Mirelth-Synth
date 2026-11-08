@@ -13,7 +13,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/bus"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/bus"
 )
 
 // ===== 远程节点管理 =====

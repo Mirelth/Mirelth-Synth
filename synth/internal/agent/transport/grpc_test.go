@@ -3,7 +3,7 @@ package transport
 import (
 	"context"
 	"fmt"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/bus"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/bus"
 	"testing"
 	"time"
 )

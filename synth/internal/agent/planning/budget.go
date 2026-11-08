@@ -25,7 +25,7 @@ import (
 	"math"
 	"sync"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // ErrPlanBudgetExceeded 规划 turns 预算耗尽。

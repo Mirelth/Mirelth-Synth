@@ -2,7 +2,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/governance"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/governance"
 )
 
 // ===== 租户管理 =====

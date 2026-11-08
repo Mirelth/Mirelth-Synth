@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/concurrency"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/concurrency"
 )
 
 // TestPool_GoroutinePool_NotConfigured 验证未配置 GoroutinePool 时的行为。

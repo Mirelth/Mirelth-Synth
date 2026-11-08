@@ -3,7 +3,7 @@ package otel
 import (
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/metrics"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/metrics"
 )
 
 // TestTelemetryProvider_Metrics 验证 Metrics() 返回构造时传入的指标收集器。

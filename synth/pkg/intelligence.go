@@ -12,10 +12,10 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence/create"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence/optimize"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence/reuse"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence/create"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence/optimize"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence/reuse"
 )
 
 // ===== 统一入口与核心接口 =====

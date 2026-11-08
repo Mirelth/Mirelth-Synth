@@ -1,4 +1,4 @@
-module github.com/Mirelth/Synth/wasm
+module github.com/Mirelth/Mirelth-Synth/wasm
 
 go 1.26.10
 

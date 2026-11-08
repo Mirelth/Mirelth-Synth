@@ -3,7 +3,7 @@
 > 通用 AI Agent 开发框架 — 轻量、并发原生、生产验证
 > **Go + TypeScript 双语言 SDK，100% 功能对等**
 
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/Mirelth/Synth)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/Mirelth/Mirelth-Synth)
 [![Go Version](https://img.shields.io/badge/go-1.26+-00ADD8E.svg)](https://golang.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-100%25%20Go%20Parity-3178C6.svg)](../../sdk/typescript/)
 
@@ -49,7 +49,7 @@ Synth是一个用 Go 语言编写、同时提供 TypeScript SDK 的生产级 AI 
 
 ```bash
 # 安装 CLI 工具（框架为普通 Go 模块，经 GOPROXY 解析）
-go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@latest
 
 # 创建新项目
 synth init my-agent --template quickstart
@@ -73,7 +73,7 @@ go run .
         "log"
         "os"
 
-        synth "github.com/Mirelth/Synth/v7/synth/pkg"
+        synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
     )
 
     func main() {
@@ -279,8 +279,8 @@ JSON-RPC over HTTP 兼容层已于 **v4.0.0 移除**（见 版本规范.md「已
 
 ## 社区
 
-- [GitHub Discussions](https://github.com/Mirelth/Synth/discussions)
-- [贡献指南](https://github.com/Mirelth/Synth/blob/main/synth/CONTRIBUTING.md)
+- [GitHub Discussions](https://github.com/Mirelth/Mirelth-Synth/discussions)
+- [贡献指南](https://github.com/Mirelth/Mirelth-Synth/blob/main/synth/CONTRIBUTING.md)
 - [TypeScript SDK 文档](../../sdk/typescript/README.md)
 
 ## License

@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // CSVData 表示加载后的 CSV 数据

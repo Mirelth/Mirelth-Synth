@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // llmBenchSystemPrompt 面向编码任务基准的系统提示词。

@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/tool_learning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/tool_learning"
 )
 
 // executeToolCalls 执行一组tool调用，处理 HITL 确认、追踪、Hook 等。

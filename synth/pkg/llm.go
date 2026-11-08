@@ -8,8 +8,8 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/resilience"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/resilience"
 )
 
 // Provider 是 LLM 提供者的核心接口，定义补全、流式、tool调用和嵌入等方法

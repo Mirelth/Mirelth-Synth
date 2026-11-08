@@ -23,7 +23,7 @@
 // 防止任何生态代码或示例误把模板当真 Provider 用 —— 运行时才
 // 暴露 "TODO: 未实现" 太晚，启动期拒绝能更早发现问题。
 //
-// 误用防护设计参考 github.com/Mirelth/Synth/v7/synth/docs/版本规范.md 的兼容性承诺与
+// 误用防护设计参考 github.com/Mirelth/Mirelth-Synth/v7/synth/docs/版本规范.md 的兼容性承诺与
 // Experimental API 定义。
 package llm
 
@@ -44,7 +44,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/Mirelth/Synth/v7/synth/internal/jsonutil" // perf-v6 round 6 Task 1
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/jsonutil" // perf-v6 round 6 Task 1
 	"io"
 	"net/http"
 )

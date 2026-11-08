@@ -12,10 +12,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/learning"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/observability"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/learning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // p2t4：审计动作常量（字符串字面量，与 internal/audit 标准动作保持一致）

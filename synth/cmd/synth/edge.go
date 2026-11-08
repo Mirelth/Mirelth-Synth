@@ -184,7 +184,7 @@ func generateEntryFile(name, platform string) string {
  *
  * 使用 Durable Objects 实现有状态 Agent 会话。
  */
-import { SynthEdge } from '@github.com/Mirelth/Synth/v7/synth/edge';
+import { SynthEdge } from '@github.com/Mirelth/Mirelth-Synth/v7/synth/edge';
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -240,7 +240,7 @@ interface Env {
  *
  * 原生 TypeScript，无需构建步骤。
  */
-import { SynthEdge } from 'npm:@github.com/Mirelth/Synth/v7/synth/edge';
+import { SynthEdge } from 'npm:@github.com/Mirelth/Mirelth-Synth/v7/synth/edge';
 
 const agent = new SynthEdge({
   provider: 'openai',
@@ -272,7 +272,7 @@ Deno.serve(async (req: Request) => {
  *
  * 极速冷启动，内置 TypeScript 支持。
  */
-import { SynthEdge } from '@github.com/Mirelth/Synth/v7/synth/edge';
+import { SynthEdge } from '@github.com/Mirelth/Mirelth-Synth/v7/synth/edge';
 
 const agent = new SynthEdge({
   provider: 'anthropic',
@@ -306,7 +306,7 @@ console.log("%s listening on http://localhost:" + server.port);
 }
 
 func generatePackageJSON(name, platform string) string {
-	deps := `"@github.com/Mirelth/Synth/v7/synth/edge": "^0.1.0"`
+	deps := `"@github.com/Mirelth/Mirelth-Synth/v7/synth/edge": "^0.1.0"`
 	devDeps := `"typescript": "^5.5.0"`
 	scripts := `"dev": "wrangler dev",\n    "deploy": "wrangler deploy"`
 
@@ -382,7 +382,7 @@ func generateDenoJSON(name string) string {
     "deploy": "deployctl deploy --project=%s src/index.ts"
   },
   "imports": {
-    "@github.com/Mirelth/Synth/v7/synth/edge": "npm:@github.com/Mirelth/Synth/v7/synth/edge@^0.1.0"
+    "@github.com/Mirelth/Mirelth-Synth/v7/synth/edge": "npm:@github.com/Mirelth/Mirelth-Synth/v7/synth/edge@^0.1.0"
   },
   "compilerOptions": {
     "strict": true
@@ -404,7 +404,7 @@ func generateAgentConfig(name string) string {
 	return fmt.Sprintf(`/**
  * %s — Agent 配置
  */
-import type { AgentConfig } from '@github.com/Mirelth/Synth/v7/synth/edge';
+import type { AgentConfig } from '@github.com/Mirelth/Mirelth-Synth/v7/synth/edge';
 
 export const config: AgentConfig = {
   name: '%s',

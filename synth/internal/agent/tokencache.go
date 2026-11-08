@@ -2,7 +2,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/tokencache"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/tokencache"
 )
 
 // ClearTokenCache 清空 token 缓存（测试用 / 内存压力场景）

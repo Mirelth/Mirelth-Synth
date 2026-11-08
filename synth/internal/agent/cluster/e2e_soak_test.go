@@ -23,7 +23,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/chaos"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/chaos"
 )
 
 // TestE2E_Cluster_24hSoak 24 小时集群浸泡测试

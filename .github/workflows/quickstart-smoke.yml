@@ -71,13 +71,13 @@ jobs:
           cat go.mod
           # 回归锁（v7.6 修复点）：standalone 用户不得再锁死旧占位版本 v7.0.0。
           # 修复前 init 写死 v7.0.0，用户 tidy 后拿到旧版而非当前发布版。
-          if grep -qF "github.com/Mirelth/Synth/v7 v7.0.0" go.mod; then
+          if grep -qF "github.com/Mirelth/Mirelth-Synth/v7 v7.0.0" go.mod; then
             echo "::error::standalone go.mod 仍锁死旧占位版本 v7.0.0（应解析为当前发布版）"
             exit 1
           fi
           # 修复目标断言：解析到的框架版本必须等于代理当前发布版（@latest）
-          LATEST=$(go list -m -f '{{.Version}}' github.com/Mirelth/Synth/v7@latest)
-          SELECTED=$(go list -m -f '{{.Version}}' github.com/Mirelth/Synth/v7)
+          LATEST=$(go list -m -f '{{.Version}}' github.com/Mirelth/Mirelth-Synth/v7@latest)
+          SELECTED=$(go list -m -f '{{.Version}}' github.com/Mirelth/Mirelth-Synth/v7)
           echo "代理当前发布版: ${LATEST} / 项目解析到: ${SELECTED}"
           if [ "${SELECTED}" != "${LATEST}" ]; then
             echo "::error::standalone 解析到的框架版本 ${SELECTED} 非当前发布版 ${LATEST}"

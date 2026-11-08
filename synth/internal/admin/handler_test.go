@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/pool"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/pool"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 const testToken = "test-admin-token"

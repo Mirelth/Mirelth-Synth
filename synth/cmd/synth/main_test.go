@@ -197,7 +197,7 @@ func TestRunInit_GeneratedProjectBuilds(t *testing.T) {
 	// 验证 go.mod 含 replace 指令
 	modContent, _ := os.ReadFile(filepath.Join(targetDir, "go.mod"))
 	modContentStr := string(modContent)
-	if !contains(modContentStr, "replace github.com/Mirelth/Synth/v7 =>") {
+	if !contains(modContentStr, "replace github.com/Mirelth/Mirelth-Synth/v7 =>") {
 		t.Skip("go.mod 不含 replace，跳过 e2e 构建")
 	}
 	t.Logf("生成 go.mod 包含预期的 replace 指令，%d 字节", len(modContentStr))
@@ -376,10 +376,10 @@ func TestRunInit_QuickstartTemplate(t *testing.T) {
 	mainGo := filepath.Join(targetDir, "main.go")
 	content, _ := os.ReadFile(mainGo)
 
-	if contains(string(content), "github.com/Mirelth/Synth/v7/synth/internal/") {
+	if contains(string(content), "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/") {
 		t.Error("quickstart 模板不应直接引用 internal/ 包，应使用 pkg/")
 	}
-	if !contains(string(content), `synth "github.com/Mirelth/Synth/v7/synth/pkg"`) {
+	if !contains(string(content), `synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"`) {
 		t.Error("quickstart 模板应通过 pkg/ 公共 API 引用框架")
 	}
 }

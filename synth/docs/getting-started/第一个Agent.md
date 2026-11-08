@@ -47,7 +47,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // WeatherTool 天气查询工具
@@ -130,7 +130,7 @@ import (
 	"os"
 	"strings"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 func main() {

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence"
 )
 
 // mockLLM 模拟 LLM 补全器

@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence/create"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence/optimize"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence/create"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence/optimize"
 )
 
 // mockLLM 模拟 LLM 补全（确定性返回 shell 脚本）

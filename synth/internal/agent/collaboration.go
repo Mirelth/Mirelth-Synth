@@ -2,7 +2,7 @@ package agent
 
 import (
 	"context"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/collaboration"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/collaboration"
 	"time"
 )
 

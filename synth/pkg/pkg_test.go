@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 func TestVersion(t *testing.T) {

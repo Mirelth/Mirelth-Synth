@@ -2,7 +2,7 @@ package agent
 
 import (
 	"context"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/eval"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/eval"
 )
 
 // Evaluator 评估器接口

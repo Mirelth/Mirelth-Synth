@@ -17,22 +17,22 @@ func TestHasLocalFrameworkReplace(t *testing.T) {
 	}{
 		{
 			name:  "框架 replace（生成项目形态）",
-			goMod: "module demo\n\nrequire github.com/Mirelth/Synth/v7 v7.0.0\n\nreplace github.com/Mirelth/Synth/v7 => ../../synth\n",
+			goMod: "module demo\n\nrequire github.com/Mirelth/Mirelth-Synth/v7 v7.0.0\n\nreplace github.com/Mirelth/Mirelth-Synth/v7 => ../../synth\n",
 			want:  true,
 		},
 		{
 			name:  "仅 pgvector replace",
-			goMod: "module demo\n\nrequire github.com/Mirelth/Synth/pgvector v0.0.0\n\nreplace github.com/Mirelth/Synth/pgvector => ../../pgvector\n",
+			goMod: "module demo\n\nrequire github.com/Mirelth/Mirelth-Synth/pgvector v0.0.0\n\nreplace github.com/Mirelth/Mirelth-Synth/pgvector => ../../pgvector\n",
 			want:  true,
 		},
 		{
 			name:  "standalone：无 replace",
-			goMod: "module demo\n\nrequire github.com/Mirelth/Synth/v7 v7.0.0\n",
+			goMod: "module demo\n\nrequire github.com/Mirelth/Mirelth-Synth/v7 v7.0.0\n",
 			want:  false,
 		},
 		{
 			name:  "代理版本 require（非本地）",
-			goMod: "module demo\n\nrequire github.com/Mirelth/Synth/v7 v7.2.3\n",
+			goMod: "module demo\n\nrequire github.com/Mirelth/Mirelth-Synth/v7 v7.2.3\n",
 			want:  false,
 		},
 		{
@@ -59,7 +59,7 @@ func TestHasLocalFrameworkReplace(t *testing.T) {
 // TestIsolatedGoEnv 校验本地 replace 项目会以 GOWORK=off 隔离构建。
 func TestIsolatedGoEnv(t *testing.T) {
 	dir := t.TempDir()
-	goMod := "module demo\n\nrequire github.com/Mirelth/Synth/v7 v7.0.0\n\nreplace github.com/Mirelth/Synth/v7 => ../../synth\n"
+	goMod := "module demo\n\nrequire github.com/Mirelth/Mirelth-Synth/v7 v7.0.0\n\nreplace github.com/Mirelth/Mirelth-Synth/v7 => ../../synth\n"
 	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte(goMod), 0o644); err != nil {
 		t.Fatalf("写入 go.mod 失败: %v", err)
 	}

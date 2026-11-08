@@ -21,7 +21,7 @@ The framework is published as a regular Go module, so the CLI installs straight 
 module proxy — **no clone, no `replace` directive, no local build**:
 
 ```bash
-go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@latest
 ```
 
 Verify:
@@ -32,7 +32,7 @@ synth version
 
 > If you want a specific release, pin the tag: `…/cmd/synth@v7.8.0`. Release binaries with
 > SHA256 checksums and cosign signatures are attached to every
-> [GitHub Release](https://github.com/Mirelth/Synth/releases).
+> [GitHub Release](https://github.com/Mirelth/Mirelth-Synth/releases).
 
 ### Installing Go first
 
@@ -74,7 +74,7 @@ go version
 Only needed when you hack on the framework itself. Clone, then build the CLI:
 
 ```bash
-git clone https://github.com/Mirelth/Synth.git
+git clone https://github.com/Mirelth/Mirelth-Synth.git
 cd Synth
 
 go build -o synth ./synth/cmd/synth/
@@ -93,15 +93,15 @@ go install ./synth/cmd/synth
 Every release publishes a signed image to GitHub Container Registry:
 
 ```bash
-docker pull ghcr.io/mirelth/synth:<release-tag>
+docker pull ghcr.io/mirelth/mirelth-synth:<release-tag>
 
 docker run -it --rm \
   -e SYNTH_LLM_API_KEY="$SYNTH_LLM_API_KEY" \
-  ghcr.io/mirelth/synth:<release-tag> --help
+  ghcr.io/mirelth/mirelth-synth:<release-tag> --help
 ```
 
 Replace `<release-tag>` with a tag from the
-[Releases page](https://github.com/Mirelth/Synth/releases) (for example `v7.8.0`).
+[Releases page](https://github.com/Mirelth/Mirelth-Synth/releases) (for example `v7.8.0`).
 
 ## Method 4: TypeScript SDK (Node.js)
 

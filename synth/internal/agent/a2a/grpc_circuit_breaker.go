@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/resilience"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/resilience"
 	"google.golang.org/grpc"
 )
 

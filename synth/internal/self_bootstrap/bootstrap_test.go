@@ -6,7 +6,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/eval"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/eval"
 )
 
 // bootstrapCases 构造 3 个用例：冷启动阈值分别为 0/1/2 轮。

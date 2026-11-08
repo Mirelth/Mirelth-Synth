@@ -11,7 +11,7 @@ package context
 import (
 	"fmt"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 )
 
 // SummarizingStrategy 摘要压缩策略

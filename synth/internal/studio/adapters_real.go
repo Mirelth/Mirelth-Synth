@@ -18,9 +18,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/cluster"
-	agentmarket "github.com/Mirelth/Synth/v7/synth/internal/agent/marketplace"
-	"github.com/Mirelth/Synth/v7/synth/internal/chaos"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/cluster"
+	agentmarket "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/marketplace"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/chaos"
 )
 
 // ===== Cluster =====

@@ -10,7 +10,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/marketplace"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/marketplace"
 )
 
 // pluginRegistryEntry 表示 registry.json 中的单个插件条目。
@@ -268,7 +268,7 @@ func pluginCreate(args []string) error {
 	pluginCode := fmt.Sprintf(`package %s
 
 import (
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // Plugin implements synth.ToolPlugin interface.

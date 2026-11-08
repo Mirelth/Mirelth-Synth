@@ -16,7 +16,7 @@ import (
 	"sync"
 	"testing"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // capture 记录测试 server 收到的请求

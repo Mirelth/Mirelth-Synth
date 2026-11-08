@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/health"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/health"
 )
 
 // ===== SLOSteadyState 测试 =====

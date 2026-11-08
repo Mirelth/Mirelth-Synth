@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
 )
 
 // defaultCheckpointDB 返回默认的 checkpoint 数据库路径

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/jsonutil"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/jsonutil"
 )
 
 // ===== 泛型 Provider 基础设施（v2.0 #3） =====

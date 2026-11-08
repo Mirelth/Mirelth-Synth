@@ -3,16 +3,16 @@ package agent
 import (
 	"context"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/learning"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/planning"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/reflection"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/tool_learning"
-	"github.com/Mirelth/Synth/v7/synth/internal/audit"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
-	"github.com/Mirelth/Synth/v7/synth/internal/observability"
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/learning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/planning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/reflection"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/tool_learning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/audit"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // OutputGuard 是输出端 Guardrail 检查函数类型（避免 agent → guardrail 反向依赖）

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // demoExecutor 把开放协议任务桥接到 synth Agent（Demo 模式 provider）。

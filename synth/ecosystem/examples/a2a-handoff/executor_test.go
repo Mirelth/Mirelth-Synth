@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // TestDemoExecutorExecute Demo 模式执行器：委托任务后应完成并经 Status.Message

@@ -3,7 +3,7 @@ package orchestration
 import (
 	"context"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
 )
 
 // noopAgent 是一个空实现 Agent，仅用于可视化测试

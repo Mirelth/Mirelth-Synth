@@ -4,7 +4,7 @@ package agent
 import (
 	"bytes"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/bufferpool"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/bufferpool"
 )
 
 // AcquireBuffer 从池中获取一个空 bytes.Buffer。

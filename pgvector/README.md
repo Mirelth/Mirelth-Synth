@@ -19,7 +19,7 @@
 ## 使用方式
 
 ```go
-import "github.com/Mirelth/Synth/pgvector"
+import "github.com/Mirelth/Mirelth-Synth/pgvector"
 
 cfg := pgvector.Config{
     ConnString:    "postgres://localhost:5432/synth",
@@ -48,7 +48,7 @@ results, err := store.Search(ctx, queryVec, 10, map[string]string{"tenant": "t1"
 框架侧接入路径：`internal/memory/pgvector_store.go` 中的 `PgVectorVectorStore` 适配器实现了 memory 的 `VectorStore` 接口（Insert/Delete/Search/CreateCollection/DropCollection），公共入口为 `synth.NewPgVectorVectorStore(ctx, synth.PgVectorConfig{...})`。RAG 混合检索与 HNSW 内存向量库的公共构造器：
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 // RAG 混合检索（Memory + Embedding + 向量通道）
 embedder := synth.NewEmbeddingAdapter(provider, 1536) // llm.Provider 适配为 EmbeddingProvider

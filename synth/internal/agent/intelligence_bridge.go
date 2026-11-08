@@ -6,7 +6,7 @@ package agent
 import (
 	"context"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence"
 )
 
 // ToolIntelligenceConfig 工具智能配置

@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // AutonomyGoalCase 自治目标跑分用例：目标描述 + 计划必须覆盖的必达阶段关键词。

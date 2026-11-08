@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools/intelligence"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools/intelligence"
 )
 
 // TestInMemoryProfiler_RecordAndProfile 测试记录并获取画像

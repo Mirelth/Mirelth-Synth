@@ -2,8 +2,8 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 )
 
 // Pipeline 是顺序编排器，前一个 Agent 的输出作为后一个的输入

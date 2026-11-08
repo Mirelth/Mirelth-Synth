@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/Mirelth/Synth/v7/synth/cmd/example/demo"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/debugger"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/example/demo"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/debugger"
 	"log"
 	"net/http"
 	"time"

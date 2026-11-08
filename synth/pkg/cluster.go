@@ -2,7 +2,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/cluster"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/cluster"
 )
 
 // ===== 集群管理 =====

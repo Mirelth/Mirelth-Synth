@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // 策略名常量（注册键）

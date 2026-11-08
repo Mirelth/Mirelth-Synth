@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"time"
 
-	remotemarket "github.com/Mirelth/Synth/v7/synth/internal/marketplace"
+	remotemarket "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/marketplace"
 )
 
 // maxCatalogBytes 目录响应体上限，防止超大响应耗尽内存。

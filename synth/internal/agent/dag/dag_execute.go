@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/hooks"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/hooks"
 )
 
 func (d *DAGWorkflow) Run(ctx context.Context, input string) (*DAGResult, error) {

@@ -3,7 +3,7 @@ package agent
 import (
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/multimodal"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/multimodal"
 )
 
 func TestConvertMultimodalMessage(t *testing.T) {

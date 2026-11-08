@@ -29,10 +29,10 @@ ecosystem/
 
 ```go
 // ✅ 推荐：导入核心包
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 // ❌ 禁止：从核心包导入生态包
-import "github.com/Mirelth/Synth/v7/synth/ecosystem/plugins/email"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/ecosystem/plugins/email"
 ```
 
 理由:生态包的 API **不在 v1 兼容承诺范围** — 任何 minor 版本都可能
@@ -43,7 +43,7 @@ import "github.com/Mirelth/Synth/v7/synth/ecosystem/plugins/email"
 ```go
 // ❌ 绝对禁止：核心代码依赖生态
 // internal/agent/xxx.go 不允许出现:
-import "github.com/Mirelth/Synth/v7/synth/ecosystem/..."
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/ecosystem/..."
 ```
 
 理由:这会破坏模块边界(AGENTS.md §模块边界),并让核心包
@@ -65,8 +65,8 @@ registry.Register(plugins.EmailPlugin)
 ```go
 // ✅ 推荐：导入核心包 + 自身依赖
 import (
-    "github.com/Mirelth/Synth/v7/synth/internal/tools"  // 实现 tools.Tool 接口
-    "github.com/Mirelth/Synth/v7/synth/ecosystem/plugins/kv"  // 复用其他生态包
+    "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"  // 实现 tools.Tool 接口
+    "github.com/Mirelth/Mirelth-Synth/v7/synth/ecosystem/plugins/kv"  // 复用其他生态包
 )
 
 // ⚠️ 谨慎：跨生态包依赖应通过文档明示

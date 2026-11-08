@@ -184,19 +184,19 @@ func dropFrameworkRequire(dir string) {
 // frameworkModulePath 框架主模块路径（v7.5：go.mod 位于仓库根，SIV 要求
 // v2+ 模块路径带 /vN 后缀；代码包位于 synth/ 子目录，import 路径
 // 形如 <frameworkModulePath>/synth/pkg）。
-const frameworkModulePath = "github.com/Mirelth/Synth/v7"
+const frameworkModulePath = "github.com/Mirelth/Mirelth-Synth/v7"
 
 // buildGoMod 生成脚手架项目的 go.mod 内容。
 //
 // 背景（v6.0 复测发现的断链问题）：pgvector 是仓库内独立模块
-// （github.com/Mirelth/Synth/pgvector），replace 不具传递性——
+// （github.com/Mirelth/Mirelth-Synth/pgvector），replace 不具传递性——
 // 生成的独立子项目经 pkg → internal/memory → pgvector 引用链解析该模块时，
 // 必须在自己的 go.mod 里自行 require+replace，否则 go mod tidy 直接失败
 // （仓库内 workspace 模式会掩盖此问题，独立构建必现；standalone 场景则经
 // 代理上已发布的 pgvector v0.0.0 解析，无需 replace）。
 //
 // 策略：
-//   - 从 projectDir 向上探测框架模块（go.mod 声明 module github.com/Mirelth/Synth/v7）：
+//   - 从 projectDir 向上探测框架模块（go.mod 声明 module github.com/Mirelth/Mirelth-Synth/v7）：
 //     找到 → 以相对路径 emit replace，并连带 pgvector 的 require+replace；
 //   - 未找到（standalone）→ 不 emit replace，require 取 frameworkRequireVersion()
 //     （Version 注入即当前发布版，dev 构建为占位），返回 standalone=true 供调用方
@@ -241,7 +241,7 @@ require %s %s
 	}
 	pgvGoMod := filepath.Join(filepath.Dir(frameworkDir), "pgvector", "go.mod")
 	hasPgvector := false
-	if data, err := os.ReadFile(pgvGoMod); err == nil && strings.Contains(string(data), "module github.com/Mirelth/Synth/pgvector") {
+	if data, err := os.ReadFile(pgvGoMod); err == nil && strings.Contains(string(data), "module github.com/Mirelth/Mirelth-Synth/pgvector") {
 		hasPgvector = true
 	}
 
@@ -254,11 +254,11 @@ require %s %s
 		}
 		sb.WriteString(fmt.Sprintf(`require (
 	%s %s
-	github.com/Mirelth/Synth/pgvector v0.0.0
+	github.com/Mirelth/Mirelth-Synth/pgvector v0.0.0
 )
 
 replace %s => %s
-replace github.com/Mirelth/Synth/pgvector => %s
+replace github.com/Mirelth/Mirelth-Synth/pgvector => %s
 `, frameworkModulePath, frameworkRequireVersion(), frameworkModulePath, frameRel, pgvRel))
 	} else {
 		sb.WriteString(fmt.Sprintf("require %s %s\n\nreplace %s => %s\n", frameworkModulePath, frameworkRequireVersion(), frameworkModulePath, frameRel))
@@ -268,7 +268,7 @@ replace github.com/Mirelth/Synth/pgvector => %s
 
 // resolveFrameworkDir 解析框架源码目录：SYNTH_ROOT 显式指定优先，但必须
 // 含框架 go.mod（v7.5 布局：go.mod 位于仓库根，声明 module
-// github.com/Mirelth/Synth/v7）；无效（未设置/目录不存在/
+// github.com/Mirelth/Mirelth-Synth/v7）；无效（未设置/目录不存在/
 // 无 go.mod——如指向旧 synth/ 子目录的过期值）则回退向上探测。
 func resolveFrameworkDir(apRoot, fallbackStart string) string {
 	if apRoot != "" {
@@ -295,7 +295,7 @@ func hasFrameworkGoMod(dir string) bool {
 	return false
 }
 
-// findFrameworkRoot 从 start 向上探测框架模块根（go.mod 声明 module github.com/Mirelth/Synth/v7），
+// findFrameworkRoot 从 start 向上探测框架模块根（go.mod 声明 module github.com/Mirelth/Mirelth-Synth/v7），
 // 最多回溯 6 层；未找到返回空串。
 func findFrameworkRoot(start string) string {
 	dir := start
@@ -305,7 +305,7 @@ func findFrameworkRoot(start string) string {
 		if err == nil {
 			for _, line := range strings.Split(string(data), "\n") {
 				line = strings.TrimSpace(line)
-				if line == "module github.com/Mirelth/Synth/v7" {
+				if line == "module github.com/Mirelth/Mirelth-Synth/v7" {
 					return dir
 				}
 				if strings.HasPrefix(line, "module ") {
@@ -318,7 +318,7 @@ func findFrameworkRoot(start string) string {
 		if data, err := os.ReadFile(filepath.Join(apSubdir, "go.mod")); err == nil {
 			for _, line := range strings.Split(string(data), "\n") {
 				line = strings.TrimSpace(line)
-				if line == "module github.com/Mirelth/Synth/v7" {
+				if line == "module github.com/Mirelth/Mirelth-Synth/v7" {
 					return apSubdir
 				}
 			}
@@ -360,8 +360,8 @@ func hasLocalFrameworkReplace(dir string) bool {
 	}
 	for _, line := range strings.Split(string(data), "\n") {
 		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "replace github.com/Mirelth/Synth/v7 ") ||
-			strings.HasPrefix(line, "replace github.com/Mirelth/Synth/") {
+		if strings.HasPrefix(line, "replace github.com/Mirelth/Mirelth-Synth/v7 ") ||
+			strings.HasPrefix(line, "replace github.com/Mirelth/Mirelth-Synth/") {
 			return true
 		}
 	}

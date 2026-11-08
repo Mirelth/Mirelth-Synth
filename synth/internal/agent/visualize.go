@@ -6,7 +6,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/workflow"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/workflow"
 )
 
 // VisualizeConfig 可视化配置

@@ -112,7 +112,7 @@ const ANCHORS = [
   ['synth/docs/版本规范.md', /当前版本：`(\d+\.\d+\.\d+)`/],
   ['synth/docs/版本规范.md', /\|\s*Go SDK\s*\|\s*v?(\d+\.\d+\.\d+)/],
   ['synth/docs/版本规范.md', /\|\s*TypeScript SDK\s*\|\s*v?(\d+\.\d+\.\d+)/],
-  ['synth/docs/Synth-开发手册-EN.md', /@synth\/sdk v(\d+\.\d+\.\d+)/],
+  ['synth/docs/Synth-开发手册-EN.md', /@mirelth\/synth v(\d+\.\d+\.\d+)/],
   ['sdk/typescript/docs/cross-language-guide.md', /Go SDK: v(\d+\.\d+\.\d+)/],
   ['sdk/typescript/docs/cross-language-guide.md', /TypeScript SDK: v(\d+\.\d+\.\d+)/],
   ['synth/ecosystem/docs/synth-guide.md', /Synth CLI v(\d+\.\d+\.\d+)/],

@@ -46,10 +46,10 @@ Synth 是 **Go 原生** 的 Agent 开发框架，核心差异：
 
 ```bash
 # 方式一：安装 CLI（推荐，经 GOPROXY，无需克隆仓库）
-go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@latest
 
 # 方式二：作为依赖引入
-go get github.com/Mirelth/Synth/v7@latest
+go get github.com/Mirelth/Mirelth-Synth/v7@latest
 ```
 
 ---

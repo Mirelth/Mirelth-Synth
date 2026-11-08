@@ -2,7 +2,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/dag"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/dag"
 )
 
 // ===== 类型别名 =====

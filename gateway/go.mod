@@ -1,3 +1,3 @@
-module github.com/Mirelth/Synth/gateway
+module github.com/Mirelth/Mirelth-Synth/gateway
 
 go 1.26.10

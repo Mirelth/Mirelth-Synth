@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // runServer 启动开放协议 server 进程。

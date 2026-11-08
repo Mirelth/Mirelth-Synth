@@ -6,7 +6,7 @@ package agent
 import (
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/reflection"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/reflection"
 )
 
 // ===== 顶层快捷注入 Option 测试 =====

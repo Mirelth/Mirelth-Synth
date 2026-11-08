@@ -3,7 +3,7 @@ package session
 import (
 	"context"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 )
 
 // CoreAgentAdapter 将 core.Agent 适配为 session.Agent 接口。

@@ -11,9 +11,9 @@ import (
 
 // standaloneHint 返回 standalone 模式（未检测到本地框架源码）下的提示文案。
 //
-// v7.6 修正：replace 的模块路径曾漏写 /v7（写成 github.com/Mirelth/Synth/synth），
+// v7.6 修正：replace 的模块路径曾漏写 /v7（写成 github.com/Mirelth/Mirelth-Synth/synth），
 // 用户照抄后 go mod tidy 直接报 unknown module；正确路径为框架主模块
-// github.com/Mirelth/Synth/v7（SIV 要求 v2+ 模块路径带 /vN 后缀）。
+// github.com/Mirelth/Mirelth-Synth/v7（SIV 要求 v2+ 模块路径带 /vN 后缀）。
 //
 // autoResolve 区分调用方是否会自动执行依赖解析：synth init 会自动
 // go get <module>@latest（见 runInit），synth plugin create 仅生成文件不做解析。

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
 )
 
 func TestGuardrailHook_InputReject(t *testing.T) {

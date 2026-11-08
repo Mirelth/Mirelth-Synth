@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	agentpgvector "github.com/Mirelth/Synth/pgvector"
+	agentpgvector "github.com/Mirelth/Mirelth-Synth/pgvector"
 )
 
 // PgVectorVectorStore 是基于 PostgreSQL + pgvector 的向量存储实现。

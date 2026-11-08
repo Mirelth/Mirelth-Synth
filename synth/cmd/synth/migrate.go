@@ -16,8 +16,8 @@
 //
 //	synth migrate [DIR] [--from PREFIX] [--to PREFIX] [--check]
 //
-// 默认把 github.com/Mirelth/Synth/v7 前缀改写为
-// github.com/Mirelth/Synth/v8（即 /v7 → /v8 主版本迁移）。
+// 默认把 github.com/Mirelth/Mirelth-Synth/v7 前缀改写为
+// github.com/Mirelth/Mirelth-Synth/v8（即 /v7 → /v8 主版本迁移）。
 // --check 只报告不落盘，并在存在待迁移项时以非零退出（供 CI）。
 package main
 
@@ -37,8 +37,8 @@ import (
 
 // 默认迁移前缀：本仓库 v7 → v8 模块路径（/v7 → /v8 的主版本迁移）。
 const (
-	defaultMigrateFrom = "github.com/Mirelth/Synth/v7"
-	defaultMigrateTo   = "github.com/Mirelth/Synth/v8"
+	defaultMigrateFrom = "github.com/Mirelth/Mirelth-Synth/v7"
+	defaultMigrateTo   = "github.com/Mirelth/Mirelth-Synth/v8"
 )
 
 // ErrMigrationPending --check 模式下发现待迁移项时的哨兵错误。

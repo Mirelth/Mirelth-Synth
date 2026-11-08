@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // testOutputCmd 返回跨平台可用的、会输出内容并退出 0 的命令

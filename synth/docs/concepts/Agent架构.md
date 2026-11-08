@@ -11,7 +11,7 @@ Agent 通过类型断言发现能力，而非配置文件：
 === "Go"
 
     ```go
-    import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+    import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
     // 创建 Agent 时通过 Functional Options 注入能力
     agent, err := synth.NewAgent("my-agent", "你是助手", provider,

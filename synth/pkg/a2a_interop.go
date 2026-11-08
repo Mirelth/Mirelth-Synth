@@ -8,7 +8,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/a2a"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/a2a"
 )
 
 // ===== 开放协议 Schema 类型 =====

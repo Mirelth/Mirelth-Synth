@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // mockDistiller 模拟 LLM 提炼器

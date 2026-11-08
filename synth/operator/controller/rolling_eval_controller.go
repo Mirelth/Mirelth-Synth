@@ -28,7 +28,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	agentv1 "github.com/Mirelth/Synth/v7/synth/operator/api/v1"
+	agentv1 "github.com/Mirelth/Mirelth-Synth/v7/synth/operator/api/v1"
 )
 
 // CanaryPhase 灰度发布状态机的阶段。

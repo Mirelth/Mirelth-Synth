@@ -107,7 +107,7 @@ func TestV72ManifestPath(t *testing.T) {
 func TestV72ModuleRootConsistent(t *testing.T) {
 	root := v72ModuleRoot()
 	repoRoot := RepoRoot()
-	// v72ModuleRoot 返回 github.com/Mirelth/Synth/，RepoRoot 返回 Synth/（上一级）
+	// v72ModuleRoot 返回 github.com/Mirelth/Mirelth-Synth/，RepoRoot 返回 Synth/（上一级）
 	// 验证 v72ModuleRoot 的上一级是 RepoRoot
 	parent := filepath.Dir(root)
 	if parent != repoRoot {

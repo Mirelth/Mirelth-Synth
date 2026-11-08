@@ -6,7 +6,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/reflection"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/reflection"
 )
 
 // reflectionSeverityOrder 严重度排序（高 → 低）

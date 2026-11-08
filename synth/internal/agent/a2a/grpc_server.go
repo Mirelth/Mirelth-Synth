@@ -8,7 +8,7 @@ import (
 	"net"
 	"time"
 
-	a2av1 "github.com/Mirelth/Synth/v7/synth/internal/agent/a2a/proto/a2a/v1"
+	a2av1 "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/a2a/proto/a2a/v1"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

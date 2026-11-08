@@ -23,7 +23,7 @@ pip install mirelth-synth
 ## Go Framework
 
 ```bash
-go get github.com/Mirelth/Synth
+go get github.com/Mirelth/Mirelth-Synth
 ```
 
 **要求：**
@@ -32,7 +32,7 @@ go get github.com/Mirelth/Synth
 ## 从源码构建
 
 ```bash
-git clone https://github.com/Mirelth/Synth.git
+git clone https://github.com/Mirelth/Mirelth-Synth.git
 cd synth
 make build
 ```

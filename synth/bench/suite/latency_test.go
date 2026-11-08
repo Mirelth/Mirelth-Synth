@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // BenchmarkLatency 基准：Agent 延迟

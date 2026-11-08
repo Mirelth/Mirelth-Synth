@@ -4,8 +4,8 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Go](https://img.shields.io/badge/go-1.26+-00ADD8.svg)](https://golang.org)
-<a href="https://github.com/Mirelth/Synth/releases"><img src="https://img.shields.io/github/v/release/Mirelth/Synth?style=flat-square" alt="最新发布"></a>
-<a href="https://github.com/Mirelth/Synth/actions/workflows/ci.yml"><img src="https://github.com/Mirelth/Synth/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+<a href="https://github.com/Mirelth/Mirelth-Synth/releases"><img src="https://img.shields.io/github/v/release/Mirelth/Mirelth-Synth?style=flat-square" alt="最新发布"></a>
+<a href="https://github.com/Mirelth/Mirelth-Synth/actions/workflows/ci.yml"><img src="https://github.com/Mirelth/Mirelth-Synth/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 
 <p align="center">
   <img src="synth/docs/synth-architecture.svg" alt="Synth Architecture" width="90%">
@@ -16,7 +16,7 @@
 
 ```bash
 # 从模块代理直接安装 CLI — 无需克隆、无需 replace
-go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@latest
 
 # 脚手架创建并运行第一个 Agent — 无需 API key
 synth init my-agent --template quickstart
@@ -61,7 +61,7 @@ English: [README.md](README.md)。
 
 ```bash
 # 从模块代理安装（推荐 — 框架就是普通 Go 模块）
-go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@latest
 
 # 或从源码检出构建（在仓库根目录）
 go build -o synth ./synth/cmd/synth/

@@ -4,7 +4,7 @@ package planning
 import (
 	"context"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // EnhancedPlanner 组合所有规划增强能力的统一规划器

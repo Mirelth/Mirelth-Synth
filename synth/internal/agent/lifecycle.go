@@ -1,7 +1,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/lifecycle"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/lifecycle"
 )
 
 // Lifecycle 是生命周期管理器的类型别名

@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"testing"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // BenchmarkQPS_AgentRun 单 Agent 完整运行 QPS

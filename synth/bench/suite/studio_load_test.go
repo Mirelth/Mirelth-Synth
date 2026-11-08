@@ -21,10 +21,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/autonomy"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/realtime"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/skills"
-	"github.com/Mirelth/Synth/v7/synth/internal/studio"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/autonomy"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/realtime"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/skills"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/studio"
 )
 
 // studioLoadFixture 注入真实引擎的 StudioHandler 测试夹具。

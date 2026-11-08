@@ -17,7 +17,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/live"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/live"
 )
 
 func main() {

@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
 )
 
 // BridgeEnabled 标识 OTel SDK 桥接是否启用（统一实现，始终启用）

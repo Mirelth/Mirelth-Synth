@@ -13,7 +13,7 @@
 package context
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 )
 
 // defaultCharsPerToken 默认字符/token 换算比（与 TS 一致：1 token ≈ 4 字符）

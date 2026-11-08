@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/resilience"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/resilience"
 )
 
 func TestServerTLSCredentials_MissingFiles(t *testing.T) {

@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/skills"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/skills"
 )
 
 const skillsUsage = `Usage: synth skill <subcommand> [arguments]

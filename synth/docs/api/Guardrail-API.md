@@ -33,7 +33,7 @@ const (
 ## 使用方式
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 engine := synth.NewGuardrailEngine()
 engine.AddRule(synth.NewPromptInjectionRule(synth.PromptInjectionConfig{})) // Prompt 注入检测

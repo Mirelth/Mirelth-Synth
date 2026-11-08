@@ -15,7 +15,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/bufferpool"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/bufferpool"
 )
 
 // SSEWriter 服务端推送事件写入器

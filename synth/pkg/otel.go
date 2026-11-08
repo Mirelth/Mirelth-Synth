@@ -15,9 +15,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/metrics"
-	obsotel "github.com/Mirelth/Synth/v7/synth/internal/observability/export/otel"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/metrics"
+	obsotel "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability/export/otel"
 )
 
 // Deprecated: 无外部采用证据的周边能力（OTel 遥测 re-export），v8.0 收敛 pkg 核心承诺面。v8.0 将从 pkg 公共面移除（实现保留在 internal/，CLI 不受影响）。[v8.0-cut]

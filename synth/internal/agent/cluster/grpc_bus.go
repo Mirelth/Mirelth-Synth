@@ -21,7 +21,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/bus"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/bus"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

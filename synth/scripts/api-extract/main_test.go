@@ -59,6 +59,6 @@ func TestAPIContractNoDrift(t *testing.T) {
 	if string(actual) != string(baseline) {
 		t.Errorf("API 契约漂移！\n"+
 			"基线文件: %s\n"+
-			"修复: 在 github.com/Mirelth/Synth/ 下运行 `make api-extract` 并提交更新。", baselineFile)
+			"修复: 在 github.com/Mirelth/Mirelth-Synth/ 下运行 `make api-extract` 并提交更新。", baselineFile)
 	}
 }

@@ -1,7 +1,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/skills"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/skills"
 )
 
 // SkillsCapable 标识 Agent 具备技能进化能力。

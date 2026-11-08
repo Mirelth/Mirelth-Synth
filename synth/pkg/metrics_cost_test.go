@@ -4,8 +4,8 @@ import (
 	"math"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // TestWrapCostTracker_Summary 验证 CostTrackerSource.Summary 把

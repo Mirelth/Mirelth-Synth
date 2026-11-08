@@ -2,7 +2,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/zerocopy"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/zerocopy"
 )
 
 // ZeroCopyMessage 零拷贝消息

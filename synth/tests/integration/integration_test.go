@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // TestApStartFlow 测试 synth start 完整流程

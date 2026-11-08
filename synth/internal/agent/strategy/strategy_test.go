@@ -8,8 +8,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/planning"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/planning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // fakeEngine 测试用引擎原语：按脚本顺序返回 LLM 响应，记录工具调用

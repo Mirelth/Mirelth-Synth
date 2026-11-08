@@ -11,9 +11,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/lifecycle"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/multimodal"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/lifecycle"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/multimodal"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // ===== 请求 ID 关联 =====

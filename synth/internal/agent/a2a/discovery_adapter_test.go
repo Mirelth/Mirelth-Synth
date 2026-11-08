@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/discovery"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/discovery"
 )
 
 // mockDiscovery 模拟 discovery.Discovery 实现

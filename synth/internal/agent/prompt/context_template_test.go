@@ -1,7 +1,7 @@
 package prompt
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 	"strings"
 	"testing"
 )

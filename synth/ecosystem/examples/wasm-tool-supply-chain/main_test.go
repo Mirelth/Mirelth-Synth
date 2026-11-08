@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // newTestSandboxAdapter 构造独立沙箱 + 适配器（每个用例一份，避免互相污染）。

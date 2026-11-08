@@ -29,7 +29,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/jsonutil"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/jsonutil"
 )
 
 // EmbeddingProvider 语义嵌入 Provider 抽象（S0-3 语义原生化）。

@@ -25,11 +25,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/autonomy"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/realtime"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/skills"
-	"github.com/Mirelth/Synth/v7/synth/internal/llm/soak"
-	"github.com/Mirelth/Synth/v7/synth/internal/studio"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/autonomy"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/realtime"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/skills"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm/soak"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/studio"
 )
 
 // soakStudioFixture 注入真实引擎的 Studio 服务器（Soak 用）。

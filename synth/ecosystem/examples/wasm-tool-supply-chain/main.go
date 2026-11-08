@@ -35,7 +35,7 @@ import (
 	"fmt"
 	"os"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // 演示用的工具身份与参数（固定，保证输出可断言）。

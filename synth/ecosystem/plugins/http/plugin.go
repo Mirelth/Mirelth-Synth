@@ -1,7 +1,7 @@
 package http
 
 import (
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // Plugin 是 HTTP 客户端插件，封装 tools.API

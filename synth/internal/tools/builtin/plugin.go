@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // BuiltinPlugin 是内置tool插件，实现 tools.ToolPlugin 接口。

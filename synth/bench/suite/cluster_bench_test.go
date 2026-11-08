@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/cluster"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/cluster"
 )
 
 // BenchmarkConsistentHash_GetNode 基准：不同节点数下的分片查找

@@ -1,6 +1,6 @@
 package orchestration
 
-import "github.com/Mirelth/Synth/v7/synth/internal/agent"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
 
 // Re-exports of the visualization types and methods now living in internal/agent.
 // These aliases keep the orchestration package as the public entry point for

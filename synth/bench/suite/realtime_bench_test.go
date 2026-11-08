@@ -11,7 +11,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/realtime"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/realtime"
 )
 
 // BenchmarkRealtimeSessionCreate 会话建立延迟

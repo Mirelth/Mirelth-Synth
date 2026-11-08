@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
 )
 
 // seedRecords 预置两条失败记录（agent-a 两条：一条可重放、一条不可；agent-b 一条）

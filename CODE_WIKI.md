@@ -1728,7 +1728,7 @@ import (
     "log"
     "os"
     
-    synth "github.com/Mirelth/Synth/v7/synth/pkg"
+    synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 func main() {
@@ -2283,7 +2283,7 @@ await audit.log({ actor: 'user-1', action: 'agent.run', resource: 'my-agent' });
 
 3. **`testutil` 测试包**
    ```go
-   import "github.com/Mirelth/Synth/v7/synth/testutil"
+   import "github.com/Mirelth/Mirelth-Synth/v7/synth/testutil"
    
    provider := testutil.NewMockProvider()
    agent := testutil.NewTestAgent(provider)
@@ -2394,7 +2394,7 @@ synth version
 PostgreSQL pgvector 扩展适配器，用于生产级向量存储：
 
 ```go
-import "github.com/Mirelth/Synth/pgvector"
+import "github.com/Mirelth/Mirelth-Synth/pgvector"
 
 // 创建 pgvector 存储
 store, err := pgvector.New(pgvector.Config{

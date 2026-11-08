@@ -2,7 +2,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/hitl"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/hitl"
 )
 
 // ErrHumanChannelClosed human input channel closed错误

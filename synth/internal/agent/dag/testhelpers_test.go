@@ -3,8 +3,8 @@ package dag
 import (
 	"context"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/lifecycle"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/lifecycle"
 )
 
 // mockAgentForOrch 用于测试的模拟 Agent

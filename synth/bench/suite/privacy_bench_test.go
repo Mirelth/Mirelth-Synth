@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/cluster"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/cluster"
 )
 
 // benchPIIDetector 基准测试用 PII 检测器（模拟正则检测开销）

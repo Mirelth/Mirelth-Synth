@@ -63,7 +63,7 @@ spec:
       serviceAccountName: synth-operator
       containers:
         - name: operator
-          image: ghcr.io/mirelth/synth-operator:latest
+          image: ghcr.io/mirelth/mirelth-synth-operator:latest
           args:
             - --metrics-addr=:8080
             - --leader-elect=false

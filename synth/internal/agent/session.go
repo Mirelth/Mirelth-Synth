@@ -2,8 +2,8 @@ package agent
 
 import (
 	"context"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/session"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/session"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 )
 
 // Session 多轮对话会话

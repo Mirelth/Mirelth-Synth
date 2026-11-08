@@ -1,7 +1,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/transport"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/transport"
 )
 
 // Transport 跨进程 Agent 通信传输层接口

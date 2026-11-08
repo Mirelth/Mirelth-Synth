@@ -11,7 +11,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // shellArtifact 是被故意当作「非 WASM 工件」的 shell 脚本（拒绝分支 C）。

@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // TestMain 抑制基准期间的 Agent INFO 日志，避免干扰输出解析。

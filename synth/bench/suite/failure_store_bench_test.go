@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/persist"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/persist"
 )
 
 // BenchmarkP95FailureSQLite_Record 关键路径四：SQLiteFailureStore Record 延迟分布。

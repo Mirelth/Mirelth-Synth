@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
-	"github.com/Mirelth/Synth/v7/synth/testutil"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/testutil"
 )
 
 func main() {

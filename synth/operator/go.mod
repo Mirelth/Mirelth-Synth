@@ -1,4 +1,4 @@
-module github.com/Mirelth/Synth/v7/synth/operator
+module github.com/Mirelth/Mirelth-Synth/v7/synth/operator
 
 go 1.26.10
 

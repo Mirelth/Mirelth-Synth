@@ -29,11 +29,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/bus"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/discovery"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/tool_learning"
-	"github.com/Mirelth/Synth/v7/synth/internal/chaos"
-	apwasm "github.com/Mirelth/Synth/v7/synth/wasm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/bus"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/discovery"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/tool_learning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/chaos"
+	apwasm "github.com/Mirelth/Mirelth-Synth/v7/synth/wasm"
 )
 
 // ===== TestE2E_EtcdDiscovery =====

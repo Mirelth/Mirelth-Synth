@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // JSONLoader 从 JSON/YAML 文件加载结构化数据，支持简单点号路径查询和嵌套结构扁平化

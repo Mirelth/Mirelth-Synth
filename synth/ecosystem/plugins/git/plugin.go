@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"strings"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // Plugin 是 Git 版本控制操作插件

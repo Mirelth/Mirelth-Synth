@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/discovery"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/discovery"
 )
 
 // newAuthServer 创建带 API Key 的测试服务器，返回服务器和基础 URL

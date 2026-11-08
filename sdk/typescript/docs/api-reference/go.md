@@ -48,12 +48,12 @@ type Tool interface {
 
 ```go
 import (
-    "github.com/Mirelth/Synth/internal/agent"
-    "github.com/Mirelth/Synth/internal/llm"
+    "github.com/Mirelth/Mirelth-Synth/internal/agent"
+    "github.com/Mirelth/Mirelth-Synth/internal/llm"
 )
 
 provider := llm.NewOpenAIProvider(apiKey)
 agent := agent.NewAgent("assistant", provider)
 ```
 
-参见 GoDoc: https://pkg.go.dev/github.com/Mirelth/Synth
+参见 GoDoc: https://pkg.go.dev/github.com/Mirelth/Mirelth-Synth

@@ -3,8 +3,8 @@
   <img src="https://img.shields.io/badge/TypeScript-5.4+-3178C6?logo=typescript&style=for-the-badge" alt="TypeScript">
   <img src="https://img.shields.io/badge/License-Apache--2.0-blue?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/Zero_CGO-✓-brightgreen?style=for-the-badge" alt="Zero CGO">
-  <a href="https://github.com/Mirelth/Synth/releases"><img src="https://img.shields.io/github/v/release/Mirelth/Synth?style=for-the-badge" alt="Latest release"></a>
-  <a href="https://github.com/Mirelth/Synth/actions/workflows/ci.yml"><img src="https://github.com/Mirelth/Synth/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/Mirelth/Mirelth-Synth/releases"><img src="https://img.shields.io/github/v/release/Mirelth/Mirelth-Synth?style=for-the-badge" alt="Latest release"></a>
+  <a href="https://github.com/Mirelth/Mirelth-Synth/actions/workflows/ci.yml"><img src="https://github.com/Mirelth/Mirelth-Synth/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
 
 <h1 align="center">⚡ Synth</h1>
@@ -30,7 +30,7 @@
 ### 1. Install the CLI
 
 ```bash
-go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@latest
 
 synth version        # verify
 ```
@@ -61,7 +61,7 @@ go run .                                          # or: synth run  (build + hot 
 ### 3. Or use it as a library
 
 ```bash
-go get github.com/Mirelth/Synth/v7@latest
+go get github.com/Mirelth/Mirelth-Synth/v7@latest
 ```
 
 ```go
@@ -72,7 +72,7 @@ import (
     "fmt"
     "os"
 
-    synth "github.com/Mirelth/Synth/v7/synth/pkg"
+    synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 func main() {
@@ -117,7 +117,7 @@ Version reality is maintained in [`docs/版本规范.md`](docs/版本规范.md) 
 |---------|--------------|
 | **v7.8.0** | Cumulative release of 7.6–7.8: English front door, clean-room CI, API surface freeze, A2A cross-process interop, signed WASM supply-chain demo, v8.0 deprecation markers + `synth migrate`, default-deny hardening |
 | **v7.5.1** | Release pipeline fixed: 6-platform binaries + SHA256 checksums + cosign signatures + SBOM, Docker build context, `go install …@latest` works end to end |
-| **v7.5** | Security & quality campaign: shell-tool allowlist hardened against 7 verified attack chains, `jsonutil` concurrent-marshal corruption fixed, Anthropic structured-output panic fixed, 167 disabled tests restored; coverage 78.8% → 81.1%; module path moved to `github.com/Mirelth/Synth/v7` so the framework is distributable via `GOPROXY` |
+| **v7.5** | Security & quality campaign: shell-tool allowlist hardened against 7 verified attack chains, `jsonutil` concurrent-marshal corruption fixed, Anthropic structured-output panic fixed, 167 disabled tests restored; coverage 78.8% → 81.1%; module path moved to `github.com/Mirelth/Mirelth-Synth/v7` so the framework is distributable via `GOPROXY` |
 | **v7.4** | Wiring batch: OTel end-to-end export, Studio bound to real engines, template registry persistence + signed remote protocol, tool-learner auto-assembly, correlation store, skill-library persistence + in-loop injection, autonomy CLI real execution |
 | **v7.3** | Zero-barrier entry (`synth start` / `synth init` templates), visible learning loop, A2A ecosystem interop |
 | **v7.0–v7.2** | Five-component GA line (distillation, gap tools, resident runtime, federation, …) plus the evaluation campaign that produced the evidence below |

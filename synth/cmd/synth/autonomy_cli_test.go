@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/autonomy"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/autonomy"
 )
 
 // newTestCheckpoint 构造一个「步骤均已完成、目标未完成」的检查点。

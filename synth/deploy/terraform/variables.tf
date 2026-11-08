@@ -20,7 +20,7 @@ variable "node_count" {
 variable "synth_image" {
   description = "Synth 镜像"
   type        = string
-  default     = "ghcr.io/mirelth/synth:v3.1.0"
+  default     = "ghcr.io/mirelth/mirelth-synth:v3.1.0"
 }
 
 variable "network_subnet" {

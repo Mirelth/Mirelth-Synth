@@ -23,8 +23,8 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/a2a"
-	"github.com/Mirelth/Synth/v7/synth/internal/resilience"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/a2a"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/resilience"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 func TestPlugin_Name(t *testing.T) {

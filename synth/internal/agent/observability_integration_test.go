@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/observability"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability"
 )
 
 // TestObservability_ClosedLoop 验证 v3.5-4 全链路闭环：

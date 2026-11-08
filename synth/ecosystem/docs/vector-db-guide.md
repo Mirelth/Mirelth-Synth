@@ -47,7 +47,7 @@ client, _ := memory.NewMilvusClient(memory.MilvusConfig{
 
 ### 已有 PostgreSQL → pgvector
 ```go
-import pgv "github.com/Mirelth/Synth/pgvector"
+import pgv "github.com/Mirelth/Mirelth-Synth/pgvector"
 
 client, _ := pgv.NewClient(pgv.Config{
     Host:       "localhost",

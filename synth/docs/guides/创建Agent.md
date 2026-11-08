@@ -9,7 +9,7 @@
     ```go
     import (
         "os"
-        synth "github.com/Mirelth/Synth/v7/synth/pkg"
+        synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
     )
 
     provider, err := synth.NewOpenAIProvider(synth.Config{
@@ -364,7 +364,7 @@
         "fmt"
         "os"
 
-        synth "github.com/Mirelth/Synth/v7/synth/pkg"
+        synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
     )
 
     func main() {

@@ -38,7 +38,7 @@
 
 **联系渠道**：
 - Email: security@synth.dev
-- GitHub Issues: https://github.com/Mirelth/Synth/issues
+- GitHub Issues: https://github.com/Mirelth/Mirelth-Synth/issues
 
 未真诚遵守或执行行为准则的项目维护者可能会面临由项目领导层其他成员决定的临时或永久影响。
 

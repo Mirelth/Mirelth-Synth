@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/jsonutil"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/jsonutil"
 )
 
 // BenchmarkCache_Get_FingerprintHit 精确指纹命中快路径

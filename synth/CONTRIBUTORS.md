@@ -43,7 +43,7 @@
 ### 需要帮助？
 
 - 查看 [贡献指南](./CONTRIBUTING.md)
-- 在 [Discussions](https://github.com/Mirelth/Synth/discussions) 中提问
+- 在 [Discussions](https://github.com/Mirelth/Mirelth-Synth/discussions) 中提问
 - 加入我们的 Discord 社区
 
 ## 致谢

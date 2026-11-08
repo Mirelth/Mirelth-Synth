@@ -3,7 +3,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/planning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/planning"
 )
 
 // Planner 定义任务规划和分解接口

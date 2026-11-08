@@ -2,7 +2,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/prompt"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/prompt"
 )
 
 // PromptTemplate 支持 {{.Variable}} 格式的系统提示词模板（prompt 子包别名）。

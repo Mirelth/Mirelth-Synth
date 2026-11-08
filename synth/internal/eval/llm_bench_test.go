@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // mockBenchProvider 实现 llm.Provider，用于真实跑分逻辑的单元测试。

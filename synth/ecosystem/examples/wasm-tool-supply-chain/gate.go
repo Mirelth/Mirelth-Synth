@@ -15,7 +15,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 // pinnedGate 钉扎公钥集合上的工件验签门。

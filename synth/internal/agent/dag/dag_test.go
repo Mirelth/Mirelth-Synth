@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/hooks"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/lifecycle"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/hooks"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/lifecycle"
 )
 
 func TestDAGWorkflow_SimpleLinear(t *testing.T) {

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // TestTelemetryFromEnvDisabledByDefault 未配置时不得构造 Provider（默认零开销）。

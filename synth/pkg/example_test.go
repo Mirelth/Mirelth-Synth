@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	synth "github.com/Mirelth/Synth/v7/synth/pkg"
-	"github.com/Mirelth/Synth/v7/synth/testutil"
+	synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/testutil"
 )
 
 // ExampleNewAgent 演示创建一个基本的 ReAct Agent 并运行对话。

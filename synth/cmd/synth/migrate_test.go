@@ -481,10 +481,10 @@ func TestRunMigrateMissingFlagValue(t *testing.T) {
 
 // TestDefaultMigratePrefixes 默认前缀必须是本仓库的 /v7 → /v8 模块路径。
 func TestDefaultMigratePrefixes(t *testing.T) {
-	if defaultMigrateFrom != "github.com/Mirelth/Synth/v7" {
+	if defaultMigrateFrom != "github.com/Mirelth/Mirelth-Synth/v7" {
 		t.Errorf("默认 from 应为 v7 模块路径，实际 %q", defaultMigrateFrom)
 	}
-	if defaultMigrateTo != "github.com/Mirelth/Synth/v8" {
+	if defaultMigrateTo != "github.com/Mirelth/Mirelth-Synth/v8" {
 		t.Errorf("默认 to 应为 v8 模块路径，实际 %q", defaultMigrateTo)
 	}
 	if !strings.HasSuffix(defaultMigrateFrom, "/v7") || !strings.HasSuffix(defaultMigrateTo, "/v8") {

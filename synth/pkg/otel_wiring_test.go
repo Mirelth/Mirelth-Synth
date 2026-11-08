@@ -3,9 +3,9 @@ package synth
 import (
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/metrics"
-	obsotel "github.com/Mirelth/Synth/v7/synth/internal/observability/export/otel"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/metrics"
+	obsotel "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability/export/otel"
 )
 
 // TestWithTelemetry 验证 WithTelemetry 把 TelemetryProvider 的 Tracer 与

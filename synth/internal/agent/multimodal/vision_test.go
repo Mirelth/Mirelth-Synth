@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // TestMultimodalMessage_ToLLMFormat 验证 multimodal.Message 经 Adapter 转换后

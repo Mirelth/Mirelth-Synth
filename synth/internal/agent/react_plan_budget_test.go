@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/planning"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/planning"
 )
 
 // TestPlanBudget_TurnDistribution 验证轮次预算按子任务数均分

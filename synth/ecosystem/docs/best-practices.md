@@ -21,7 +21,7 @@
 每个 Agent 应该专注于一个明确的任务：
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 // 好的：职责清晰
 codeAgent := synth.NewAgent("CodeAssistant", "你是一个代码助手，只负责编写和调试代码",
@@ -64,7 +64,7 @@ defer memoryStore.Close()
 ### 3. LLM Provider 选择策略
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 // 方案1: 主备切换（推荐生产环境）
 primary := synth.NewOpenAIProvider(synth.Config{Model: "gpt-4o"})
@@ -258,7 +258,7 @@ registry, _ := synth.DefaultToolkit(synth.ToolkitConfig{
 ### 1. 分层错误处理
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 resp, err := agent.Run(ctx, synth.UserMessage("你好"))
 
@@ -325,8 +325,8 @@ resilient.AddFallback(fallback)
 ```go
 import (
     "testing"
-    synth "github.com/Mirelth/Synth/v7/synth/pkg"
-    "github.com/Mirelth/Synth/v7/synth/testutil"
+    synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
+    "github.com/Mirelth/Mirelth-Synth/v7/synth/testutil"
 )
 
 func TestAgentBasicFlow(t *testing.T) {

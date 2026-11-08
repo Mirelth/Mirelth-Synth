@@ -90,7 +90,7 @@ synth init <name> 支持 7 个模板 × 3 种类型；模板：quickstart / basi
 
 ### 6.2 go.mod 生成双分支（scaffold.go buildGoMod）
 
-1. 框架内探测：findFrameworkRoot 从项目父目录向上最多 6 层寻找声明 module github.com/Mirelth/Synth 的 go.mod；命中则 emit 相对路径 replace，并检测兄弟目录 pgvector/go.mod 连带补 require + replace github.com/Mirelth/Synth/pgvector（规避 pgvector replace 不具传递性导致的独立子项目断链，commit 891f683d）。
+1. 框架内探测：findFrameworkRoot 从项目父目录向上最多 6 层寻找声明 module github.com/Mirelth/Mirelth-Synth 的 go.mod；命中则 emit 相对路径 replace，并检测兄弟目录 pgvector/go.mod 连带补 require + replace github.com/Mirelth/Mirelth-Synth/pgvector（规避 pgvector replace 不具传递性导致的独立子项目断链，commit 891f683d）。
 2. standalone：未找到时仅写 require synth v0.0.0 占位并打印提示——受 Go 语义化导入版本限制，框架必须本地 replace 后才可 tidy（版本规范.md 有模块消费限制说明）。
 
 ### 6.3 synth run 行为链

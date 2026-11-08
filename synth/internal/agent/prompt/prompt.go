@@ -3,7 +3,7 @@ package prompt
 import (
 	"bytes"
 	"fmt"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/core"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/core"
 	"strings"
 	"text/template"
 )

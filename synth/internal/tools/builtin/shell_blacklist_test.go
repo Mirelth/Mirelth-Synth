@@ -18,7 +18,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 )
 
 // execShellResult 执行 shell 工具并返回结果（辅助，与现有测试风格一致）

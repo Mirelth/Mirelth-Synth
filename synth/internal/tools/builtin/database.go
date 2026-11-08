@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/tools"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 
 	_ "modernc.org/sqlite" // 纯 Go SQLite 驱动
 )

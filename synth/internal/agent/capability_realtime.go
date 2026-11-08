@@ -1,7 +1,7 @@
 package agent
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/realtime"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/realtime"
 )
 
 // RealtimeCapable 标识 Agent 具备多模态实时交互能力。

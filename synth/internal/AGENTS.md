@@ -89,7 +89,7 @@
 - `google.golang.org/grpc` + `protobuf` → 仅 `agent/a2a/` 及其子包、`agent/cluster/`（grpc_bus）、`agent/transport/`（grpc）
 - `go.etcd.io/etcd/client/v3` → 仅 `persist/` 与 `agent/cluster/`（均带 `etcd` build tag）
 - `github.com/redis/go-redis/v9` → 仅 `persist/`（`redis` build tag）
-- `github.com/jackc/pgx/v5` → **禁止在 internal/ 直接 import**；仅由 `pgvector/` 独立模块 require，internal 通过 `github.com/Mirelth/Synth/pgvector` 间接使用
+- `github.com/jackc/pgx/v5` → **禁止在 internal/ 直接 import**；仅由 `pgvector/` 独立模块 require，internal 通过 `github.com/Mirelth/Mirelth-Synth/pgvector` 间接使用
 - `gopkg.in/yaml.v3` → 仅 `config/`、`governance/`（策略/配置 YAML 解析）
 
 ## 编码约定

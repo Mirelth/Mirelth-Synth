@@ -18,7 +18,7 @@ type Agent interface {
 ## 构造 Agent
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 agent, err := synth.NewAgent("my-agent", "You are a helpful assistant.", provider,
     synth.WithMaxTurns(20),

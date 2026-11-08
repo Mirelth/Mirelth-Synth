@@ -31,15 +31,15 @@
 //	              文件内未导出符号默认属于此等级。
 //
 // 用户应使用 `go doc` 或 IDE 悬浮提示查看每个 export 的稳定性等级。
-// 详细治理策略见 github.com/Mirelth/Synth/v7/synth/docs/版本规范.md（兼容性承诺与废弃策略）。
+// 详细治理策略见 github.com/Mirelth/Mirelth-Synth/v7/synth/docs/版本规范.md（兼容性承诺与废弃策略）。
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/worldmodel"
-	"github.com/Mirelth/Synth/v7/synth/internal/config"
-	"github.com/Mirelth/Synth/v7/synth/internal/health"
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/worldmodel"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/config"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/health"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 	"os"
 )
 
@@ -368,7 +368,7 @@ type CognitionConfig = agent.CognitionConfig
 // v6.1 新增：把任务世界增量维护为结构化状态图（实体/关系/因果算子）。
 // 经 synth.WithWorldModel 显式注入，默认关闭（铁律 7：不注入时默认 ReAct
 // 行为零变更）；「评价线默认开」「翻默认」分属三段式默认策略第二/三段，
-// 见 github.com/Mirelth/Synth/v7/synth/docs/提案-世界模型默认策略切换.md，翻默认锁 v7.0。
+// 见 github.com/Mirelth/Mirelth-Synth/v7/synth/docs/提案-世界模型默认策略切换.md，翻默认锁 v7.0。
 type WorldModelTracker = worldmodel.WorldModelTracker
 
 // ===== 协议式微内核：Capable 接口 + CapabilityAgent =====

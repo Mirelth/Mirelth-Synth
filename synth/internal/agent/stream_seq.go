@@ -7,7 +7,7 @@ import (
 	"errors"
 	"iter"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // StreamSeq 返回流式输出迭代器（Go 1.23+ 风格）。

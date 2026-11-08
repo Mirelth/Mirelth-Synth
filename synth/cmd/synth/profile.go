@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/memory"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 )
 
 func runProfile(args []string) error {

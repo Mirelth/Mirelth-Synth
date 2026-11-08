@@ -64,7 +64,7 @@ ReActLoop 是 Agent 的核心引擎，实现了 **Reason → Act → Observe** �
 #### 创建 Agent
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 // 推荐入口（v0.7.0 起）
 agent, err := synth.NewAgent("MyAgent", "你是一个专业的AI助手", llmProvider,
@@ -164,7 +164,7 @@ Pool 管理多个 Agent 的并发执行，提供任务分发、状态查询和�
 ### 创建与配置
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 p := synth.NewPool(synth.PoolConfig{
     MaxConcurrency: 10,  // 最大并发 Agent 数
@@ -218,7 +218,7 @@ result, ok := p.GetTask("task-1")
 支持 GPT-4o、GPT-4o-mini 及所有 OpenAI 兼容 API。
 
 ```go
-import "github.com/Mirelth/Synth/v7/synth/internal/llm"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 
 // 标准配置
 provider, err := llm.NewOpenAIProvider(llm.Config{
@@ -468,7 +468,7 @@ MCP (Model Context Protocol) Server 提供标准化的工具、资源和提示�
 #### 创建 MCP Server
 
 ```go
-import "github.com/Mirelth/Synth/v7/synth/internal/tools"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 
 server := tools.NewMCPServer(tools.MCPServerConfig{
     Name:    "my-mcp-server",
@@ -561,7 +561,7 @@ mux.HandleFunc("/mcp", server.ServeHTTP)
 MCP Client 用于连接外部 MCP Server 并调用其工具。
 
 ```go
-import "github.com/Mirelth/Synth/v7/synth/internal/tools"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 
 // 连接已运行的 MCP Server
 client := tools.NewMCPClient("http://localhost:3000/mcp")
@@ -596,7 +596,7 @@ client.Close()
 MCP Registry 管理多个 MCP Server 的注册、启动和工具发现，支持从配置文件自动加载。
 
 ```go
-import "github.com/Mirelth/Synth/v7/synth/internal/tools"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/tools"
 
 registry := tools.NewMCPRegistry()
 
@@ -708,7 +708,7 @@ defer store.Close()
 **独立模块**：pgvector 依赖 PostgreSQL 驱动（pgx），作为独立 Go Module 提供，不污染主框架零依赖原则。
 
 ```go
-import pgv "github.com/Mirelth/Synth/pgvector"
+import pgv "github.com/Mirelth/Mirelth-Synth/pgvector"
 
 client, err := pgv.NewClient(pgv.Config{
     Host:       "localhost",
@@ -799,7 +799,7 @@ type Episode struct {
 #### 语义搜索（RAG）
 
 ```go
-import "github.com/Mirelth/Synth/v7/synth/internal/memory"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/memory"
 
 ragStore := memory.NewRAGStore(store)
 
@@ -849,7 +849,7 @@ Discovery Server 提供 Agent 注册、发现和心跳管理。
 ### 创建 Discovery Server
 
 ```go
-import "github.com/Mirelth/Synth/v7/synth/internal/agent"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
 
 localDiscovery := agent.NewLocalDiscovery()
 server := agent.NewDiscoveryServer(localDiscovery)
@@ -1118,7 +1118,7 @@ A2A (Agent-to-Agent) 协议实现 Google A2A 规范，支持跨 Agent 任务协�
 推荐使用公共包 `synth/pkg/synth`：
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 tm := synth.NewA2ATaskManager()
 defer tm.Cleanup()
@@ -1250,7 +1250,7 @@ A2A 同时提供基于 protobuf/gRPC 的二进制传输，消息定义位于 `in
 #### 启动 gRPC Server
 
 ```go
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 service := synth.NewA2AService(card, tm)
 grpcServer := synth.NewA2AGRPCServerWithService(service)
@@ -1394,7 +1394,7 @@ Admin Handler 提供 Agent Pool 的 HTTP 管理接口。
 ### 创建
 
 ```go
-import "github.com/Mirelth/Synth/v7/synth/internal/admin"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/admin"
 
 handler := admin.NewAdminHandler(pool)
 // handler 实现了 http.Handler 接口
@@ -1502,7 +1502,7 @@ Prometheus 格式的指标导出服务。
 ### 创建
 
 ```go
-import "github.com/Mirelth/Synth/v7/synth/internal/metrics"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/metrics"
 
 m := metrics.NewMetrics()
 handler := metrics.NewPrometheusHandler(m, ":9090")
@@ -1581,7 +1581,7 @@ multiExporter := metrics.NewMultiExporter(logExporter, jsonExporter)
 ### HTTP 调试服务器
 
 ```go
-import "github.com/Mirelth/Synth/v7/synth/internal/debugger"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/debugger"
 
 debugServer := debugger.NewDebugServer(":8080")
 go debugServer.Start()
@@ -1988,7 +1988,7 @@ synth plugin create synth-plugin-weather
 ```go
 package synth_plugin_weather
 
-import synth "github.com/Mirelth/Synth/v7/synth/pkg"
+import synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 
 type Plugin struct{}
 
@@ -2080,7 +2080,7 @@ go tool pprof cpu.prof
 
 ```go
 import (
-    "github.com/Mirelth/Synth/v7/synth/pkg/errors"
+    "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg/errors"
 )
 
 _, err := agent.Run(ctx, msg)

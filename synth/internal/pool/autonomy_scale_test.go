@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/autonomy"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/autonomy"
 )
 
 // scaleStepExecutor 确定性步骤执行器：failOnce 置位时首个 fix 步骤失败一次后恢复。

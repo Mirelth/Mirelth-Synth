@@ -2,7 +2,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/chaos"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/chaos"
 )
 
 // ===== 实验引擎 =====

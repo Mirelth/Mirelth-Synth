@@ -3,7 +3,7 @@
 replicaCount: 3
 
 image:
-  repository: ghcr.io/mirelth/synth
+  repository: ghcr.io/mirelth/mirelth-synth
   tag: "v7.8.0"
   pullPolicy: IfNotPresent
 
@@ -75,7 +75,7 @@ studio:
   enabled: true
   replicaCount: 1
   image:
-    repository: ghcr.io/mirelth/synth-studio
+    repository: ghcr.io/mirelth/mirelth-synth-studio
     tag: "v5.0.0"
   service:
     type: ClusterIP
@@ -92,7 +92,7 @@ studio:
 operator:
   enabled: false
   image:
-    repository: ghcr.io/mirelth/synth-operator
+    repository: ghcr.io/mirelth/mirelth-synth-operator
     tag: "v2.0.0"
 
 # ─── 可观测性 ─────────────────────────────────────────────────

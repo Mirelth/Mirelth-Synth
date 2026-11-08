@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	agentmarket "github.com/Mirelth/Synth/v7/synth/internal/agent/marketplace"
-	"github.com/Mirelth/Synth/v7/synth/internal/marketplace"
+	agentmarket "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/marketplace"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/marketplace"
 )
 
 // validateTemplateID 验证模板 ID 安全性

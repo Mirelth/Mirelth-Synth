@@ -7,7 +7,7 @@
 相反，请通过以下方式私下报告：
 
 - 📧 发送邮件到：security@synth.dev
-- 🔒 使用 GitHub 的 [Private Vulnerability Reporting](https://github.com/Mirelth/Synth/security/advisories/new)
+- 🔒 使用 GitHub 的 [Private Vulnerability Reporting](https://github.com/Mirelth/Mirelth-Synth/security/advisories/new)
 
 ## 报告流程
 
@@ -87,7 +87,7 @@
 
 - **安全问题**：security@synth.dev
 - **一般问题**：support@synth.dev
-- **GitHub Issues**：https://github.com/Mirelth/Synth/issues
+- **GitHub Issues**：https://github.com/Mirelth/Mirelth-Synth/issues
 
 ---
 

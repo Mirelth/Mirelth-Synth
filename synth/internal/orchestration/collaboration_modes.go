@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
 )
 
 func (s *CollaborationSession) executeDebate(ctx context.Context, topic string) error {

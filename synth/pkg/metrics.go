@@ -2,8 +2,8 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/agent"
-	"github.com/Mirelth/Synth/v7/synth/internal/metrics"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/metrics"
 )
 
 // AgentMetricsCollector 是 Agent 指标收集器，记录 LLM 调用、tool调用和轮次等指标

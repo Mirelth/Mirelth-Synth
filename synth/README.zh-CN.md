@@ -3,8 +3,8 @@
   <img src="https://img.shields.io/badge/TypeScript-5.4+-3178C6?logo=typescript&style=for-the-badge" alt="TypeScript">
   <img src="https://img.shields.io/badge/License-Apache--2.0-blue?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/Zero_CGO-✓-brightgreen?style=for-the-badge" alt="Zero CGO">
-  <a href="https://github.com/Mirelth/Synth/releases"><img src="https://img.shields.io/github/v/release/Mirelth/Synth?style=for-the-badge" alt="最新发布"></a>
-  <a href="https://github.com/Mirelth/Synth/actions/workflows/ci.yml"><img src="https://github.com/Mirelth/Synth/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/Mirelth/Mirelth-Synth/releases"><img src="https://img.shields.io/github/v/release/Mirelth/Mirelth-Synth?style=for-the-badge" alt="最新发布"></a>
+  <a href="https://github.com/Mirelth/Mirelth-Synth/actions/workflows/ci.yml"><img src="https://github.com/Mirelth/Mirelth-Synth/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
 
 <h1 align="center">⚡ Synth</h1>
@@ -25,7 +25,7 @@
 ### 1. 安装 CLI
 
 ```bash
-go install github.com/Mirelth/Synth/v7/synth/cmd/synth@latest
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@latest
 
 synth version        # 验证安装
 ```
@@ -56,7 +56,7 @@ go run .                                          # 或 synth run（构建 + 热
 ### 3. 作为库使用
 
 ```bash
-go get github.com/Mirelth/Synth/v7@latest
+go get github.com/Mirelth/Mirelth-Synth/v7@latest
 ```
 
 ```go
@@ -67,7 +67,7 @@ import (
     "fmt"
     "os"
 
-    synth "github.com/Mirelth/Synth/v7/synth/pkg"
+    synth "github.com/Mirelth/Mirelth-Synth/v7/synth/pkg"
 )
 
 func main() {
@@ -111,7 +111,7 @@ func main() {
 |------|----------|
 | **v7.8.0** | 累计发布 7.6–7.8：英文前门、clean-room CI、API 表面冻结、A2A 跨进程互操作、WASM 供应链签名 demo、v8.0 废弃标记 + `synth migrate`、默认安全加固 |
 | **v7.5.1** | 发布链路修正：6 平台二进制 + SHA256 校验和 + cosign 签名 + SBOM、Docker 构建上下文修复，`go install …@latest` 端到端可用 |
-| **v7.5** | 安全与质量战役：Shell 工具白名单加固（7 条实证攻击链全阻断）、`jsonutil` 并发覆写修复、Anthropic 结构化输出 panic 修复、167 个被禁用测试恢复；覆盖率 78.8% → 81.1%；模块路径迁至 `github.com/Mirelth/Synth/v7`，框架自此可经 GOPROXY 分发 |
+| **v7.5** | 安全与质量战役：Shell 工具白名单加固（7 条实证攻击链全阻断）、`jsonutil` 并发覆写修复、Anthropic 结构化输出 panic 修复、167 个被禁用测试恢复；覆盖率 78.8% → 81.1%；模块路径迁至 `github.com/Mirelth/Mirelth-Synth/v7`，框架自此可经 GOPROXY 分发 |
 | **v7.4** | 接线批次：OTel 端到端导出、Studio 接真实引擎、模板注册表持久化 + 签名远程协议、工具学习器自动装配、全链路关联存储、技能库持久化 + 入循环、自治 CLI 真实化 |
 | **v7.3** | 零门槛入口（`synth start` / `synth init` 模板）、学习闭环体感、A2A 生态协议卡位 |
 | **v7.0–v7.2** | 五构件 GA 线（蒸馏、缺口工具、常驻运行时、联邦社会等）+ 产出下述证据的评测战役 |

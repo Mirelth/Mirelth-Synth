@@ -24,7 +24,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	agentv1 "github.com/Mirelth/Synth/v7/synth/operator/api/v1"
+	agentv1 "github.com/Mirelth/Mirelth-Synth/v7/synth/operator/api/v1"
 )
 
 // shouldCreatePDB 判断是否需要创建 PDB

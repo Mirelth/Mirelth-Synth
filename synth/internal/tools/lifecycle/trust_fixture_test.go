@@ -36,7 +36,7 @@ func TestWriteTrustFixture(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	payload := []byte("github.com/Mirelth/Synth/v7/synth/lifecycle-trust-fixture/v1")
+	payload := []byte("github.com/Mirelth/Mirelth-Synth/v7/synth/lifecycle-trust-fixture/v1")
 	digest := sha256.Sum256(payload)
 	sig, err := ecdsa.SignASN1(rand.Reader, key, digest[:])
 	if err != nil {

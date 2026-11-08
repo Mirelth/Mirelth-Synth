@@ -9,9 +9,9 @@
 // 移除计划：v7.x。
 package ebpf
 
-import "github.com/Mirelth/Synth/v7/synth/internal/observability/export/otel/procfs"
+import "github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability/export/otel/procfs"
 
-// Deprecated: 自 v6.x 起，请使用 github.com/Mirelth/Synth/v7/synth/internal/observability/export/otel/procfs。
+// Deprecated: 自 v6.x 起，请使用 github.com/Mirelth/Mirelth-Synth/v7/synth/internal/observability/export/otel/procfs。
 // Removed in v7.0. 当前符号作为 alias 保留至 v7.x。
 
 type (

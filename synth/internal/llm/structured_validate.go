@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/jsonutil" // perf-v6 round 8 Task 1：统一 JSON 序列化
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/jsonutil" // perf-v6 round 8 Task 1：统一 JSON 序列化
 )
 
 // ValidationError 结构化输出验证错误

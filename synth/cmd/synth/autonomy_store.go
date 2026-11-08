@@ -13,7 +13,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/agent/autonomy"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/agent/autonomy"
 )
 
 // jsonCheckpointStore 基于 JSON 文件的目标检查点存储。

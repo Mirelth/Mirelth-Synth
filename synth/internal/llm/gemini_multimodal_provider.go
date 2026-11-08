@@ -7,7 +7,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/Mirelth/Synth/v7/synth/internal/jsonutil" // perf-v6 round 6 Task 1
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/jsonutil" // perf-v6 round 6 Task 1
 	"io"
 	"log/slog"
 	"net/http"

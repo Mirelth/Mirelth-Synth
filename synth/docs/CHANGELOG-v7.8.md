@@ -35,7 +35,7 @@ v7.6、v7.7、v7.8 三批工作均已完成并合入 `main`，但提交在时间
 ## 安装与升级
 
 ```bash
-go install github.com/Mirelth/Synth/v7/synth/cmd/synth@v7.8.0
+go install github.com/Mirelth/Mirelth-Synth/v7/synth/cmd/synth@v7.8.0
 synth version   # 应显示 7.8.0
 ```
 

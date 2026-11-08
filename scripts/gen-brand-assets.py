@@ -149,7 +149,7 @@ def poster_head(idx: int) -> str:
 
 def poster_foot(note: str = "开源 AI Agent 开发框架") -> str:
     return f"""<div class="foot"><span>{note}</span>
-<span class="url">github.com/Mirelth/Synth</span></div></div>"""
+<span class="url">github.com/Mirelth/Mirelth-Synth</span></div></div>"""
 
 
 POSTERS = []
@@ -285,7 +285,7 @@ POSTERS.append(("docs/posters/poster-10.png", 1080, 1920, poster_head(10) + f"""
   <div class="eyebrow">Get Started</div>
   <h2>从一行命令<br><span class="grad">到生产级 Agent</span></h2>
   <div class="card" style="padding:34px 38px;display:flex;flex-direction:column;gap:22px">
-    <div class="mono" style="font-size:24px;color:{CYAN}">go get github.com/Mirelth/Synth/v7</div>
+    <div class="mono" style="font-size:24px;color:{CYAN}">go get github.com/Mirelth/Mirelth-Synth/v7</div>
     <div class="rule"></div>
     <div class="mono" style="font-size:24px;color:{CYAN}">synth init myagent --template quickstart</div>
     <div class="rule"></div>
@@ -472,7 +472,7 @@ FRAMES = [
 <div style="font-size:56px;font-weight:700">万物之源 · 智能之始</div>
 <div class="lead" style="font-size:30px;letter-spacing:.18em">FROM SYNTH, INTELLIGENCE</div>
 </div>
-<div class="footer"><span>生产级 AI Agent 开发框架</span><span class="url">github.com/Mirelth/Synth</span></div>
+<div class="footer"><span>生产级 AI Agent 开发框架</span><span class="url">github.com/Mirelth/Mirelth-Synth</span></div>
 </div>""", "", 51)),
     ("docs/ppt_preview_frame2.png", 1920, 1080, page(1920, 1080, f"""<div class="pad" style="padding:100px 120px">
 <div class="head" style="display:flex;justify-content:space-between"><div class="brandbar"><div class="mark"></div><span class="eyebrow">Synth</span></div><span class="org" style="font-size:19px;letter-spacing:.34em;color:{MUTED}">MIRELTH · 02</span></div>
@@ -493,12 +493,12 @@ FRAMES = [
 <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:34px">
 <h2 style="font-size:72px">从一行命令<br><span class="grad">到生产级 Agent</span></h2>
 <div class="card" style="padding:34px 38px;display:flex;flex-direction:column;gap:20px">
-<div class="mono" style="font-size:28px;color:{CYAN}">go get github.com/Mirelth/Synth/v7</div>
+<div class="mono" style="font-size:28px;color:{CYAN}">go get github.com/Mirelth/Mirelth-Synth/v7</div>
 <div class="rule"></div>
 <div class="mono" style="font-size:28px;color:{CYAN}">synth init myagent --template quickstart</div>
 </div>
 </div>
-<div class="footer"><span>Apache-2.0 · Mirelth</span><span class="url">github.com/Mirelth/Synth</span></div>
+<div class="footer"><span>Apache-2.0 · Mirelth</span><span class="url">github.com/Mirelth/Mirelth-Synth</span></div>
 </div>""", "", 53)),
 ]
 

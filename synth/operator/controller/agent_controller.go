@@ -26,7 +26,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	agentv1 "github.com/Mirelth/Synth/v7/synth/operator/api/v1"
+	agentv1 "github.com/Mirelth/Mirelth-Synth/v7/synth/operator/api/v1"
 )
 
 const agentFinalizer = "synth.dev/finalizer"
@@ -165,7 +165,7 @@ func (r *AgentDeploymentReconciler) imageOrDefault(ad *agentv1.AgentDeployment) 
 	if r.DefaultImage != "" {
 		return r.DefaultImage
 	}
-	return "ghcr.io/mirelth/synth:latest"
+	return "ghcr.io/mirelth/mirelth-synth:latest"
 }
 
 // ensureConfigMap 创建或更新 Agent 配置的 ConfigMap

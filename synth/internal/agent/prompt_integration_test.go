@@ -3,7 +3,7 @@ package agent
 import (
 	"testing"
 
-	"github.com/Mirelth/Synth/v7/synth/internal/llm"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/llm"
 )
 
 // TestReActAgent_WithPromptTemplate 验证 PromptTemplate 与 ReActAgent 集成

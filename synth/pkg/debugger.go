@@ -2,7 +2,7 @@
 package synth
 
 import (
-	"github.com/Mirelth/Synth/v7/synth/internal/debugger"
+	"github.com/Mirelth/Mirelth-Synth/v7/synth/internal/debugger"
 )
 
 // DebugServer 是调试 HTTP 服务器，提供实时事件记录和查询
