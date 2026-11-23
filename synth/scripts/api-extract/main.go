@@ -503,9 +503,11 @@ func docSummary(doc *ast.CommentGroup) string {
 	if idx := strings.Index(text, "\n"); idx > 0 {
 		text = text[:idx]
 	}
-	// 限制长度
-	if len(text) > 120 {
-		text = text[:117] + "..."
+	// 限制长度：按 rune 截断而非字节——text[:117] 会切断多字节 UTF-8
+	// 字符（如中文）产生 U+FFFD，导致契约基线对账恒失败。
+	runes := []rune(text)
+	if len(runes) > 120 {
+		text = string(runes[:117]) + "..."
 	}
 	return text
 }
