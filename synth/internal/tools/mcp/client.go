@@ -122,8 +122,12 @@ func buildChildEnv(extra map[string]string) []string {
 		allowed[k] = true
 	}
 	if runtime.GOOS == "windows" {
-		// Windows 下 npx.cmd 等批处理启动器依赖的基础变量
-		for _, k := range []string{"SYSTEMROOT", "WINDIR", "COMSPEC", "PATHEXT", "TEMP", "TMP", "USERPROFILE"} {
+		// Windows 下 npx.cmd 等批处理启动器依赖的基础变量。
+		// LocalAppData 必须在列：Go 工具链经 os.UserCacheDir 用 %LocalAppData%
+		// 定位默认构建缓存（GOCACHE 未显式设置时），缺失会使 go run 型
+		// MCP server 报 "build cache is required ... %LocalAppData% is not defined"
+		// 并立即退出，表现为 initialize 超时。
+		for _, k := range []string{"SYSTEMROOT", "WINDIR", "COMSPEC", "PATHEXT", "TEMP", "TMP", "USERPROFILE", "LocalAppData"} {
 			allowed[k] = true
 		}
 	}
