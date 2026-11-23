@@ -7,8 +7,22 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"time"
 )
+
+// recordSeq 为学习记录 ID 提供进程内单调序号。
+// 修复：裸 UnixNano 时间戳在同一时钟 tick 内连续记录会碰撞，
+// 而 InMemoryStore.Add 对同 ID 采取覆盖语义，导致经验记录静默丢失、
+// 成功率统计失真（TestToolLearnerAutoWiredFromMemoryStore 曾因此 flaky）。
+var recordSeq atomic.Uint64
+
+// nextRecordID 生成唯一学习记录 ID：工具名 + 纳秒时间戳 + 原子序号。
+func nextRecordID(toolName string) string {
+	return "tool_usage_" + toolName + "_" +
+		strconv.FormatInt(time.Now().UnixNano(), 10) + "_" +
+		strconv.FormatUint(recordSeq.Add(1), 10)
+}
 
 // MemoryStore 定义tool学习所需的最小记忆存储接口
 type MemoryStore interface {
@@ -123,7 +137,7 @@ func (l *MemoryToolLearner) RecordSuccess(ctx context.Context, toolName string, 
 	}
 
 	episode := &Episode{
-		ID:        "tool_usage_" + toolName + "_" + strconv.FormatInt(time.Now().UnixNano(), 10),
+		ID:        nextRecordID(toolName),
 		SessionID: "tool_learning",
 		Role:      "tool_usage",
 		Content:   string(recordJSON),
@@ -153,7 +167,7 @@ func (l *MemoryToolLearner) RecordFailure(ctx context.Context, toolName string, 
 	}
 
 	episode := &Episode{
-		ID:        "tool_usage_" + toolName + "_" + strconv.FormatInt(time.Now().UnixNano(), 10),
+		ID:        nextRecordID(toolName),
 		SessionID: "tool_learning",
 		Role:      "tool_usage",
 		Content:   string(recordJSON),
