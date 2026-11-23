@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -56,6 +57,31 @@ func canonicalJailPath(p string) string {
 			return filepath.Clean(filepath.Join(real, rest))
 		}
 	}
+}
+
+// anchorJailVolume 修复 Windows 盘符相对路径（如 `\etc\passwd`）的禁锢绕过。
+// 这类路径 filepath.IsAbs 判为绝对，但 filepath.Abs 按**进程当前盘符**解析，
+// 而 cmd.exe 实际按**子进程 cwd 的盘符**解析——两者不一致时，禁锢校验放行
+// 的路径会在执行时落到 jail 之外。此处统一锚定到参考目录（workdir/allowed）
+// 的盘符，使校验基准与执行基准一致；校验与执行同盘符时结论不变，异盘符时
+// 越界路径会被正确拒绝。POSIX 无盘符语义，原样返回。
+func anchorJailVolume(p, ref string) string {
+	if runtime.GOOS != "windows" || p == "" || filepath.VolumeName(p) != "" {
+		return p
+	}
+	if !strings.HasPrefix(p, `\`) && !strings.HasPrefix(p, "/") {
+		return p
+	}
+	refAbs, err := filepath.Abs(ref)
+	if err != nil {
+		return p
+	}
+	vol := filepath.VolumeName(refAbs)
+	if vol == "" {
+		return p
+	}
+	// 统一分隔符后拼接盘符，得到确定性的全路径。
+	return vol + filepath.FromSlash(strings.ReplaceAll(p, "/", `\`))
 }
 
 // isWithinAllowedWorkdirs 判断 path 是否落在任一允许的工作目录内
@@ -138,12 +164,15 @@ func resolveWithinWorkdir(tok, workdir string, allowed []string) bool {
 		return true
 	}
 	p := tok
+	base := workdir
+	if base == "" {
+		base = allowed[0]
+	}
 	if !filepath.IsAbs(p) {
-		base := workdir
-		if base == "" {
-			base = allowed[0]
-		}
 		p = filepath.Join(base, p) // Join 内部 Clean，正确折叠 ".."
+	} else {
+		// Windows 盘符相对路径：锚定到 jail 参考盘符，消除解析歧义。
+		p = anchorJailVolume(p, base)
 	}
 	return isWithinAllowedWorkdirs(p, allowed)
 }
