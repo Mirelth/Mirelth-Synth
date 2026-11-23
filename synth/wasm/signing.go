@@ -48,7 +48,7 @@ func GenerateKeyPair() (ed25519.PrivateKey, ed25519.PublicKey, error) {
 	return priv, pub, err
 }
 
-// KeyFingerprint 计算公钥的指纹（SHA-256 前 8 字节的十六进制）
+// KeyFingerprint 计算公钥的指纹（SHA-256 前 4 字节的十六进制，8 个 hex 字符）
 func KeyFingerprint(publicKey []byte) string {
 	hash := sha256.Sum256(publicKey)
 	return fmt.Sprintf("%x", hash[:4])
